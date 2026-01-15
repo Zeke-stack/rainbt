@@ -1,5 +1,4 @@
 {
-  "buildCommand": "echo 'Static site'",
-  "outputDirectory": "public",
-  "installCommand": "echo 'No install needed'"
+  "version": 2,
+  "public": true
 }
