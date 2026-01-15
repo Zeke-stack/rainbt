@@ -1,0 +1,12 @@
+{
+  "name": "Play Mines",
+  "short_name": "Mines",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#001f3f",
+  "theme_color": "#0077DB",
+  "icons": [
+    { "src": "https://cdn.rainbet.com/brand/favicons/192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "https://cdn.rainbet.com/brand/favicons/512x512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

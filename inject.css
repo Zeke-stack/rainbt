@@ -1,0 +1,60 @@
+<style>/* Hide loading overlays, toasts, notifications, offline messages */
+section.fixed.inset-0,
+div[class*="fixed"][class*="inset"],
+div[class*="Loading"],
+div[class*="loading"],
+div[class*="toast"],
+div[class*="Toast"],
+div[class*="notification"],
+div[class*="Notification"],
+div[class*="offline"],
+div[class*="Offline"],
+div[role="alertdialog"],
+div[role="dialog"]:not([class*="search"]):not([class*="modal"]),
+[class*="overlay"]:not([id*="game"]):not([class*="game"]),
+[data-testid*="offline"],
+[class*="connection-error"],
+[class*="ConnectionError"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.fake-user-profile {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #262C50 0%, #1B213C 100%);
+    border: 1px solid #33395C;
+    border-radius: 8px;
+}
+.fake-balance {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #0077DB;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #1F99FF;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+}
+.fake-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7DD934 0%, #5BB520 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+}
+
+/* Make game board clickable */
+button { pointer-events: auto !important; cursor: pointer !important; }
+</style>
