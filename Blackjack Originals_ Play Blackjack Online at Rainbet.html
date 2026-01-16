@@ -272,21 +272,18 @@ a[href*="modal=auth&tab=register"] { display: none !important; }
         try {
             var header = document.querySelector('header.sticky');
             if (!header) return;
-            var containers = header.querySelectorAll('div[class*="gap-[6px]"]');
-            containers.forEach(function (container) {
-                if (container.querySelector('.fake-user-profile')) return;
-                var fake = document.createElement('div');
-                fake.className = 'fake-user-profile';
-                var avatar = document.createElement('div');
-                avatar.className = 'fake-avatar';
-                avatar.textContent = 'EL';
-                var balance = document.createElement('div');
-                balance.className = 'fake-balance';
-                balance.textContent = '$1,247.83';
-                fake.appendChild(avatar);
-                fake.appendChild(balance);
-                container.insertBefore(fake, container.firstChild);
-            });
+            if (header.querySelector('.fake-user-profile')) return;
+            var fake = document.createElement('div');
+            fake.className = 'fake-user-profile';
+            var avatar = document.createElement('div');
+            avatar.className = 'fake-avatar';
+            avatar.textContent = 'EL';
+            var balance = document.createElement('div');
+            balance.className = 'fake-balance';
+            balance.textContent = '$1,247.83';
+            fake.appendChild(avatar);
+            fake.appendChild(balance);
+            header.appendChild(fake);
         } catch (e) {}
     }
     if (document.readyState === 'loading') {
@@ -318,20 +315,19 @@ div[role="dialog"]:not([class*="search"]):not([class*="modal"]),
 [class*="ConnectionError"],
 [role="alert"],
 .fake-user-profile {
-    display: flex !important;
+    display: inline-flex !important;
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
     background: linear-gradient(135deg, #262C50 0%, #1B213C 100%);
     border: 1px solid #33395C;
     border-radius: 8px;
-    position: fixed !important;
+    position: relative !important;
     z-index: 99999 !important;
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    top: 12px;
-    right: 12px;
+    margin-left: 10px;
 }
 .fake-balance {
     display: flex !important;
