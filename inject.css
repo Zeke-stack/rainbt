@@ -1,4 +1,4 @@
-<style>/* Hide loading overlays, toasts, notifications, offline messages */
+/* Hide loading overlays, toasts, notifications, offline messages */
 section.fixed.inset-0,
 div[class*="fixed"][class*="inset"],
 div[class*="Loading"],
@@ -57,4 +57,3 @@ div[role="dialog"]:not([class*="search"]):not([class*="modal"]),
 
 /* Make game board clickable */
 button { pointer-events: auto !important; cursor: pointer !important; }
-</style>
