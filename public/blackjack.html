@@ -171,6 +171,46 @@ a[href*="modal=auth&tab=register"] { display: none !important; }
     font-size: 14px;
 }
 
+/* Hide template cards - only show dynamically generated ones */
+#player-hand-0 > .blackjack-card,
+#dealer-hand-0 > .blackjack-card,
+.BlackjackStyle_cards-container__lYgJ3 > .blackjack-card {
+    display: none !important;
+}
+
+/* Show dynamically added cards */
+.BlackjackStyle_cards-container__lYgJ3 > .blackjack-card.deal-animation {
+    display: block !important;
+}
+
+/* Hide template totals */
+.BlackjackStyle_hand-total__dPXth .BlackjackStyle_soft-total__6aJNp {
+    opacity: 0;
+    color: #7179a5 !important; /* Same color for both dealer and player */
+}
+
+/* Hide win message by default */
+.BlackjackStyle_total-message___KlVJ {
+    display: none !important;
+}
+
+/* Remove the green win highlight from player total and make same color */
+.BlackjackStyle_dealer__H2M6U .BlackjackStyle_hand-total__dPXth,
+.BlackjackStyle_player__iwj_G .BlackjackStyle_hand-total__dPXth {
+    background: transparent !important;
+    color: #7179a5 !important;
+}
+
+.BlackjackStyle_hand-total__dPXth.BlackjackStyle_win__0lzK6 {
+    background: transparent !important;
+    color: #7179a5 !important;
+}
+
+/* Ensure both dealer and player totals have same styling */
+.BlackjackStyle_hand-total__dPXth .BlackjackStyle_soft-total__6aJNp {
+    color: #7179a5 !important;
+}
+
 /* Card flip animations */
 .blackjack-card {
     perspective: 1000px;
@@ -184,6 +224,15 @@ a[href*="modal=auth&tab=register"] { display: none !important; }
 }
 .CardStyle_card__face--back__N11Xu {
     transform: rotateY(180deg);
+}
+
+/* Make hidden elements flip instead of disappear */
+.hidden {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: rotateY(180deg) !important;
+    pointer-events: none !important;
 }
 
 /* Game button animations */
@@ -435,8 +484,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const suitSymbols = {
         hearts: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#C5161D" d="M16 28.8c-.8 0-1.6-.4-2.2-.9l-9.5-9.5C1.7 15.8 0 12.8 0 9.6 0 4.3 4.3 0 9.6 0c2.6 0 5 1 6.4 2.7C17.4 1 19.8 0 22.4 0 27.7 0 32 4.3 32 9.6c0 3.2-1.7 6.2-4.3 8.8l-9.5 9.5c-.6.6-1.4.9-2.2.9z"/></svg>',
         diamonds: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#C5161D" d="M9.25 23.716c-2.11-2.111-5.716-4.572-8.164-6.144-1.152-.74-1.152-2.472 0-3.212 2.448-1.573 6.053-4.033 8.164-6.144 1.892-1.892 3.758-4.677 5.047-6.787.755-1.237 2.651-1.237 3.406 0 1.29 2.11 3.155 4.895 5.047 6.787 2.11 2.11 5.716 4.57 8.164 6.144 1.152.74 1.152 2.471 0 3.212-2.448 1.572-6.053 4.033-8.164 6.144-1.892 1.891-3.758 4.676-5.047 6.786-.755 1.237-2.651 1.237-3.406 0-1.29-2.11-3.155-4.895-5.047-6.786"/></svg>',
-        clubs: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="33" fill="none" viewBox="0 0 32 33"><path fill="#313240" d="M11.092 32.613h9.392c.365 0 .506-.49.2-.688-.987-.638-2.389-1.594-3.101-2.307a13 13 0 0 1-1.453-1.734.427.427 0 0 0-.684 0 13 13 0 0 1-1.453 1.734c-.713.713-2.114 1.669-3.1 2.307-.307.198-.166.688.199.688M23.44 27.357c2.135 0 4.183-.883 5.696-2.456a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .613-3.209 8.7 8.7 0 0 0-.613-3.209 8.4 8.4 0 0 0-1.746-2.717c-.848-.883-1.879-1.59-3.028-2.088A12.5 12.5 0 0 0 18.056 8.9a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .614-3.209 8.7 8.7 0 0 0-.613-3.209A8.4 8.4 0 0 0 18.056-2.953h-4.112a8.4 8.4 0 0 0-1.746 2.717 8.7 8.7 0 0 0-.614 3.209c0 1.1.207 2.19.614 3.209a8.4 8.4 0 0 0 1.746 2.717 12.5 12.5 0 0 0-8.053 2.06c-1.149.498-2.18 1.205-3.028 2.088a8.4 8.4 0 0 0-1.746 2.717A8.7 8.7 0 0 0 .504 18.974c0 1.1.207 2.19.614 3.209a8.4 8.4 0 0 0 1.746 2.718c1.513 1.573 3.56 2.456 5.696 2.456z"/></svg>',
-        spades: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="33" fill="none" viewBox="0 0 32 33"><path fill="#313240" d="M11.092 32.613h9.392c.365 0 .506-.49.2-.688-.987-.638-2.389-1.594-3.101-2.307a13 13 0 0 1-1.453-1.734.427.427 0 0 0-.684 0 13 13 0 0 1-1.453 1.734c-.713.713-2.114 1.669-3.1 2.307-.307.198-.166.688.199.688M23.44 27.357c2.135 0 4.183-.883 5.696-2.456a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .613-3.209 8.7 8.7 0 0 0-.613-3.209 8.4 8.4 0 0 0-1.746-2.717c-.848-.883-1.879-1.59-3.028-2.088A12.5 12.5 0 0 0 18.056 8.9a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .614-3.209 8.7 8.7 0 0 0-.613-3.209A8.4 8.4 0 0 0 18.056-2.953h-4.112a8.4 8.4 0 0 0-1.746 2.717 8.7 8.7 0 0 0-.614 3.209c0 1.1.207 2.19.614 3.209a8.4 8.4 0 0 0 1.746 2.717 12.5 12.5 0 0 0-8.053 2.06c-1.149.498-2.18 1.205-3.028 2.088a8.4 8.4 0 0 0-1.746 2.717A8.7 8.7 0 0 0 .504 18.974c0 1.1.207 2.19.614 3.209a8.4 8.4 0 0 0 1.746 2.718c1.513 1.573 3.56 2.456 5.696 2.456z"/></svg>'
+        clubs: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="33" fill="none" viewBox="0 0 32 33"><path fill="#313240" d="M11.092 32.613h9.392c.365 0 .506-.49.2-.688-.987-.638-2.389-1.594-3.101-2.307a13 13 0 0 1-1.453-1.734.427.427 0 0 0-.684 0 13 13 0 0 1-1.453 1.734c-.713.713-2.114 1.669-3.1 2.307-.307.198-.166.688.199.688M23.44 27.357c2.135 0 4.183-.883 5.696-2.456a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .613-3.209 8.7 8.7 0 0 0-.613-3.209 8.4 8.4 0 0 0-1.746-2.717l-1.977-2.057s-3.932-3.051-5.811-5.006S17.537.978 17.537.978a2.43 2.43 0 0 0-1.749-.752c-.655 0-1.283.27-1.748.752 0 0-1.938 3.059-3.821 5.018-1.883 1.96-5.822 5.018-5.822 5.018L2.434 13.06A8.4 8.4 0 0 0 .692 15.77a8.7 8.7 0 0 0-.612 3.203c0 1.1.208 2.188.612 3.203a8.4 8.4 0 0 0 1.742 2.712c1.51 1.57 3.555 2.453 5.686 2.453s4.176-.882 5.686-2.453l1.963-2.043 1.975 2.055c1.513 1.573 3.561 2.456 5.696 2.456"/></svg>',
+        spades: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="33" fill="none" viewBox="0 0 32 33"><path fill="#313240" d="M11.092 32.613h9.392c.365 0 .506-.49.2-.688-.987-.638-2.389-1.594-3.101-2.307a13 13 0 0 1-1.453-1.734.427.427 0 0 0-.684 0 13 13 0 0 1-1.453 1.734c-.713.713-2.114 1.669-3.1 2.307-.307.198-.166.688.199.688M23.44 27.357c2.135 0 4.183-.883 5.696-2.456a8.4 8.4 0 0 0 1.746-2.718 8.7 8.7 0 0 0 .613-3.209 8.7 8.7 0 0 0-.613-3.21 8.4 8.4 0 0 0-1.746-2.717c-1.513-1.573-3.561-2.456-5.696-2.456s-4.183.883-5.696 2.456l-1.975 2.055L8.557 11.006c-1.51-1.573-3.556-2.453-5.686-2.453s-4.176.88-5.686 2.453A8.4 8.4 0 0 0 .442 13.718a8.7 8.7 0 0 0-.612 3.203c0 1.1.208 2.188.612 3.203a8.4 8.4 0 0 0 1.743 2.712c1.513 1.573 3.561 2.456 5.696 2.456 2.135 0 4.183-.883 5.696-2.456l1.963-2.043 1.975 2.055c1.513 1.573 3.561 2.456 5.696 2.456"/></svg>'
     };
     
     // Update balance display
@@ -506,9 +555,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const isRed = ['hearts', 'diamonds'].includes(card.suit);
                 
                 cardEl.innerHTML = `
-                    <div class="CardStyle_card__bU4IY" data-bj="card" style="position: absolute; transform: rotateY(${faceUp ? 180 : 0}deg);">
+                    <div class="CardStyle_card__bU4IY" data-bj="card" style="position: absolute; transform: rotateY(${faceUp ? 0 : 180}deg);">
                         <div class="CardStyle_card__face__lAVmt CardStyle_card__face--front__2OhnB">
                             <div class="CardStyle_card-corner__NDTfW ${isRed ? 'CardStyle_text-red__Ayv6w' : 'CardStyle_text-black__7r66F'}">
+                                <span class="CardStyle_card-rank__4Yp6C">${card.value}</span>
+                                <div class="CardStyle_suit-card-container__KyeLJ">${suitSymbols[card.suit]}</div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; position: absolute; top: 0; left: 0; pointer-events: none;">
+                                <div style="transform: scale(1.5); ${isRed ? 'filter: hue-rotate(0deg);' : 'filter: hue-rotate(0deg);'}">${suitSymbols[card.suit]}</div>
+                            </div>
+                            <div class="CardStyle_card-corner__NDTfW ${isRed ? 'CardStyle_text-red__Ayv6w' : 'CardStyle_text-black__7r66F'}" style="position: absolute; bottom: 4px; right: 4px; transform: rotate(180deg);">
                                 <span class="CardStyle_card-rank__4Yp6C">${card.value}</span>
                                 <div class="CardStyle_suit-card-container__KyeLJ">${suitSymbols[card.suit]}</div>
                             </div>
@@ -530,7 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function flipCard(cardEl) {
         const inner = cardEl.querySelector('.CardStyle_card__bU4IY');
         if (inner) {
-            inner.style.transform = 'rotateY(180deg)';
+            inner.style.transform = 'rotateY(0deg)';
         }
     }
     
@@ -548,8 +604,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start new game
     async function startGame() {
+        console.log('startGame called!');
         const betAmount = getBetInput();
-        if (betAmount <= 0 || betAmount > balance) return;
+        console.log('Bet amount:', betAmount, 'Balance:', balance);
+        
+        if (betAmount <= 0) {
+            console.log('Invalid bet amount:', betAmount);
+            alert('Please enter a valid bet amount');
+            return;
+        }
+        
+        if (betAmount > balance) {
+            console.log('Insufficient balance. Bet:', betAmount, 'Balance:', balance);
+            alert('Insufficient balance');
+            return;
+        }
         
         currentBet = betAmount;
         balance -= currentBet;
@@ -884,6 +953,118 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run immediately and repeatedly like Mines
     injectFakeUserProfile();
     setInterval(injectFakeUserProfile, 1000);
+    
+    // Add Place Bet button event listener with multiple strategies
+    function setupPlaceBetButton() {
+        console.log('=== Setting up Place Bet button ===' );
+        
+        // Try multiple selectors
+        const selectors = [
+            '[data-testid="bet-btn"]',
+            'button:contains("Place Bet")',
+            '.style_bet-btn___Z9Vg',
+            'button[type="button"]:not([aria-label=""])',
+            'button'
+        ];
+        
+        let placeBetButton = null;
+        for (let selector of selectors) {
+            if (selector.includes('contains')) {
+                // Custom contains logic
+                const buttons = document.querySelectorAll('button');
+                for (let btn of buttons) {
+                    if (btn.textContent.includes('Place Bet')) {
+                        placeBetButton = btn;
+                        console.log('Found button with contains:', selector);
+                        break;
+                    }
+                }
+            } else {
+                placeBetButton = document.querySelector(selector);
+                if (placeBetButton) {
+                    console.log('Found button with selector:', selector);
+                    break;
+                }
+            }
+        }
+        
+        console.log('Place Bet button found:', placeBetButton);
+        
+        if (placeBetButton) {
+            console.log('Button classes:', placeBetButton.className);
+            console.log('Button disabled:', placeBetButton.disabled);
+            console.log('Button tabindex:', placeBetButton.tabIndex);
+            console.log('Button innerHTML:', placeBetButton.innerHTML);
+            
+            // Force enable the button
+            placeBetButton.disabled = false;
+            placeBetButton.tabIndex = 0;
+            placeBetButton.style.pointerEvents = 'auto';
+            placeBetButton.style.cursor = 'pointer';
+            placeBetButton.classList.remove('style_de-active__Mg1U5');
+            placeBetButton.setAttribute('aria-disabled', 'false');
+            
+            // Add multiple event types
+            const gameFunction = function(e) {
+                console.log('=== BUTTON CLICKED! ===');
+                console.log('Event type:', e.type);
+                console.log('Current bet amount:', getBetInput());
+                console.log('Current balance:', balance);
+                
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                try {
+                    startGame();
+                } catch (err) {
+                    console.error('Error in startGame:', err);
+                    // Try direct game simulation
+                    console.log('Trying direct game start...');
+                    dealNewHand();
+                }
+            };
+            
+            // Remove all existing event listeners by cloning
+            const newButton = placeBetButton.cloneNode(true);
+            placeBetButton.parentNode.replaceChild(newButton, placeBetButton);
+            
+            // Add events to new button
+            ['click', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'pointerdown', 'pointerup'].forEach(eventType => {
+                newButton.addEventListener(eventType, gameFunction, { capture: true });
+            });
+            
+            // Focus and test
+            newButton.focus();
+            console.log('Button setup complete, classes:', newButton.className);
+            
+            // Auto-test the button after 2 seconds
+            setTimeout(() => {
+                console.log('=== TESTING BUTTON AUTO-CLICK ===');
+                newButton.click();
+            }, 2000);
+            
+        } else {
+            console.log('Place Bet button not found with any selector, retrying...');
+            setTimeout(setupPlaceBetButton, 1000);
+        }
+    }
+    
+    // Also add keyboard shortcut as backup
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            console.log('Keyboard shortcut triggered!');
+            startGame();
+        }
+    });
+    
+    setupPlaceBetButton();
+    
+    // Hide template totals and show 0 initially
+    document.querySelectorAll('.BlackjackStyle_soft-total__6aJNp').forEach(el => {
+        el.textContent = '0';
+        el.style.opacity = '1';
+    });
        
     console.log('Blackjack game initialized!');
 });

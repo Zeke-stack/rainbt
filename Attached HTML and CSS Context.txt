@@ -1,0 +1,1939 @@
+Attached HTML and CSS Context
+
+<div class="BlackjackStyle_blackjack-game-display__s3GPG"><div class="w-full min-h-[50px] bg-[#191f3b] border-b border-[rgba(232,229,255,0.05)] flex items-center justify-between pr-[5px] relative"><div class="GameFrame_game-frame-header-container__GlamC"><button data-loading="false" aria-label="" class="border-none cursor-pointer ml-4" type="button"><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16"><path fill="#E8E5FF" fill-opacity="0.5" d="M8.004-.016c-4.411 0-8 3.59-8 8 0 4.412 3.589 8 8 8s8-3.588 8-8c0-4.41-3.589-8-8-8zm0 14.546a6.553 6.553 0 01-6.546-6.546A6.553 6.553 0 018.004 1.44a6.553 6.553 0 016.545 6.545 6.553 6.553 0 01-6.545 6.546z"></path><path fill="#E8E5FF" fill-opacity="0.5" d="M8.005 3.383a.97.97 0 000 1.94.97.97 0 000-1.94zm0 3.394a.727.727 0 00-.728.727v4.364a.727.727 0 001.455 0V7.504a.727.727 0 00-.727-.727z"></path></svg></div></button><div class="GameFrame_sponsor-display-container__0WXrV"><div class="bg-[#191f3b]"><div class="flex items-center justify-center gap-1.5 [&amp;_svg]:h-[16px]"><div class="GamesIcons_small__QUAeX GamesIcons_value-icon__p9Oky GamesIcons_no-glow__5IRNV GamesIcons_has-custom-color__2sPCl"><svg width="25" height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect fill="none" height="256" width="256"></rect><path d="M232,140a56,56,0,0,1-56,56,55.2,55.2,0,0,1-25.9-6.4L162,225.5a7.8,7.8,0,0,1-1.1,7.2,7.9,7.9,0,0,1-6.4,3.3h-53a7.9,7.9,0,0,1-6.4-3.3,7.8,7.8,0,0,1-1.1-7.2l11.9-35.9A55.2,55.2,0,0,1,80,196a56,56,0,0,1-56-56C24,86.4,121.7,23.3,125.8,20.6a4.3,4.3,0,0,1,4.4,0C134.3,23.3,232,86.4,232,140Z"></path></svg></div><span class="text-[13px]"><span class="font-semibold capitalize">blackjack</span> </span></div></div></div><div class="free-play_free-play-header-container__SlWnI free-play_enabled__Nbq7L"></div></div><a class="flex items-center gap-1.5 text-[13px] [&amp;_svg]:h-[16px] p-2.5 border border-solid border-transparent" href="https://rainbet.com/casino/originals/blackjack?modal=fairplay&amp;tab=seeds"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16" fill="none"><g clip-path="url(#clip0_10751_28269)"><path d="M13.554 6.24468L13.0034 2.66602C9.00336 2.66602 7.00336 0.666016 7.00336 0.666016C7.00336 0.666016 5.00336 2.66602 1.00336 2.66602L0.452692 6.24468C0.223055 7.73534 0.458626 9.26054 1.1273 10.6125C1.79598 11.9644 2.86524 13.0772 4.18936 13.7993L7.00336 15.3327L9.81736 13.7993C11.1415 13.0772 12.2107 11.9644 12.8794 10.6125C13.5481 9.26054 13.7837 7.73534 13.554 6.24468ZM10.1414 6.47068L6.14136 10.4707C6.01634 10.5957 5.8468 10.6659 5.67003 10.6659C5.49325 10.6659 5.32371 10.5957 5.19869 10.4707L3.86536 9.13735C3.80169 9.07585 3.7509 9.00229 3.71596 8.92095C3.68102 8.83962 3.66263 8.75214 3.66186 8.66362C3.66109 8.5751 3.67796 8.48731 3.71148 8.40538C3.745 8.32345 3.7945 8.24901 3.8571 8.18642C3.91969 8.12382 3.99413 8.07432 4.07606 8.0408C4.15799 8.00728 4.24577 7.99041 4.33429 7.99118C4.42281 7.99195 4.51029 8.01034 4.59163 8.04528C4.67297 8.08022 4.74653 8.13101 4.80803 8.19468L5.67003 9.05668L9.19869 5.52802C9.32443 5.40658 9.49283 5.33938 9.66763 5.3409C9.84243 5.34242 10.0096 5.41253 10.1332 5.53614C10.2568 5.65974 10.327 5.82695 10.3285 6.00175C10.33 6.17655 10.2628 6.34495 10.1414 6.47068Z" fill="white"></path></g><defs><clipPath id="clip0_10751_28269"><rect width="14" height="16" fill="white"></rect></clipPath></defs></svg>Fair Play</a></div><div id="blackjack-game-display" class=" BlackjackStyle_blackjack-game-display-inner__XZuwT __variable_1b1c3c"><div class="BlackjackStyle_background-container__T_a8W"><div class="BlackjackStyle_table-container__jM603"></div></div><div class=" 
+      undefined
+      BlackjackStyle_card-deck__PMvlU 
+    " id="blackjack-card-deck"><div class="BlackjackStyle_inner-deck__89s2j"><div class="CardStyle_card__face__lAVmt CardStyle_card__face--back__N11Xu"><img alt="face down" loading="lazy" width="448" height="668" decoding="async" data-nimg="1" srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=640&amp;q=100 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=1080&amp;q=100 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/face-down.webp" style="color: transparent;"></div><div class="CardStyle_card__face__lAVmt CardStyle_card__face--back__N11Xu"><img alt="face down" loading="lazy" width="448" height="668" decoding="async" data-nimg="1" srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=640&amp;q=100 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=1080&amp;q=100 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/face-down.webp" style="color: transparent;"></div><div class="CardStyle_card__face__lAVmt CardStyle_card__face--back__N11Xu"><img alt="face down" loading="lazy" width="448" height="668" decoding="async" data-nimg="1" srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=640&amp;q=100 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=1080&amp;q=100 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/face-down.webp" style="color: transparent;"></div><div class="CardStyle_card__face__lAVmt CardStyle_card__face--back__N11Xu"><img alt="face down" loading="lazy" width="448" height="668" decoding="async" data-nimg="1" srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=640&amp;q=100 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fface-down.072a7f62.png&amp;w=1080&amp;q=100 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/face-down.webp" style="color: transparent;"></div></div><div class="BlackjackStyle_deck-slider__GlujX"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="148" fill="none" viewBox="0 0 20 148"><path fill="url(#paint0_linear_19338_177691)" stroke="url(#paint1_linear_19338_177691)" d="M19.5 147.494C8.962 147.228.5 138.602.5 128V20C.5 9.398 8.962.772 19.5.506z"></path><defs><linearGradient id="paint0_linear_19338_177691" x1="10" x2="10" y1="0" y2="148" gradientUnits="userSpaceOnUse"><stop stop-color="#496883"></stop><stop offset="0.15" stop-color="#567C9C"></stop><stop offset="0.85" stop-color="#5980A1"></stop><stop offset="1" stop-color="#496883"></stop></linearGradient><linearGradient id="paint1_linear_19338_177691" x1="20" x2="0" y1="74" y2="74" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity="0"></stop><stop offset="1" stop-color="#fff" stop-opacity="0.5"></stop></linearGradient></defs></svg></div></div><div class="BlackjackStyle_dealer-section-container__y3wGC"><div class="BlackjackStyle_hands-container__qvJMs BlackjackStyle_dealer__H2M6U"><div id="dealer-hand-0" class="BlackjackStyle_cards-container__lYgJ3" style="width: 322px; height: 150px; --bj-card-w: 100px; --bj-card-h: 150px;"></div><div class="BlackjackStyle_hand-total__dPXth BlackjackStyle_active__Yv8k6"><div class="BlackjackStyle_total-display__LOjC2"><span class="BlackjackStyle_soft-total__6aJNp"></span></div></div></div></div><div class="BlackjackStyle_middle-display__qxmUH"><div class="BlackjackStyle_logo-content__zusqj"><img alt="Rainbet Logo" loading="lazy" width="109" height="36" decoding="async" data-nimg="1" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/rainbet-logo.svg" style="color: transparent;"></div><div class="BlackjackStyle_default-content__vI0C_"><div class="BlackjackStyle_ribbon-container__Mv71i"><div class="BlackjackStyle_ribbon-inner__Ve5CM"><span>Blackjack pays 3 to 2</span></div><svg width="320" height="34" viewBox="0 0 320 34" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_29217_76145)"><path d="M15.2634 15.95L0.741812 4.41796C-0.747255 3.23796 0.143412 0.959961 2.09221 0.959961H316.934C318.882 0.959961 319.771 3.23696 318.285 4.41696L303.762 15.95C303.529 16.134 303.343 16.3632 303.215 16.6216C303.087 16.8801 303.021 17.1616 303.021 17.4465C303.021 17.7314 303.087 18.0129 303.215 18.2713C303.343 18.5298 303.529 18.759 303.762 18.943L318.285 30.475C319.771 31.655 318.882 33.932 316.934 33.932H2.09221C0.144478 33.932 -0.745122 31.655 0.740745 30.475L15.2634 18.943C15.4954 18.759 15.6819 18.5298 15.8098 18.2713C15.9377 18.0129 16.004 17.7314 16.004 17.4465C16.004 17.1616 15.9377 16.8801 15.8098 16.6216C15.6819 16.3632 15.4954 16.134 15.2634 15.95Z" fill="#282C57"></path><path d="M15.2634 15.95L0.741812 4.41796C-0.747255 3.23796 0.143412 0.959961 2.09221 0.959961H316.934C318.882 0.959961 319.771 3.23696 318.285 4.41696L303.762 15.95C303.529 16.134 303.343 16.3632 303.215 16.6216C303.087 16.8801 303.021 17.1616 303.021 17.4465C303.021 17.7314 303.087 18.0129 303.215 18.2713C303.343 18.5298 303.529 18.759 303.762 18.943L318.285 30.475C319.771 31.655 318.882 33.932 316.934 33.932H2.09221C0.144478 33.932 -0.745122 31.655 0.740745 30.475L15.2634 18.943C15.4954 18.759 15.6819 18.5298 15.8098 18.2713C15.9377 18.0129 16.004 17.7314 16.004 17.4465C16.004 17.1616 15.9377 16.8801 15.8098 16.6216C15.6819 16.3632 15.4954 16.134 15.2634 15.95Z" fill="#282C57"></path></g><defs><clipPath id="clip0_29217_76145"><rect width="320" height="34" fill="white"></rect></clipPath></defs></svg></div><div class="BlackjackStyle_ribbon-container__Mv71i"><div class="BlackjackStyle_ribbon-inner__Ve5CM"><span>insurance pays 2 to 1</span></div><svg width="270" height="34" viewBox="0 0 270 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M27.9051 28.67L1.10938 0.593994H269.25L241.214 28.844C239.918 30.1507 238.303 31.2007 236.482 31.9209C234.66 32.6412 232.676 33.0142 230.668 33.014H38.6206C36.5677 33.0142 34.5406 32.6243 32.687 31.8728C30.8333 31.1214 29.1997 30.0272 27.9051 28.67Z" fill="#282C57"></path><path d="M27.9051 28.67L1.10938 0.593994H269.25L241.214 28.844C239.918 30.1507 238.303 31.2007 236.482 31.9209C234.66 32.6412 232.676 33.0142 230.668 33.014H38.6206C36.5677 33.0142 34.5406 32.6243 32.687 31.8728C30.8333 31.1214 29.1997 30.0272 27.9051 28.67Z" fill="#282C57"></path></svg></div></div></div><div class="BlackjackStyle_player-section-container__7XNEM"><div class="BlackjackStyle_hands-container__qvJMs BlackjackStyle_player__iwj_G"><div id="player-hand-0" class="BlackjackStyle_cards-container__lYgJ3" style="width: 212px; height: 150px; --bj-card-w: 100px; --bj-card-h: 150px;"></div><div class="BlackjackStyle_hand-total__dPXth BlackjackStyle_win__0lzK6 BlackjackStyle_active__Yv8k6"><div class="BlackjackStyle_total-display__LOjC2"><span class="BlackjackStyle_soft-total__6aJNp"></span></div><div class="BlackjackStyle_total-message___KlVJ" style="width: auto;"><span>Win</span></div></div></div></div></div><div class="BlackjackStyle_bet-bar-content__EPE_Y"><div class="BlackjackStyle_bet-btn-container__1_xat"><div class="style_bet-btn-container__fBS5D"><button data-loading="false" aria-label="" class="style_bet-btn___Z9Vg" type="button" data-testid="bet-btn" tabindex="0" popupposition="top" style="position: relative; pointer-events: auto; cursor: pointer !important;" onclick="console.log('BUTTON CLICKED!'); if(window.startGame) { window.startGame(); } else { alert('startGame not found'); }"><img alt="snow effect left" loading="lazy" width="32" height="29" decoding="async" data-nimg="1" class="absolute z-[10] pointer-events-none select-none top-0 left-0 translate-x-[-5px] translate-y-[-4px]" srcset="https://assets.rbgcdn.com/223k2P3/max-w-32/events/xmas/fx/snow-l.png 1x, https://assets.rbgcdn.com/223k2P3/max-w-64/events/xmas/fx/snow-l.png 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/snow-l.png" style="color: transparent; filter: drop-shadow(rgba(0, 0, 0, 0.15) 1px 1px 2.2px);"><img alt="snow effect right" loading="lazy" width="32" height="29" decoding="async" data-nimg="1" class="absolute z-[10] pointer-events-none select-none top-0 right-0 translate-x-[3px] translate-y-[-3px]" srcset="https://assets.rbgcdn.com/223k2P3/max-w-32/events/xmas/fx/snow-r.png 1x, https://assets.rbgcdn.com/223k2P3/max-w-64/events/xmas/fx/snow-r.png 2x" src="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/snow-r.png" style="color: transparent; filter: drop-shadow(rgba(0, 0, 0, 0.15) 1px 1px 2.2px);"><div class="style_bet-btn-content__vrg3Z"><span><span>Place Bet</span></span><div class="style_hover-background__0Oe5n"></div></div></button><div class="style_demo-mode-text-container__XTHV6"><div class="style_arrow-up__1qSd3"></div></div></div></div><div class="BlackjackStyle_bet-bar-inner-container__8FUmz"><div class="BlackjackStyle_blackjack-ui-container__FVLPG"><div class="BlackjackStyle_action-buttons-container__Qt6ak"><button data-loading="false" aria-label="" class="BlackjackStyle_action-button__9nk8s
+        BlackjackStyle_double__DhPRX
+        
+
+        " type="button"><div class="BlackjackStyle_action-icon__14_sn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="12" fill="none" viewBox="0 0 20 12"><path fill="#39FFA0" fill-opacity="0.75" d="M6.67 11.5 4.91 9.041 3.093 11.5H.56l3.084-4.038-2.98-3.98h2.608l1.699 2.34 1.743-2.34h2.474l-2.98 3.92 3.1 4.098zm13.303-2.131V11.5h-8.54V9.805l4.36-4.117q.693-.662.935-1.13.243-.484.243-.952 0-.678-.469-1.034-.451-.37-1.34-.37-.742 0-1.34.29a2.5 2.5 0 0 0-1 .84l-1.905-1.228q.66-.984 1.824-1.533 1.163-.565 2.664-.565 1.26 0 2.195.42.953.403 1.47 1.162.532.742.532 1.76 0 .92-.387 1.727-.389.807-1.502 1.84L15.114 9.37z"></path></svg></div><span>Double</span></button><button data-loading="false" aria-label="" class="BlackjackStyle_action-button__9nk8s
+        BlackjackStyle_hit__HZmDD
+        
+
+        " type="button"><div class="BlackjackStyle_action-icon__14_sn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="20" fill="none" viewBox="0 0 15 20"><path fill="#31A1FF" d="M1.943 0h6.153c.888 0 1.611.723 1.611 1.611v7.223L7.953 7.797l-.005-.004a2.33 2.33 0 0 0-1.778-.232 2.33 2.33 0 0 0-1.424 1.09 2.346 2.346 0 0 0 .858 3.202l1.798 1.038H1.943a1.613 1.613 0 0 1-1.611-1.612V1.611C.332.723 1.055 0 1.943 0"></path><path fill="#31A1FF" d="M8.356 14.504v.225a2.425 2.425 0 0 0 2.422 2.422.586.586 0 0 0 0-1.172c-.69 0-1.25-.56-1.25-1.25v-.225a2.94 2.94 0 0 0-1.504-2.605L6.19 10.84a1.173 1.173 0 0 1-.429-1.6c.156-.27.409-.463.712-.544s.618-.041.886.113l4.717 2.791a.586.586 0 0 0 .597-1.008L10.879 9.53V5.273l2.93 2.931c.57.57.859 1.267.859 2.072v9.14a.586.586 0 0 1-.586.586h-.003l-6.494-.029a.586.586 0 0 1-.769-.557v-.03c0-.624-.294-1.146-.827-1.47L5.63 17.7a2.83 2.83 0 0 1-1.393-2.472v-1.163s3.998-.004 4.067-.009q.051.221.05.448"></path></svg></div><span>Hit</span></button><button data-loading="false" aria-label="" class="BlackjackStyle_action-button__9nk8s
+        BlackjackStyle_stand__YSz_T
+        
+
+        " type="button"><div class="BlackjackStyle_action-icon__14_sn"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="20" fill="none" viewBox="0 0 17 20"><path fill="#B683CF" d="M15.216 5.386a1.154 1.154 0 1 0 0-2.308 1.154 1.154 0 0 0 0 2.308M12.138 3.073a1.154 1.154 0 1 0 0-2.307 1.154 1.154 0 0 0 0 2.307M9.064 2.308a1.154 1.154 0 1 0 0-2.308 1.154 1.154 0 0 0 0 2.308M5.986 3.847a1.154 1.154 0 1 0 0-2.308 1.154 1.154 0 0 0 0 2.308"></path><path fill="#C88FF0" d="M14.063 4.233v5a.384.384 0 1 1-.77 0V1.925h-2.307v6.539a.385.385 0 0 1-.77 0V1.156H7.91v7.308a.385.385 0 0 1-.769 0v-5.77H4.832v9.616L3.275 10.18c-.462-.712-1.363-.95-2.023-.543-.657.417-.82 1.326-.365 2.036 0 0 2.512 3.802 3.583 5.43 1.07 1.627 2.805 2.9 6.05 2.9 5.37 0 5.85-4.147 5.85-5.384V4.233z"></path></svg></div><span>Stand</span></button><button data-loading="false" aria-label="" class="BlackjackStyle_action-button__9nk8s
+        BlackjackStyle_split__jSd4R
+        
+
+        " type="button"><div class="BlackjackStyle_action-icon__14_sn"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="16" fill="none" viewBox="0 0 21 16"><rect width="9.516" height="13.745" fill="#F49B49" rx="1.594" transform="scale(-1 1)rotate(-11 -.392 107.4)"></rect><path fill="#E18937" fill-rule="evenodd" d="m9.013 14.194-4.6.894a1.594 1.594 0 0 1-1.87-1.26L.53 3.465a1.594 1.594 0 0 1 1.26-1.869L8.002.39c.864-.168 1.7.396 1.868 1.26l.115.588L8.01 12.398a1.594 1.594 0 0 0 1.003 1.796" clip-rule="evenodd"></path></svg></div><span>Split</span></button></div></div><div class="BlackjackStyle_bet-input-container__2Yy7H"><div class="BlackjackStyle_chip-display__GnSwz"><div class="BlackjackStyle_reset-chip-container__Qf7KA"><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><div class="BlackjackStyle_reset-icon__Il9wD"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 13 13"><path fill="#fff" d="M4.773 4.716H1.44c-.4 0-.667-.266-.667-.666V.716c0-.4.267-.666.667-.666s.667.266.667.666v2.667h2.666c.4 0 .667.267.667.667s-.267.666-.667.666"></path><path fill="#fff" d="M6.107 12.716a5.8 5.8 0 0 1-2.133-.4A6.3 6.3 0 0 1 1.04 9.983c-.2-.333-.133-.733.2-.933.334-.2.734-.134.934.2.533.8 1.333 1.466 2.266 1.8.934.333 1.934.4 2.934.133a4.65 4.65 0 0 0 2.4-1.667c.6-.8.933-1.733 1-2.733 0-1-.267-2-.867-2.8s-1.4-1.4-2.333-1.733-1.934-.334-2.934 0a5 5 0 0 0-2.333 1.733c-.2.333-.6.4-.933.2s-.4-.667-.134-.933a5.95 5.95 0 0 1 3-2.267c1.2-.4 2.534-.4 3.734 0s2.266 1.2 3 2.267c.733 1.066 1.133 2.266 1.066 3.6 0 1.266-.466 2.533-1.266 3.533s-1.867 1.733-3.134 2.133c-.4.134-1 .2-1.533.2"></path></svg></div><svg xmlns="http://www.w3.org/2000/svg" width="47" height="46" fill="none" viewBox="0 0 47 46"><g clip-path="url(#clip0_22795_26741)"><path fill="#575F94" d="M23.224 45.172c12.284 0 22.241-9.958 22.241-22.242C45.465 10.647 35.507.69 23.224.69 10.94.689.982 10.647.982 22.93c0 12.284 9.958 22.242 22.242 22.242"></path><path fill="#000" fill-opacity="0.25" d="M45.234 19.527q.026.548.027 1.103c.01 12.292-9.946 22.264-22.237 22.274-10.99.008-20.341-8.006-22.014-18.868.623 12.276 11.079 21.722 23.354 21.1 12.276-.623 21.722-11.08 21.1-23.355a22 22 0 0 0-.23-2.254"></path><path fill="#fff" fill-opacity="0.5" d="M19.365 3.927V1.842c2.481-.682 5.1-.682 7.581 0v2.085l-3.79 1.043zM26.916 39.75v2.084c-2.48.683-5.1.683-7.581 0V39.75l3.79-1.043zM41.743 18.199h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649zM4.528 25.478H2.362a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.648z"></path><path fill="#fff" fill-opacity="0.5" d="M41.743 18.199h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649zM4.528 25.478H2.362a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.648zM38.963 31.936l1.531 1.475a13.55 13.55 0 0 1-5.362 5.157L33.6 37.095l1.916-3.316zM7.31 11.742l-1.53-1.475a13.55 13.55 0 0 1 5.362-5.158l1.53 1.475L10.758 9.9zM33.626 6.604l1.532-1.473a13.55 13.55 0 0 1 5.358 5.161l-1.532 1.474-3.445-1.844zM12.646 37.073l-1.532 1.473a13.55 13.55 0 0 1-5.359-5.161l1.532-1.474 3.446 1.844z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.135" d="M37.608 22.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path><mask id="mask0_22795_26741" width="42" height="43" x="2" y="1" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" fill-opacity="0.5" d="m15.244 2.94 3.713-1.025 11.17 40.173-3.712 1.026z"></path><path fill="#fff" fill-opacity="0.5" d="m42.281 15.125 1.016 3.716L3.093 29.903l-1.016-3.716z"></path><path fill="#fff" fill-opacity="0.5" d="m43.361 25.839-.965 3.73L2.01 19.19l.965-3.73z"></path><path fill="#fff" fill-opacity="0.5" d="m18.74 43.026-3.693-1.094L26.83 1.933l3.693 1.095z"></path><path fill="#fff" fill-opacity="0.5" d="M8.973 38.34 6.31 35.558 36.4 6.688l2.662 2.784z"></path><path fill="#fff" fill-opacity="0.5" d="m38.926 35.734-2.701 2.747L6.445 9.295l2.7-2.747z"></path></mask><defs><clipPath id="clip0_22795_26741"><rect width="44.483" height="44.483" x="0.98" y="0.689" fill="#fff" rx="22.241"></rect></clipPath></defs></svg></button></div><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><span>1</span><svg xmlns="http://www.w3.org/2000/svg" width="64" height="63" fill="none" viewBox="0 0 64 63"><g clip-path="url(#clip0_22736_21902)"><path fill="#28699F" d="M31.3 62.332c17.14 0 31.035-13.894 31.035-31.034S48.44.263 31.3.263.266 14.158.266 31.298 14.16 62.332 31.3 62.332"></path><path fill="#000" fill-opacity="0.25" d="M62.012 26.549q.037.765.038 1.54c.014 17.15-13.878 31.065-31.029 31.079C15.687 59.18 2.64 47.997.304 32.84c.87 17.128 15.46 30.31 32.588 29.44 17.128-.868 30.31-15.458 29.44-32.587a31 31 0 0 0-.32-3.145"></path><path fill="url(#paint0_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M25.914 4.782V1.873a19.95 19.95 0 0 1 10.578 0v2.91l-5.29 1.454z"></path><path fill="url(#paint1_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M36.45 54.767v2.909a19.95 19.95 0 0 1-10.578 0v-2.91l5.29-1.454z"></path><path fill="url(#paint2_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M57.138 24.696h3.023a17.9 17.9 0 0 1 0 10.182h-3.023l-1.51-5.091z"></path><path fill="url(#paint3_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M5.211 34.853H2.19a17.9 17.9 0 0 1 0-10.181H5.21l1.511 5.09z"></path><path fill="url(#paint4_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M57.138 24.696h3.023a17.9 17.9 0 0 1 0 10.182h-3.023l-1.51-5.091z"></path><path fill="url(#paint5_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M5.211 34.853H2.19a17.9 17.9 0 0 1 0-10.181H5.21l1.511 5.09z"></path><path fill="url(#paint6_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="m53.259 43.864 2.136 2.058c-1.747 3.024-4.339 5.517-7.483 7.197l-2.136-2.058 2.673-4.628z"></path><path fill="url(#paint7_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="m9.093 15.686-2.136-2.058c1.747-3.025 4.34-5.518 7.483-7.197l2.136 2.058-2.673 4.627z"></path><path fill="url(#paint8_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M45.813 8.518 47.95 6.46c3.142 1.682 5.732 4.177 7.477 7.203L53.29 15.72l-4.808-2.573z"></path><path fill="url(#paint9_linear_22736_21902)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.517" d="M16.539 51.031 14.4 53.088c-3.142-1.682-5.732-4.177-7.477-7.203l2.138-2.056 4.807 2.573z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.583" d="M51.346 29.981c0 11.148-9.068 20.19-20.26 20.19s-20.26-9.042-20.26-20.19 9.068-20.19 20.26-20.19 20.26 9.042 20.26 20.19Z"></path><mask id="mask0_22736_21902" width="59" height="58" x="1" y="1" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" d="m20.138 2.708 5.181-1.432 15.587 56.057-5.18 1.43z"></path><path fill="#fff" d="m57.864 19.71 1.418 5.185L3.183 40.33l-1.417-5.185z"></path><path fill="#fff" d="m59.372 34.659-1.347 5.203-56.352-14.48 1.346-5.204z"></path><path fill="#fff" d="m25.017 58.641-5.153-1.527 16.44-55.812 5.154 1.528z"></path><path fill="#fff" d="m11.387 52.104-3.715-3.885L49.657 7.938l3.715 3.884z"></path><path fill="#fff" d="m53.182 48.467-3.768 3.832L7.859 11.574l3.769-3.832z"></path></mask><g stroke-width="1.583" mask="url(#mask0_22736_21902)"><path stroke="#91BEE3" d="M51.346 29.981c0 11.148-9.068 20.19-20.26 20.19s-20.26-9.042-20.26-20.19 9.068-20.19 20.26-20.19 20.26 9.042 20.26 20.19Z"></path><path stroke="url(#paint10_radial_22736_21902)" d="M51.346 29.981c0 11.148-9.068 20.19-20.26 20.19s-20.26-9.042-20.26-20.19 9.068-20.19 20.26-20.19 20.26 9.042 20.26 20.19Z"></path></g><defs><linearGradient id="paint0_linear_22736_21902" x1="31.203" x2="31.203" y1="0.419" y2="6.237" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint1_linear_22736_21902" x1="31.161" x2="31.161" y1="59.13" y2="53.312" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint2_linear_22736_21902" x1="61.672" x2="55.627" y1="29.787" y2="29.787" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint3_linear_22736_21902" x1="0.678" x2="6.722" y1="29.762" y2="29.762" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint4_linear_22736_21902" x1="61.672" x2="55.627" y1="29.787" y2="29.787" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint5_linear_22736_21902" x1="0.678" x2="6.722" y1="29.762" y2="29.762" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint6_linear_22736_21902" x1="52.722" x2="48.613" y1="50.549" y2="46.276" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint7_linear_22736_21902" x1="9.63" x2="13.739" y1="9" y2="13.273" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint8_linear_22736_21902" x1="52.758" x2="48.645" y1="9.035" y2="13.304" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint9_linear_22736_21902" x1="9.594" x2="13.706" y1="50.514" y2="46.245" gradientUnits="userSpaceOnUse"><stop stop-color="#2C72AD"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><radialGradient id="paint10_radial_22736_21902" cx="0" cy="0" r="1" gradientTransform="matrix(0 20.9814 -21.0513 0 31.086 29.981)" gradientUnits="userSpaceOnUse"><stop offset="0.925" stop-color="#fff"></stop><stop offset="1" stop-color="#69A5D9"></stop></radialGradient><clipPath id="clip0_22736_21902"><rect width="62.069" height="62.069" x="0.264" y="0.264" fill="#fff" rx="31.035"></rect></clipPath></defs></svg></button><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><span>5</span><svg xmlns="http://www.w3.org/2000/svg" width="46" height="45" fill="none" viewBox="0 0 46 45"><g clip-path="url(#clip0_22728_20842)"><path fill="#178C6E" d="M22.671 44.672c12.284 0 22.242-9.958 22.242-22.242C44.913 10.147 34.955.19 22.67.19 10.388.189.43 10.147.43 22.43c0 12.284 9.958 22.242 22.241 22.242"></path><path fill="#000" fill-opacity="0.25" d="M44.68 19.027q.029.548.029 1.103c.01 12.292-9.947 22.264-22.238 22.274-10.99.008-20.341-8.006-22.014-18.868.623 12.276 11.079 21.722 23.355 21.1 12.275-.623 21.722-11.08 21.099-23.355a22 22 0 0 0-.23-2.254"></path><path fill="url(#paint0_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M18.813 3.427V1.343c2.48-.683 5.1-.683 7.58 0v2.084l-3.79 1.043z"></path><path fill="url(#paint1_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M26.363 39.25v2.084c-2.48.683-5.1.683-7.58 0V39.25l3.79-1.043z"></path><path fill="url(#paint2_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.19 17.699h2.166a12.8 12.8 0 0 1 0 7.297H41.19l-1.082-3.649z"></path><path fill="url(#paint3_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M3.976 24.978H1.81a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint4_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.19 17.699h2.166a12.8 12.8 0 0 1 0 7.297H41.19l-1.082-3.649z"></path><path fill="url(#paint5_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M3.976 24.978H1.81a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint6_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m38.41 31.436 1.532 1.475a13.55 13.55 0 0 1-5.363 5.157l-1.531-1.474 1.916-3.317z"></path><path fill="url(#paint7_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m6.757 11.242-1.53-1.475a13.55 13.55 0 0 1 5.362-5.158l1.531 1.475L10.204 9.4z"></path><path fill="url(#paint8_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m33.073 6.104 1.532-1.473a13.55 13.55 0 0 1 5.359 5.161l-1.533 1.474-3.445-1.844z"></path><path fill="url(#paint9_linear_22728_20842)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m12.093 36.573-1.532 1.473a13.55 13.55 0 0 1-5.358-5.161l1.532-1.474 3.445 1.844z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.135" d="M37.038 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.519 6.48 14.519 14.47Z"></path><mask id="mask0_22728_20842" width="42" height="43" x="1" y="0" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" d="M14.674 1.94 18.387.916l11.17 40.174-3.712 1.025z"></path><path fill="#fff" d="m41.71 14.126 1.017 3.715L2.523 28.903l-1.016-3.716z"></path><path fill="#fff" d="m42.791 24.839-.965 3.73L1.44 18.19l.965-3.73z"></path><path fill="#fff" d="m18.17 42.026-3.693-1.094L26.259.933l3.693 1.095z"></path><path fill="#fff" d="M8.402 37.34 5.74 34.558 35.83 5.689l2.661 2.784z"></path><path fill="#fff" d="m38.356 34.735-2.701 2.746L5.875 8.295l2.7-2.747z"></path></mask><g stroke-width="1.135" mask="url(#mask0_22728_20842)"><path stroke="#66E5C4" d="M37.038 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.519 6.48 14.519 14.47Z"></path><path stroke="url(#paint10_radial_22728_20842)" d="M37.038 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.519 6.48 14.519 14.47Z"></path></g><defs><linearGradient id="paint0_linear_22728_20842" x1="22.603" x2="22.603" y1="0.3" y2="4.47" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint1_linear_22728_20842" x1="22.573" x2="22.573" y1="42.377" y2="38.207" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint2_linear_22728_20842" x1="44.44" x2="40.108" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint3_linear_22728_20842" x1="0.727" x2="5.059" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint4_linear_22728_20842" x1="44.44" x2="40.108" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint5_linear_22728_20842" x1="0.727" x2="5.059" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint6_linear_22728_20842" x1="38.026" x2="35.081" y1="36.227" y2="33.165" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint7_linear_22728_20842" x1="7.142" x2="10.087" y1="6.45" y2="9.512" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint8_linear_22728_20842" x1="38.05" x2="35.103" y1="6.475" y2="9.535" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint9_linear_22728_20842" x1="7.116" x2="10.063" y1="36.202" y2="33.142" gradientUnits="userSpaceOnUse"><stop stop-color="#1A9B79"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><radialGradient id="paint10_radial_22728_20842" cx="0" cy="0" r="1" gradientTransform="matrix(0 15.0367 -15.0868 0 22.518 21.487)" gradientUnits="userSpaceOnUse"><stop offset="0.925" stop-color="#fff"></stop><stop offset="1" stop-color="#3BDEB3"></stop></radialGradient><clipPath id="clip0_22728_20842"><rect width="44.483" height="44.483" x="0.428" y="0.189" fill="#fff" rx="22.241"></rect></clipPath></defs></svg></button><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><span>25</span><svg xmlns="http://www.w3.org/2000/svg" width="46" height="45" fill="none" viewBox="0 0 46 45"><g clip-path="url(#clip0_22728_12115)"><path fill="#754F9A" d="M22.913 44.672c12.284 0 22.242-9.958 22.242-22.242C45.155 10.147 35.197.19 22.913.19 10.63.189.672 10.147.672 22.43c0 12.284 9.958 22.242 22.241 22.242"></path><path fill="#000" fill-opacity="0.25" d="M44.923 19.027q.027.548.028 1.103c.01 12.292-9.946 22.264-22.238 22.274-10.99.008-20.34-8.006-22.014-18.868.623 12.276 11.08 21.722 23.355 21.1 12.275-.623 21.722-11.08 21.099-23.355a22 22 0 0 0-.23-2.254"></path><path fill="url(#paint0_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M19.055 3.427V1.343c2.48-.683 5.1-.683 7.58 0v2.084l-3.79 1.043z"></path><path fill="url(#paint1_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M26.606 39.25v2.084c-2.482.683-5.1.683-7.582 0V39.25l3.791-1.043z"></path><path fill="url(#paint2_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.433 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint3_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.218 24.978H2.052a12.8 12.8 0 0 1 0-7.297h2.166L5.3 21.33z"></path><path fill="url(#paint4_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.433 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint5_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.218 24.978H2.052a12.8 12.8 0 0 1 0-7.297h2.166L5.3 21.33z"></path><path fill="url(#paint6_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m38.653 31.436 1.53 1.475a13.55 13.55 0 0 1-5.362 5.157l-1.53-1.474 1.915-3.317z"></path><path fill="url(#paint7_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M7 11.242 5.469 9.767a13.55 13.55 0 0 1 5.362-5.158l1.531 1.475L10.446 9.4z"></path><path fill="url(#paint8_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m33.315 6.104 1.532-1.473a13.55 13.55 0 0 1 5.359 5.161l-1.533 1.474-3.445-1.844z"></path><path fill="url(#paint9_linear_22728_12115)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m12.335 36.573-1.532 1.473a13.55 13.55 0 0 1-5.358-5.161l1.532-1.474 3.445 1.844z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.135" d="M37.28 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.52 6.48 14.52 14.47Z"></path><mask id="mask0_22728_12115" width="43" height="43" x="1" y="0" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" d="M14.916 1.94 18.629.916l11.17 40.174-3.712 1.025z"></path><path fill="#fff" d="m41.953 14.126 1.016 3.715L2.765 28.903l-1.016-3.716z"></path><path fill="#fff" d="m43.033 24.839-.965 3.73L1.682 18.19l.965-3.73z"></path><path fill="#fff" d="m18.412 42.026-3.693-1.094L26.5.933l3.694 1.095z"></path><path fill="#fff" d="m8.645 37.34-2.663-2.783 30.09-28.868 2.661 2.784z"></path><path fill="#fff" d="m38.598 34.735-2.701 2.746L6.117 8.295l2.7-2.747z"></path></mask><g stroke-width="1.135" mask="url(#mask0_22728_12115)"><path stroke="#C2AED5" d="M37.28 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.52 6.48 14.52 14.47Z"></path><path stroke="url(#paint10_radial_22728_12115)" d="M37.28 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.499-14.469 14.52-14.469 8.02 0 14.52 6.48 14.52 14.47Z"></path></g><defs><linearGradient id="paint0_linear_22728_12115" x1="22.845" x2="22.845" y1="0.3" y2="4.47" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint1_linear_22728_12115" x1="22.815" x2="22.815" y1="42.377" y2="38.207" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint2_linear_22728_12115" x1="44.682" x2="40.35" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint3_linear_22728_12115" x1="0.969" x2="5.301" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint4_linear_22728_12115" x1="44.682" x2="40.35" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint5_linear_22728_12115" x1="0.969" x2="5.301" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint6_linear_22728_12115" x1="38.268" x2="35.323" y1="36.227" y2="33.165" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint7_linear_22728_12115" x1="7.384" x2="10.329" y1="6.45" y2="9.512" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint8_linear_22728_12115" x1="38.292" x2="35.345" y1="6.475" y2="9.535" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint9_linear_22728_12115" x1="7.358" x2="10.305" y1="36.202" y2="33.142" gradientUnits="userSpaceOnUse"><stop stop-color="#754F9A"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><radialGradient id="paint10_radial_22728_12115" cx="0" cy="0" r="1" gradientTransform="matrix(0 15.0367 -15.0868 0 22.76 21.487)" gradientUnits="userSpaceOnUse"><stop offset="0.925" stop-color="#fff"></stop><stop offset="1" stop-color="#A98CC4"></stop></radialGradient><clipPath id="clip0_22728_12115"><rect width="44.483" height="44.483" x="0.67" y="0.189" fill="#fff" rx="22.241"></rect></clipPath></defs></svg></button><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><span>100</span><svg xmlns="http://www.w3.org/2000/svg" width="46" height="45" fill="none" viewBox="0 0 46 45"><g clip-path="url(#clip0_22728_11978)"><path fill="#DF900C" d="M23.154 44.672c12.283 0 22.241-9.958 22.241-22.242C45.395 10.147 35.437.19 23.153.19 10.87.189.914 10.147.914 22.43c0 12.284 9.957 22.242 22.24 22.242"></path><path fill="#000" fill-opacity="0.25" d="M45.163 19.027q.028.548.028 1.103c.01 12.292-9.946 22.264-22.238 22.274-10.99.008-20.34-8.006-22.014-18.868.623 12.276 11.08 21.722 23.355 21.1 12.275-.623 21.722-11.08 21.1-23.355a22 22 0 0 0-.23-2.254"></path><path fill="url(#paint0_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M19.295 3.427V1.343c2.48-.683 5.1-.683 7.58 0v2.084l-3.79 1.043z"></path><path fill="url(#paint1_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M26.846 39.25v2.084c-2.481.683-5.1.683-7.581 0V39.25l3.79-1.043z"></path><path fill="url(#paint2_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.673 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint3_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.458 24.978H2.292a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint4_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.673 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint5_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.458 24.978H2.292a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint6_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m38.893 31.436 1.531 1.475a13.55 13.55 0 0 1-5.363 5.157l-1.53-1.474 1.915-3.317z"></path><path fill="url(#paint7_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M7.24 11.242 5.709 9.767a13.55 13.55 0 0 1 5.363-5.158l1.53 1.475L10.688 9.4z"></path><path fill="url(#paint8_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m33.555 6.104 1.532-1.473a13.55 13.55 0 0 1 5.359 5.161l-1.532 1.474-3.446-1.844z"></path><path fill="url(#paint9_linear_22728_11978)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m12.576 36.573-1.533 1.473a13.55 13.55 0 0 1-5.358-5.161l1.532-1.474 3.446 1.844z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.135" d="M37.52 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path><mask id="mask0_22728_11978" width="43" height="43" x="1" y="0" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" d="M15.156 1.94 18.87.916 30.04 41.089l-3.713 1.025z"></path><path fill="#fff" d="m42.193 14.126 1.016 3.715L3.005 28.903 1.99 25.187z"></path><path fill="#fff" d="m43.273 24.839-.965 3.73L1.923 18.19l.965-3.73z"></path><path fill="#fff" d="m18.652 42.026-3.693-1.094L26.742.933l3.693 1.095z"></path><path fill="#fff" d="m8.885 37.34-2.662-2.783L36.312 5.689l2.662 2.784z"></path><path fill="#fff" d="m38.838 34.735-2.7 2.746L6.356 8.295l2.7-2.747z"></path></mask><g stroke-width="1.135" mask="url(#mask0_22728_11978)"><path stroke="#FAD89E" d="M37.52 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path><path stroke="url(#paint10_radial_22728_11978)" d="M37.52 21.487c0 7.99-6.499 14.469-14.52 14.469-8.02 0-14.519-6.48-14.519-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path></g><defs><linearGradient id="paint0_linear_22728_11978" x1="23.085" x2="23.085" y1="0.3" y2="4.47" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint1_linear_22728_11978" x1="23.055" x2="23.055" y1="42.377" y2="38.207" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint2_linear_22728_11978" x1="44.922" x2="40.59" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint3_linear_22728_11978" x1="1.209" x2="5.541" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint4_linear_22728_11978" x1="44.922" x2="40.59" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint5_linear_22728_11978" x1="1.209" x2="5.541" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint6_linear_22728_11978" x1="38.508" x2="35.563" y1="36.227" y2="33.165" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint7_linear_22728_11978" x1="7.625" x2="10.57" y1="6.45" y2="9.512" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint8_linear_22728_11978" x1="38.533" x2="35.585" y1="6.475" y2="9.535" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint9_linear_22728_11978" x1="7.598" x2="10.546" y1="36.202" y2="33.142" gradientUnits="userSpaceOnUse"><stop stop-color="#F29E0F"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><radialGradient id="paint10_radial_22728_11978" cx="0" cy="0" r="1" gradientTransform="matrix(0 15.0367 -15.0868 0 23 21.487)" gradientUnits="userSpaceOnUse"><stop offset="0.925" stop-color="#fff"></stop><stop offset="1" stop-color="#F7C46E"></stop></radialGradient><clipPath id="clip0_22728_11978"><rect width="44.483" height="44.483" x="0.91" y="0.189" fill="#fff" rx="22.241"></rect></clipPath></defs></svg></button><button data-loading="false" aria-label="" class="BlackjackStyle_chip-button__2j0vm" type="button"><span>200</span><svg xmlns="http://www.w3.org/2000/svg" width="47" height="45" fill="none" viewBox="0 0 47 45"><g clip-path="url(#clip0_22728_21289)"><path fill="#E74545" d="M23.394 44.672c12.283 0 22.241-9.958 22.241-22.242C45.635 10.147 35.677.19 23.394.19 11.11.189 1.152 10.147 1.152 22.43c0 12.284 9.958 22.242 22.242 22.242"></path><path fill="#000" fill-opacity="0.25" d="M45.404 19.027q.026.548.027 1.103c.01 12.292-9.946 22.264-22.237 22.274-10.99.008-20.341-8.006-22.014-18.868.622 12.276 11.079 21.722 23.354 21.1 12.276-.623 21.722-11.08 21.1-23.355a22 22 0 0 0-.23-2.254"></path><path fill="url(#paint0_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M19.535 3.427V1.343c2.481-.683 5.1-.683 7.581 0v2.084l-3.79 1.043z"></path><path fill="url(#paint1_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M27.086 39.25v2.084c-2.481.683-5.1.683-7.581 0V39.25l3.79-1.043z"></path><path fill="url(#paint2_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.913 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint3_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.698 24.978H2.532a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint4_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M41.913 17.699h2.166a12.8 12.8 0 0 1 0 7.297h-2.166l-1.083-3.649z"></path><path fill="url(#paint5_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M4.698 24.978H2.532a12.8 12.8 0 0 1 0-7.297h2.166l1.083 3.649z"></path><path fill="url(#paint6_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m39.133 31.436 1.531 1.475a13.55 13.55 0 0 1-5.362 5.157l-1.531-1.474 1.915-3.317z"></path><path fill="url(#paint7_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="M7.48 11.242 5.95 9.767a13.55 13.55 0 0 1 5.362-5.158l1.53 1.475L10.928 9.4z"></path><path fill="url(#paint8_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m33.796 6.104 1.532-1.473a13.55 13.55 0 0 1 5.358 5.161l-1.532 1.474-3.445-1.844z"></path><path fill="url(#paint9_linear_22728_21289)" stroke="#fff" stroke-opacity="0.5" stroke-width="0.371" d="m12.816 36.573-1.532 1.473a13.55 13.55 0 0 1-5.359-5.161l1.532-1.474 3.446 1.844z"></path></g><path stroke="#000" stroke-opacity="0.15" stroke-width="1.135" d="M37.76 21.487c0 7.99-6.498 14.469-14.519 14.469-8.02 0-14.52-6.48-14.52-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path><mask id="mask0_22728_21289" width="42" height="43" x="2" y="0" maskUnits="userSpaceOnUse" style="mask-type: alpha;"><path fill="#fff" d="M15.397 1.94 19.109.916 30.28 41.089l-3.713 1.025z"></path><path fill="#fff" d="m42.434 14.126 1.015 3.715L3.245 28.903 2.23 25.187z"></path><path fill="#fff" d="m43.514 24.839-.965 3.73L2.163 18.19l.965-3.73z"></path><path fill="#fff" d="m18.893 42.026-3.694-1.094L26.982.933l3.693 1.095z"></path><path fill="#fff" d="m9.125 37.34-2.662-2.783L36.552 5.689l2.662 2.784z"></path><path fill="#fff" d="m39.078 34.735-2.7 2.746L6.596 8.295l2.7-2.747z"></path></mask><g stroke-width="1.135" mask="url(#mask0_22728_21289)"><path stroke="#F9CDCD" d="M37.76 21.487c0 7.99-6.498 14.469-14.519 14.469-8.02 0-14.52-6.48-14.52-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path><path stroke="url(#paint10_radial_22728_21289)" d="M37.76 21.487c0 7.99-6.498 14.469-14.519 14.469-8.02 0-14.52-6.48-14.52-14.47 0-7.989 6.5-14.469 14.52-14.469s14.52 6.48 14.52 14.47Z"></path></g><defs><linearGradient id="paint0_linear_22728_21289" x1="23.326" x2="23.326" y1="0.3" y2="4.47" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint1_linear_22728_21289" x1="23.295" x2="23.295" y1="42.377" y2="38.207" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint2_linear_22728_21289" x1="45.162" x2="40.83" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint3_linear_22728_21289" x1="1.449" x2="5.781" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint4_linear_22728_21289" x1="45.162" x2="40.83" y1="21.347" y2="21.347" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint5_linear_22728_21289" x1="1.449" x2="5.781" y1="21.33" y2="21.33" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint6_linear_22728_21289" x1="38.748" x2="35.803" y1="36.227" y2="33.165" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint7_linear_22728_21289" x1="7.865" x2="10.81" y1="6.45" y2="9.512" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint8_linear_22728_21289" x1="38.773" x2="35.825" y1="6.475" y2="9.535" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><linearGradient id="paint9_linear_22728_21289" x1="7.838" x2="10.786" y1="36.202" y2="33.142" gradientUnits="userSpaceOnUse"><stop stop-color="#E74646"></stop><stop offset="0.84" stop-color="#DDD"></stop></linearGradient><radialGradient id="paint10_radial_22728_21289" cx="0" cy="0" r="1" gradientTransform="matrix(0 15.0367 -15.0868 0 23.241 21.487)" gradientUnits="userSpaceOnUse"><stop offset="0.925" stop-color="#fff"></stop><stop offset="1" stop-color="#F3A0A0"></stop></radialGradient><clipPath id="clip0_22728_21289"><rect width="44.483" height="44.483" x="1.15" y="0.189" fill="#fff" rx="22.241"></rect></clipPath></defs></svg></button></div><div class="BlackjackStyle_bet-input-container__2Yy7H"><div class="BetInputField_bet-input-field-container__C78_q" style="margin-bottom: 0px;"><span data-state="instant-open" data-slot="tooltip-trigger" aria-describedby="radix-:r1q:"><div class="BetInputField_bet-input-content__imNM8 BetInputField_inline-error__j9u1F"><label for="bet-input" class="BetInputField_currency-icon__yKEoI"><span class="ValueDisplay_text-currency__eWvkF">$</span></label><input type="number" id="bet-input" name="bet-input" placeholder="0.00" class="" value="9"><div class="BetInputField_bet-input-field-buttons-container__Arphq"><button data-loading="false" aria-label="" class="BetInputField_adding-bet-btns__mgA98" type="button"><span>1/2</span></button><button data-loading="false" aria-label="2x" class="BetInputField_adding-bet-btns__mgA98" type="button"><span>2x</span></button><button data-loading="false" aria-label="Max" class="BetInputField_adding-bet-btns__mgA98" type="button"><span>Max</span></button></div></div></span></div></div></div></div></div></div>
+
+
+/* Matched Rule from user-agent */
+div {
+  display: block;
+}
+
+/* Matched Rule from user-agent */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Matched Rule from regular */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Matched Rule from regular */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Matched Rule from regular */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Matched Rule from regular */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Matched Rule from regular */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Matched Rule from regular */
+.BlackjackStyle_blackjack-game-display__s3GPG {
+  -webkit-flex: 1;
+  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+}
+
+/* Matched Rule from regular */
+.BlackjackStyle_blackjack-game-display__s3GPG, .BlackjackStyle_player-hand-container__dTwCV {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inherited from ancestor level 1 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 1 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+.BlackjackStyle_blackjack-game-container__EhOYU {
+  display: -webkit-flex;
+  display: flex;
+  position: relative;
+  display: flex;
+  position: relative;
+}
+
+/* Inherited from ancestor level 2 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 2 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+.GameFrame_game-frame-container__JI0DU {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+/* Inherited from ancestor level 3 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 3 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+.relative {
+  position: relative;
+  position: relative;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+.w-full {
+  width: 100%;
+  width: 100%;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+.max-w-\[1200px\] {
+  max-width: 1200px;
+  max-width: 1200px;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+.p-4 {
+  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+}
+
+/* Inherited from ancestor level 4 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 4 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+.relative {
+  position: relative;
+  position: relative;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+.h-full {
+  height: 100%;
+  height: 100%;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+.min-w-0 {
+  min-width: 0;
+  min-width: 0px;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+.overflow-auto {
+  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+#__next, .body-content-container, body, html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+/* Inherited from ancestor level 5 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 5 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+.grid {
+  display: grid;
+  display: grid;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+.flex-1 {
+  -webkit-flex: 1 1 0%;
+  flex: 1 1 0%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+.\[\@media\(min-width\:1101px\)\]\:grid-cols-\[auto_1fr_auto\] {
+  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto;
+}
+
+/* Inherited from ancestor level 6 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 6 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+.grid {
+  display: grid;
+  display: grid;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+.min-h-svh {
+  min-height: 100svh;
+  min-height: 100svh;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+.grid-rows-\[68px_auto\] {
+  grid-template-rows: 68px auto;
+  grid-template-rows: 68px auto;
+}
+
+/* Inherited from ancestor level 7 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 7 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+.site-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+.__variable_069ab3 {
+  --main-font: "__Montserrat_069ab3","__Montserrat_Fallback_069ab3",sans-serif;
+  --main-font: "__Montserrat_069ab3","__Montserrat_Fallback_069ab3",sans-serif;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+.__variable_7d73c7 {
+  --oswald-font: "__Oswald_7d73c7","__Oswald_Fallback_7d73c7";
+  --oswald-font: "__Oswald_7d73c7","__Oswald_Fallback_7d73c7";
+}
+
+/* Inherited from ancestor level 8 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 8 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+#__next, body, html {
+  width: 100vw;
+  height: 100%;
+  width: 100vw;
+  height: 100%;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+#__next, .body-content-container, body, html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+/* Inherited from ancestor level 9 (user-agent) */
+body {
+  display: block;
+  margin-top: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  margin: 0;
+  line-height: inherit;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  line-height: inherit;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  line-height: 1;
+  line-height: 1;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body, html {
+  padding: 0;
+  margin: 0;
+  font-family: var(--main-font),-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  font-family: var(--main-font),-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  background: #0f1328;
+  max-height: 100vh;
+  background-image: initial;
+  background-position-x: initial;
+  background-position-y: initial;
+  background-size: initial;
+  background-repeat: initial;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+  background-color: rgb(15, 19, 40);
+  max-height: 100vh;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+#__next, body, html {
+  width: 100vw;
+  height: 100%;
+  width: 100vw;
+  height: 100%;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+#__next, .body-content-container, body, html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  font-weight: 500;
+  font-weight: 500;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  font-family: var(--main-font),sans-serif;
+  font-family: var(--main-font),sans-serif;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+.__variable_069ab3 {
+  --main-font: "__Montserrat_069ab3","__Montserrat_Fallback_069ab3",sans-serif;
+  --main-font: "__Montserrat_069ab3","__Montserrat_Fallback_069ab3",sans-serif;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+.__variable_7d73c7 {
+  --oswald-font: "__Oswald_7d73c7","__Oswald_Fallback_7d73c7";
+  --oswald-font: "__Oswald_7d73c7","__Oswald_Fallback_7d73c7";
+}
+
+/* Inherited from ancestor level 10 (user-agent) */
+html {
+  display: block;
+}
+
+/* Inherited from ancestor level 10 (user-agent) */
+:root {
+  view-transition-name: root;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+*, :after, :before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59,130,246,.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+*, :after, :before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgb(229, 231, 235);
+  border-right-color: rgb(229, 231, 235);
+  border-bottom-color: rgb(229, 231, 235);
+  border-left-color: rgb(229, 231, 235);
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+* {
+  box-sizing: border-box;
+  background-origin: border-box!important;
+  box-sizing: border-box;
+  background-origin: border-box !important;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+* {
+  scrollbar-face-color: #1b213e;
+  scrollbar-track-color: transparent;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+:host, html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.5;
+  text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  font-style: inherit;
+  font-variant-ligatures: inherit;
+  font-variant-caps: inherit;
+  font-variant-numeric: inherit;
+  font-variant-east-asian: inherit;
+  font-variant-alternates: inherit;
+  font-variant-position: inherit;
+  font-variant-emoji: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-optical-sizing: inherit;
+  font-size-adjust: inherit;
+  font-kerning: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  vertical-align: initial;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+body, html {
+  padding: 0;
+  margin: 0;
+  font-family: var(--main-font),-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  font-family: var(--main-font),-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+#__next, body, html {
+  width: 100vw;
+  height: 100%;
+  width: 100vw;
+  height: 100%;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+#__next, .body-content-container, body, html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-width: none;
+}
