@@ -186,43 +186,159 @@ button { pointer-events: auto !important; cursor: pointer !important; }
 }
 
 /* ===== MOBILE RESPONSIVE STYLES ===== */
+
+/* Hide sidebar and unnecessary elements on mobile */
+@media (max-width: 1100px) {
+    /* Hide the left sidebar completely on mobile */
+    .Button_side-menu-nav__RFtAA,
+    [class*="side-menu"],
+    [class*="sidebar"],
+    nav[class*="desktop"] {
+        display: none !important;
+    }
+    
+    /* Make the main content take full width */
+    .body-content-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Remove padding on inner container */
+    .inner-body-container {
+        padding: 8px !important;
+        max-width: 100% !important;
+    }
+}
+
 @media (max-width: 768px) {
+    /* Full width game container */
+    .GameUi_game-container__E_Czr,
+    .BlackjackStyle_blackjack-game-container__EhOYU {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Game display area */
+    .BlackjackStyle_blackjack-game-display__s3GPG {
+        min-height: auto !important;
+        padding: 10px !important;
+    }
+    
     /* Scale down cards on mobile */
     .blackjack-card,
     .CardStyle_card-container__4CUis {
-        width: 70px !important;
-        height: 105px !important;
+        width: 60px !important;
+        height: 90px !important;
+    }
+    
+    /* Card image scaling */
+    .CardStyle_card__bU4IY img,
+    .CardStyle_card__face__lAVmt img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
     }
     
     /* Reduce card overlap on mobile */
     #player-hand-0, #dealer-hand-0 {
-        min-width: 150px !important;
-        height: 110px !important;
+        min-width: 140px !important;
+        height: 100px !important;
+        display: flex !important;
+        justify-content: center !important;
     }
     
-    /* Scale chip buttons */
-    .BlackjackStyle_chip-button__2j0vm {
-        transform: scale(0.85);
+    /* Cards container */
+    .BlackjackStyle_cards-container__lYgJ3 {
+        gap: 8px !important;
+        padding: 10px !important;
+        justify-content: center !important;
     }
     
+    /* Hand sections - dealer and player */
+    .BlackjackStyle_dealer-section-container__y3wGC,
+    .BlackjackStyle_player-section-container__7XNEM {
+        padding: 8px !important;
+        margin: 5px 0 !important;
+    }
+    
+    /* Hand total display */
+    .BlackjackStyle_hand-total__dPXth {
+        font-size: 14px !important;
+        padding: 4px 10px !important;
+    }
+    
+    /* Chip buttons row */
     .BlackjackStyle_chip-display__GnSwz {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 4px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 8px !important;
     }
     
-    /* Stack the bet controls better */
-    .BlackjackStyle_bet-input-container__2Yy7H {
-        flex-direction: column;
-        align-items: center;
+    /* Individual chip buttons */
+    .BlackjackStyle_chip-button__2j0vm {
+        transform: scale(0.8) !important;
+        margin: 2px !important;
+    }
+    
+    /* Bet input area */
+    .BlackjackStyle_bet-input-container__2Yy7H,
+    .BetInputField_container___0OEA {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 8px !important;
+        width: 100% !important;
+    }
+    
+    /* Bet input field */
+    #bet-input,
+    .BetInputField_input__dpDz7 {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        min-height: 44px !important;
+        width: 100% !important;
+        max-width: 200px !important;
+        text-align: center !important;
+    }
+    
+    /* 1/2, 2x, Max buttons */
+    .BetInputField_adding-bet-btns__mgA98 {
+        min-height: 38px !important;
+        min-width: 50px !important;
+        font-size: 13px !important;
+        padding: 8px 12px !important;
+    }
+    
+    /* Bet bar at bottom */
+    .BlackjackStyle_bet-bar-content__EPE_Y {
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 10px !important;
+    }
+    
+    .BlackjackStyle_bet-bar-inner-container__8FUmz {
+        width: 100% !important;
+    }
+    
+    /* Action buttons container (Hit/Stand/Double) */
+    .BlackjackStyle_action-buttons-container__Qt6ak {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
     }
     
     /* Make action buttons (Hit/Stand/Double) touch-friendly */
     .BlackjackStyle_action-button__9nk8s {
-        min-height: 48px;
-        min-width: 80px;
-        font-size: 14px !important;
-        padding: 12px 16px !important;
+        min-height: 50px !important;
+        min-width: 90px !important;
+        font-size: 15px !important;
+        padding: 12px 18px !important;
+        flex: 1 !important;
+        max-width: 120px !important;
     }
     
     /* Better spacing for game area */
@@ -235,7 +351,17 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     .style_bet-btn___Z9Vg {
         min-height: 56px !important;
         font-size: 18px !important;
-        padding: 16px 32px !important;
+        padding: 14px 28px !important;
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+    
+    /* Bet button container */
+    .BlackjackStyle_bet-btn-container__1_xat,
+    .style_bet-btn-container__fBS5D {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
     }
     
     /* Adjust header balance display */
@@ -246,56 +372,89 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     
     .fake-balance {
         padding: 6px 10px !important;
-        font-size: 12px !important;
+        font-size: 13px !important;
     }
     
     .fake-avatar {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 12px !important;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 11px !important;
     }
     
-    /* Bet input field */
-    #bet-input {
-        font-size: 16px !important; /* Prevents zoom on iOS */
-        min-height: 44px !important;
+    /* Game header */
+    .GameFrame_game-frame-header-container__GlamC {
+        padding: 8px !important;
     }
     
-    /* 1/2, 2x, Max buttons */
-    .BetInputField_adding-bet-btns__mgA98 {
-        min-height: 40px !important;
-        min-width: 44px !important;
-        font-size: 14px !important;
+    /* Hide unnecessary decorative elements */
+    .style_demo-mode-text-container__XTHV6 {
+        display: none !important;
     }
 }
 
 @media (max-width: 480px) {
-    /* Extra small screens */
+    /* Extra small screens - even tighter layout */
+    .inner-body-container {
+        padding: 4px !important;
+    }
+    
     .blackjack-card,
     .CardStyle_card-container__4CUis {
-        width: 55px !important;
-        height: 82px !important;
+        width: 50px !important;
+        height: 75px !important;
     }
     
     #player-hand-0, #dealer-hand-0 {
-        min-width: 120px !important;
-        height: 90px !important;
+        min-width: 110px !important;
+        height: 85px !important;
     }
     
     .BlackjackStyle_chip-button__2j0vm {
-        transform: scale(0.7);
+        transform: scale(0.65) !important;
+    }
+    
+    .BlackjackStyle_chip-display__GnSwz {
+        gap: 2px !important;
+        padding: 4px !important;
     }
     
     .BlackjackStyle_action-button__9nk8s {
-        min-width: 65px !important;
-        padding: 10px 12px !important;
-        font-size: 12px !important;
+        min-width: 70px !important;
+        min-height: 44px !important;
+        padding: 10px 14px !important;
+        font-size: 13px !important;
     }
     
-    /* Hide chip label text on very small screens, show only number */
-    .BlackjackStyle_chip-button__2j0vm svg {
-        width: 36px !important;
-        height: 36px !important;
+    .style_bet-btn___Z9Vg {
+        min-height: 50px !important;
+        font-size: 16px !important;
+        padding: 12px 24px !important;
+    }
+    
+    /* Hand total */
+    .BlackjackStyle_hand-total__dPXth {
+        font-size: 12px !important;
+        padding: 3px 8px !important;
+    }
+    
+    /* Bet input */
+    #bet-input,
+    .BetInputField_input__dpDz7 {
+        max-width: 150px !important;
+        min-height: 40px !important;
+    }
+    
+    .BetInputField_adding-bet-btns__mgA98 {
+        min-height: 34px !important;
+        min-width: 44px !important;
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+    }
+    
+    /* Balance display */
+    .fake-balance {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
     }
 }
 
@@ -311,6 +470,38 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     .style_bet-btn___Z9Vg:active {
         transform: scale(0.95);
         opacity: 0.9;
+    }
+    
+    /* Larger touch targets */
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 900px) and (orientation: landscape) {
+    .BlackjackStyle_blackjack-game-display__s3GPG {
+        min-height: 250px !important;
+    }
+    
+    .blackjack-card,
+    .CardStyle_card-container__4CUis {
+        width: 50px !important;
+        height: 75px !important;
+    }
+    
+    #player-hand-0, #dealer-hand-0 {
+        height: 80px !important;
+    }
+    
+    .BlackjackStyle_bet-bar-content__EPE_Y {
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+    
+    .BlackjackStyle_action-button__9nk8s {
+        min-height: 40px !important;
     }
 }
 </style><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="preload" as="image" imagesrcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmini-ticket.175af0e7.png&amp;w=32&amp;q=75 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmini-ticket.175af0e7.png&amp;w=48&amp;q=75 2x" fetchpriority="high"><title>Blackjack Originals: Play Blackjack Online at Rainbet</title><meta property="og:site_name" content="Rainbet"><meta property="og:type" content="website"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover"><meta name="description" content="Play Blackjack online at Rainbet. Experience 3:2 payouts, instant play mode, and verifiable fair gaming. Start with multiple betting options from 1 to 200 chips."><meta property="og:title" content="Blackjack Originals: Play Blackjack Online at Rainbet"><meta property="og:description" content="Play Blackjack online at Rainbet. Experience 3:2 payouts, instant play mode, and verifiable fair gaming. Start with multiple betting options from 1 to 200 chips."><meta property="og:image" content="https://cdn.rainbet.com/games/blackjack.png"><link rel="canonical" href="https://rainbet.com/casino/originals/blackjack"><meta name="next-head-count" content="13"><link rel="icon" type="image/png" sizes="64x64" href="https://cdn.rainbet.com/brand/favicons/64x64.png"><link rel="icon" type="image/png" sizes="128x128" href="https://cdn.rainbet.com/brand/favicons/128x128.png"><link rel="icon" type="image/png" sizes="192x192" href="https://cdn.rainbet.com/brand/favicons/192x192.png"><link rel="apple-touch-icon" sizes="120x120" href="https://cdn.rainbet.com/brand/favicons/120x120.png"><link rel="apple-touch-icon" sizes="152x152" href="https://cdn.rainbet.com/brand/favicons/152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="https://cdn.rainbet.com/brand/favicons/180x180.png"><link rel="preconnect" href="https://challenges.cloudflare.com/"><link rel="preload" href="./Blackjack Originals_ Play Blackjack Online at Rainbet_files/api.js.download" as="script"><meta name="referrer" content="origin-when-cross-origin"><link rel="preload" href="https://rainbet.com/_next/static/media/904be59b21bd51cb-s.p.woff2" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"><link rel="preload" href="https://rainbet.com/_next/static/media/7f06be3f780a819a-s.p.woff2" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"><script id="no-logs" data-nscript="beforeInteractive">if (typeof window !== 'undefined') {
