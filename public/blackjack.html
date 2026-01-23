@@ -269,6 +269,15 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     .CardStyle_card-container__4CUis {
         width: 55px !important;
         height: 82px !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Card itself */
+    .CardStyle_card__bU4IY {
+        width: 55px !important;
+        height: 82px !important;
+        position: relative !important;
     }
     
     /* Card image scaling */
@@ -279,20 +288,23 @@ button { pointer-events: auto !important; cursor: pointer !important; }
         object-fit: contain !important;
     }
     
-    /* Hand containers - centered cards */
-    #player-hand-0, #dealer-hand-0 {
-        min-width: 120px !important;
-        height: 90px !important;
+    /* Hand containers - centered cards - override inline styles */
+    #player-hand-0, #dealer-hand-0,
+    .BlackjackStyle_cards-container__lYgJ3 {
+        min-width: 150px !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 90px !important;
+        max-height: 100px !important;
         display: flex !important;
+        flex-direction: row !important;
         justify-content: center !important;
         align-items: center !important;
-    }
-    
-    /* Cards container */
-    .BlackjackStyle_cards-container__lYgJ3 {
         gap: 5px !important;
         padding: 5px !important;
-        justify-content: center !important;
+        position: relative !important;
+        --bj-card-w: 55px !important;
+        --bj-card-h: 82px !important;
     }
     
     /* Hand sections - dealer and player */
@@ -425,11 +437,6 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     .free-play_free-play-header-container__SlWnI {
         display: none !important;
     }
-    
-    /* Hide game header completely for more space */
-    .w-full.min-h-\\[50px\\].bg-\\[\\#191f3b\\] {
-        display: none !important;
-    }
 }
 
 @media (max-width: 480px) {
@@ -438,11 +445,24 @@ button { pointer-events: auto !important; cursor: pointer !important; }
     .CardStyle_card-container__4CUis {
         width: 45px !important;
         height: 67px !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
     }
     
-    #player-hand-0, #dealer-hand-0 {
-        min-width: 100px !important;
-        height: 75px !important;
+    .CardStyle_card__bU4IY {
+        width: 45px !important;
+        height: 67px !important;
+        position: relative !important;
+    }
+    
+    #player-hand-0, #dealer-hand-0,
+    .BlackjackStyle_cards-container__lYgJ3 {
+        min-width: 120px !important;
+        min-height: 75px !important;
+        max-height: 80px !important;
+        height: auto !important;
+        --bj-card-w: 45px !important;
+        --bj-card-h: 67px !important;
     }
     
     .BlackjackStyle_chip-button__2j0vm {
