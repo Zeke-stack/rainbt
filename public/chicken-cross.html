@@ -2,1267 +2,631 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Play Chicken Cross Game Online at Rainbet</title>
+<title>Chicken Cross – Rainbet</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
 <meta name="theme-color" content="#11152B">
 <link rel="icon" href="https://cdn.rainbet.com/brand/favicons/64x64.png">
-
-<!-- PixiJS 7.4 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
-<!-- GSAP + PixiPlugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/PixiPlugin.min.js"></script>
-<!-- Howler.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:#11152B;color:#E8E5FF;
   font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  font-size:14px;-webkit-font-smoothing:antialiased}
+  -webkit-font-smoothing:antialiased}
 
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
-/* Header */
-.hdr{display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;height:56px;min-height:56px;background:#191F3B;
-  border-bottom:1px solid #262C50;z-index:100}
-.hdr-left{display:flex;align-items:center;gap:10px}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#E8E5FF;font-weight:700;font-size:17px}
-.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#0077DB,#005aa8);
-  border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff}
-.hdr-right{display:flex;align-items:center;gap:10px}
-.bal-box{display:flex;align-items:center;gap:5px;background:#0077DB;padding:7px 14px;
-  border-radius:6px;border:1px solid #1F99FF;color:#fff;font-weight:600;font-size:13px;cursor:pointer;user-select:none}
-.bal-box:hover{background:#0069c4}
-.bal-cur{opacity:.8;font-size:11px}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7DD934,#5BB520);
-  display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:13px}
+/* ─── Top Bar ─── */
+.top-bar{display:flex;align-items:center;justify-content:space-between;
+  height:42px;min-height:42px;padding:0 14px;background:#191F3B;border-bottom:1px solid #262C50}
+.top-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#8B8DB5}
+.top-left .icon{width:26px;height:26px;border-radius:50%;background:#262C50;display:flex;
+  align-items:center;justify-content:center;font-size:12px;cursor:pointer}
+.top-left .title{color:#E8E5FF;font-size:14px;display:flex;align-items:center;gap:5px}
+.top-right{display:flex;align-items:center;gap:8px}
+.fair-btn{background:none;border:1px solid #33395C;color:#8B8DB5;padding:4px 10px;border-radius:5px;
+  font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;
+  transition:all .2s;font-family:inherit}
+.fair-btn:hover{background:#262C50;color:#E8E5FF}
 
-/* Main frame */
-.frame{flex:1;display:flex;overflow:hidden;padding:12px;gap:0}
-.container{flex:1;display:flex;background:#1B213C;border-radius:12px;overflow:hidden;border:1px solid #262C50}
+/* ─── Game Canvas ─── */
+.game-wrap{flex:1;position:relative;overflow:hidden;background:#1B213C}
+.game-canvas{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-end;padding-bottom:160px;overflow:hidden;position:relative}
 
-/* Sidebar */
-.sidebar{width:272px;min-width:272px;background:#191F3B;padding:14px;
-  display:flex;flex-direction:column;gap:14px;border-right:1px solid #262C50;overflow-y:auto}
-.lbl{font-size:11px;font-weight:600;color:#8B8DB5;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+/* Road */
+.road{width:90%;max-width:500px;position:relative}
+.lane{display:flex;align-items:center;justify-content:center;height:52px;position:relative;
+  border-bottom:2px dashed rgba(255,255,255,.08);transition:all .3s}
+.lane:last-child{border-bottom:none}
+.lane-num{position:absolute;left:-28px;font-size:10px;font-weight:700;color:#5E679E;width:22px;text-align:right}
+.lane-mult{position:absolute;right:-50px;font-size:11px;font-weight:700;color:#5E679E;white-space:nowrap}
+.lane.active{background:rgba(0,119,219,.06);border-color:rgba(0,119,219,.2)}
+.lane.cleared{background:rgba(125,217,52,.04)}
+.lane.dead{background:rgba(231,69,69,.06)}
 
-/* Bet input */
-.bet-wrap{display:flex;align-items:center;background:#141931;border:1px solid #33395C;border-radius:8px;overflow:hidden;transition:border-color .15s}
-.bet-wrap:focus-within{border-color:#0077DB}
-.bet-cur{padding:0 10px;color:#5E679E;font-size:13px;font-weight:600}
-.bet-inp{flex:1;background:0 0;border:0;color:#E8E5FF;font-size:13px;padding:9px 0;outline:0;font-family:inherit;min-width:0;-moz-appearance:textfield}
-.bet-inp::-webkit-inner-spin-button,.bet-inp::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-.bet-btns{display:flex;gap:2px;padding:4px}
-.bet-adj{background:#262C50;border:1px solid #33395C;color:#E8E5FF;padding:5px 9px;border-radius:5px;
-  font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
-.bet-adj:hover{background:#2A2F52;border-color:#454D7D}
-
-/* Action button */
-.act-btn{width:100%;padding:13px;border-radius:8px;border:0;font-size:15px;font-weight:700;
-  cursor:pointer;font-family:inherit;transition:all .15s;text-transform:uppercase;letter-spacing:.4px}
-.act-btn.cross{background:linear-gradient(180deg,#0077DB,#005aa8);color:#fff;box-shadow:0 4px 12px rgba(0,119,219,.4)}
-.act-btn.cross:hover{background:linear-gradient(180deg,#0085f2,#0066be)}
-.act-btn.cashout{background:linear-gradient(180deg,#7DD934,#5BB520);color:#fff;box-shadow:0 4px 12px rgba(125,217,52,.4);animation:pulse 1.5s ease-in-out infinite}
-.act-btn.cashout:hover{background:linear-gradient(180deg,#8ee63f,#68c525)}
-.act-btn:disabled{background:#262C50!important;color:#5E679E!important;cursor:not-allowed;box-shadow:none!important;animation:none!important}
-@keyframes pulse{0%,100%{box-shadow:0 4px 12px rgba(125,217,52,.4)}50%{box-shadow:0 4px 20px rgba(125,217,52,.6)}}
-
-/* Payout */
-.payout{background:#141931;border:1px solid #33395C;border-radius:8px;padding:9px 13px;display:flex;justify-content:space-between;align-items:center}
-.pay-lbl{font-size:12px;color:#8B8DB5}
-.pay-val{font-size:15px;font-weight:700;color:#8B8DB5}
-.pay-mult{font-size:13px;font-weight:600;color:#0077DB}
-
-/* Risk */
-.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.risk-btn{padding:7px 10px;background:#262C50;border:1px solid #33395C;border-radius:6px;
-  color:#8B8DB5;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;font-family:inherit}
-.risk-btn:hover{background:#2A2F52;border-color:#454D7D;color:#E8E5FF}
-.risk-btn.on{background:#0077DB;border-color:#1F99FF;color:#fff}
-
-/* Game area */
-.game-area{flex:1;display:flex;flex-direction:column;position:relative;background:#11152B}
-.game-bar{display:flex;align-items:center;justify-content:space-between;
-  padding:6px 14px;background:#191F3B;border-bottom:1px solid #262C50;min-height:38px}
-.game-title{font-size:12px;font-weight:600;color:#8B8DB5;display:flex;align-items:center;gap:6px}
-.game-title .emoji{font-size:15px}
-.mult-trail{display:flex;gap:5px;align-items:center;overflow-x:auto;padding:2px 0}
-.mbadge{padding:3px 7px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;
-  background:#262C50;color:#8B8DB5;border:1px solid #33395C;transition:all .2s}
-.mbadge.cur{background:#0077DB;color:#fff;border-color:#1F99FF}
-.mbadge.done{background:rgba(125,217,52,.15);color:#7DD934;border-color:rgba(125,217,52,.3)}
-
-/* Canvas container */
-.canvas-box{flex:1;position:relative;overflow:hidden}
-.canvas-box canvas{display:block;width:100%!important;height:100%!important}
-
-/* Lanes overlay (clickable zones) */
-.lanes-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-  align-items:center;pointer-events:none;z-index:10}
-.lane-row{display:flex;gap:4px;pointer-events:none;margin:2px 0}
-.lane-tile{width:60px;height:42px;border-radius:8px;border:2px solid transparent;cursor:default;
-  pointer-events:none;transition:all .2s;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:transparent;background:transparent;font-family:inherit}
-.lane-tile.active{pointer-events:auto;cursor:pointer;border-color:rgba(0,119,219,.5);
-  background:rgba(0,119,219,.08);color:rgba(0,119,219,.6);animation:tileGlow 2s ease-in-out infinite}
-.lane-tile.active:hover{border-color:#0077DB;background:rgba(0,119,219,.15);color:#0077DB;transform:scale(1.06)}
-.lane-tile.safe{border-color:rgba(125,217,52,.5);background:rgba(125,217,52,.12);color:#7DD934;pointer-events:none}
-.lane-tile.fail{border-color:rgba(231,69,69,.5);background:rgba(231,69,69,.12);color:#E74545;pointer-events:none}
-.lane-tile.revealed{border-color:rgba(91,97,140,.3);background:rgba(91,97,140,.05);color:#5E679E;pointer-events:none}
+/* Tiles inside lane */
+.tiles{display:flex;gap:6px}
+.tile{width:52px;height:40px;border-radius:8px;border:2px solid #262C50;background:#191F3B;
+  display:flex;align-items:center;justify-content:center;font-size:18px;cursor:default;
+  transition:all .25s;user-select:none}
+.lane.active .tile{border-color:rgba(0,119,219,.5);background:rgba(0,119,219,.08);cursor:pointer;
+  animation:tileGlow 2s ease-in-out infinite}
+.lane.active .tile:hover{border-color:#0077DB;background:rgba(0,119,219,.15);transform:scale(1.08)}
+.tile.safe{border-color:rgba(125,217,52,.5)!important;background:rgba(125,217,52,.1)!important;
+  cursor:default!important;animation:none!important}
+.tile.safe::after{content:'✓';color:#7DD934;font-size:16px;font-weight:700}
+.tile.danger{border-color:rgba(231,69,69,.5)!important;background:rgba(231,69,69,.1)!important;
+  cursor:default!important;animation:none!important}
+.tile.danger::after{content:'💀';font-size:16px}
+.tile.pothole{border-color:rgba(231,69,69,.5)!important;background:rgba(231,69,69,.1)!important;
+  cursor:default!important;animation:none!important}
+.tile.pothole::after{content:'🕳️';font-size:16px}
+.tile.revealed{border-color:#262C50!important;background:#191F3B!important;cursor:default!important;animation:none!important;opacity:.4}
 @keyframes tileGlow{0%,100%{border-color:rgba(0,119,219,.4)}50%{border-color:rgba(0,119,219,.7)}}
 
-/* Result overlay */
-.result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:50;
-  animation:fadeIn .3s ease-out;pointer-events:none;display:none}
-.result.win{background:rgba(125,217,52,.08)}
-.result.lose{background:rgba(231,69,69,.08)}
-.result.show{display:flex}
-.result-card{background:#1B213C;border:2px solid #33395C;border-radius:16px;padding:28px 48px;
+/* Chicken */
+.chicken{font-size:32px;margin-bottom:6px;transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.3));position:relative;z-index:10}
+.chicken.dead{filter:grayscale(1) drop-shadow(0 2px 8px rgba(231,69,69,.4));transform:rotate(90deg) scale(.8)}
+
+/* Win overlay */
+.win-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:50;
+  background:rgba(0,0,0,.4);animation:fadeIn .3s}
+.win-overlay.show{display:flex}
+.win-card{background:#1B213C;border:2px solid rgba(125,217,52,.4);border-radius:16px;padding:30px 50px;
   text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:pop .4s cubic-bezier(.175,.885,.32,1.275);
-  pointer-events:auto;cursor:pointer}
-.result.win .result-card{border-color:rgba(125,217,52,.4)}
-.result.lose .result-card{border-color:rgba(231,69,69,.4)}
-.res-emoji{font-size:48px;margin-bottom:10px}
-.res-text{font-size:22px;font-weight:700;margin-bottom:6px}
-.result.win .res-text{color:#7DD934}
-.result.lose .res-text{color:#E74545}
-.res-amount{font-size:18px;color:#E8E5FF;font-weight:600}
-.res-mult{font-size:13px;color:#8B8DB5;margin-top:5px}
-.res-dismiss{font-size:10px;color:#5E679E;margin-top:10px}
+  cursor:pointer}
+.win-card.lose{border-color:rgba(231,69,69,.4)}
+.win-emoji{font-size:48px;margin-bottom:8px}
+.win-text{font-size:22px;font-weight:700;color:#7DD934}
+.win-card.lose .win-text{color:#E74545}
+.win-amount{font-size:17px;color:#E8E5FF;font-weight:600;margin-top:4px}
+.win-sub{font-size:10px;color:#5E679E;margin-top:10px}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
 
-/* Footer */
-.game-ft{display:flex;align-items:center;justify-content:space-between;
-  padding:5px 14px;background:#191F3B;border-top:1px solid #262C50;min-height:34px}
-.ft-info{font-size:10px;color:#5E679E}
-.ft-info kbd{background:#262C50;border:1px solid #33395C;border-radius:3px;padding:1px 4px;font-size:9px;font-family:inherit}
-.reset-btn{background:0 0;border:1px solid #33395C;color:#8B8DB5;padding:3px 9px;border-radius:5px;
-  font-size:10px;cursor:pointer;font-family:inherit;transition:all .15s}
-.reset-btn:hover{background:#262C50;color:#E8E5FF}
+/* ─── Bet Overlay (bottom of canvas) ─── */
+.bet-overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;
+  background:linear-gradient(transparent,rgba(25,31,59,.95) 20%);z-index:20;
+  display:flex;flex-direction:column;gap:8px}
 
-/* History */
-.hist{margin-top:auto;padding-top:10px;border-top:1px solid #262C50}
-.hist-title{font-size:11px;font-weight:600;color:#5E679E;margin-bottom:5px;text-transform:uppercase}
-.hist-list{display:flex;flex-direction:column;gap:3px;max-height:120px;overflow-y:auto}
-.hist-item{display:flex;justify-content:space-between;padding:4px 7px;border-radius:4px;font-size:11px;background:#141931}
-.hist-item.win{color:#7DD934}
-.hist-item.lose{color:#E74545}
+.bet-row{display:flex;gap:8px;align-items:stretch}
 
-/* Mobile balance */
-#mob-bal{display:none;position:fixed;top:7px;right:7px;background:linear-gradient(135deg,#0077DB,#005aa8);
-  padding:7px 13px;border-radius:18px;border:2px solid #1F99FF;color:#fff;font-weight:700;font-size:13px;z-index:100000;
-  box-shadow:0 2px 10px rgba(0,0,0,.3)}
+/* Bet input group */
+.bet-grp{flex:1;display:flex;flex-direction:column;gap:3px}
+.bet-label{font-size:10px;font-weight:600;color:#5E679E;text-transform:uppercase;letter-spacing:.3px}
+.bet-input-wrap{display:flex;align-items:center;background:#141931;border:1px solid #33395C;
+  border-radius:7px;overflow:hidden;height:36px}
+.bet-input-wrap:focus-within{border-color:#0077DB}
+.bet-cur{padding:0 8px;color:#5E679E;font-size:12px;font-weight:600}
+.bet-input{flex:1;background:none;border:0;color:#E8E5FF;font-size:13px;padding:0;outline:0;
+  font-family:inherit;min-width:0;-moz-appearance:textfield}
+.bet-input::-webkit-inner-spin-button,.bet-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.bet-adj{background:#262C50;border:none;color:#E8E5FF;padding:4px 8px;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .15s;font-family:inherit;border-left:1px solid #33395C}
+.bet-adj:hover{background:#2A2F52}
 
-/* Responsive */
-@media(max-width:900px){
-  .frame{padding:0;flex-direction:column}
-  .container{flex-direction:column;border-radius:0;border:0}
-  .sidebar{width:100%;min-width:unset;flex-direction:row;flex-wrap:wrap;padding:8px;gap:6px;
-    border-right:0;border-top:1px solid #262C50;order:2;max-height:200px;overflow-y:auto}
-  .bet-grp{flex:1;min-width:140px}
-  .act-grp{flex:1;min-width:110px}
-  .risk-grp{flex:1;min-width:140px}
-  .pay-grp{flex:1;min-width:140px}
-  .hist{display:none}
-  .game-area{order:1}
+/* Risk dropdown */
+.risk-grp{width:100px;display:flex;flex-direction:column;gap:3px}
+.risk-select{height:36px;background:#141931;border:1px solid #33395C;border-radius:7px;color:#E8E5FF;
+  font-size:12px;font-weight:600;padding:0 8px;outline:0;font-family:inherit;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235E679E'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center}
+
+/* Buttons row */
+.btn-row{display:flex;gap:8px}
+.btn-bet{flex:1;height:40px;border-radius:8px;border:none;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.3px;transition:all .15s;
+  background:linear-gradient(180deg,#0077DB,#005aa8);color:#fff;
+  box-shadow:0 4px 12px rgba(0,119,219,.4)}
+.btn-bet:hover{background:linear-gradient(180deg,#0085f2,#0066be)}
+.btn-bet:disabled{background:#262C50!important;color:#5E679E!important;cursor:not-allowed;box-shadow:none!important}
+
+.btn-cross{flex:1;height:40px;border-radius:8px;border:none;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.3px;transition:all .15s;
+  background:linear-gradient(180deg,#8B45E6,#6B2FB8);color:#fff;
+  box-shadow:0 4px 12px rgba(139,69,230,.4);display:none}
+.btn-cross:hover{background:linear-gradient(180deg,#9D5BF0,#7B3CC8)}
+.btn-cross:disabled{background:#262C50!important;color:#5E679E!important;cursor:not-allowed;box-shadow:none!important}
+
+.btn-cashout{flex:1;height:40px;border-radius:8px;border:none;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.3px;transition:all .15s;
+  background:linear-gradient(180deg,#7DD934,#5BB520);color:#fff;
+  box-shadow:0 4px 12px rgba(125,217,52,.4);animation:pulse 1.5s ease-in-out infinite;display:none}
+.btn-cashout:hover{background:linear-gradient(180deg,#8ee63f,#68c525)}
+@keyframes pulse{0%,100%{box-shadow:0 4px 12px rgba(125,217,52,.4)}50%{box-shadow:0 4px 20px rgba(125,217,52,.6)}}
+
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:0 2px}
+.info-item{font-size:11px;color:#5E679E}
+.info-val{color:#E8E5FF;font-weight:700}
+.info-val.green{color:#7DD934}
+
+/* ─── Footer ─── */
+.footer{display:flex;align-items:center;justify-content:space-between;height:36px;min-height:36px;
+  padding:0 14px;background:#191F3B;border-top:1px solid #262C50}
+.footer-left{display:flex;align-items:center;gap:12px}
+.footer-icon{width:28px;height:28px;border-radius:6px;background:#262C50;border:1px solid #33395C;
+  display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .15s}
+.footer-icon:hover{background:#2A2F52;border-color:#454D7D}
+.footer-brand{font-size:12px;font-weight:700;color:#5E679E;display:flex;align-items:center;gap:4px}
+.footer-right{display:flex;gap:4px}
+.tab{padding:5px 14px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;
+  background:none;border:1px solid transparent;color:#5E679E;font-family:inherit;transition:all .15s}
+.tab.on{background:#262C50;border-color:#33395C;color:#E8E5FF}
+.tab:hover{color:#E8E5FF}
+
+/* Balance display */
+.bal-display{position:absolute;top:8px;right:14px;background:#0077DB;padding:6px 12px;border-radius:18px;
+  border:2px solid #1F99FF;color:#fff;font-weight:700;font-size:13px;z-index:30;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px;cursor:pointer}
+.bal-display:hover{background:#0069c4}
+.bal-display .cur{opacity:.7;font-size:11px}
+
+@media(max-width:500px){
+  .bet-row{flex-wrap:wrap}
+  .risk-grp{width:100%;flex-direction:row;align-items:center;gap:6px}
+  .risk-grp .bet-label{width:auto}
+  .risk-select{flex:1}
+  .tile{width:42px;height:34px;font-size:15px}
+  .lane{height:44px}
 }
-@media(max-width:600px){
-  .hdr{height:48px;min-height:48px;padding:0 8px}
-  #mob-bal{display:flex!important;align-items:center;gap:3px}
-  .hdr-right{display:none}
-  .sidebar{padding:6px;gap:4px;max-height:170px}
-  .act-btn{padding:10px;font-size:13px}
-}
-@media(max-width:900px) and (orientation:landscape){
-  .container{flex-direction:row}
-  .sidebar{order:0;width:210px;min-width:210px;flex-direction:column;max-height:unset;
-    border-top:0;border-right:1px solid #262C50}
-  .game-area{order:1}
-  .hist{display:block}
-}
-
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#33395C;border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:#454D7D}
 </style>
 </head>
 <body>
-<div id="mob-bal"><span class="bal-cur">$</span><span id="mob-bal-amt">1,247.83</span></div>
-
 <div class="app">
-  <div class="hdr">
-    <div class="hdr-left">
-      <a href="/" class="logo"><div class="logo-icon">R</div><span>Rainbet</span></a>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-left">
+      <div class="icon" id="infoBtn">ℹ️</div>
+      <div class="title">🐔 Chicken Cross</div>
     </div>
-    <div class="hdr-right">
-      <div class="bal-box" id="hdr-bal" title="Click to reset balance">
-        <span class="bal-cur">$</span><span id="bal-amt">1,247.83</span>
-      </div>
-      <div class="avatar">Z</div>
+    <div class="top-right">
+      <button class="fair-btn" id="fairBtn">✓ Fair Play</button>
     </div>
   </div>
 
-  <div class="frame">
-    <div class="container">
-      <div class="sidebar">
+  <!-- Game Area -->
+  <div class="game-wrap">
+    <!-- Balance -->
+    <div class="bal-display" id="balDisplay"><span class="cur">$</span><span id="balAmt">5,293.00</span></div>
+
+    <!-- Game Canvas -->
+    <div class="game-canvas" id="gameCanvas">
+      <div class="chicken" id="chicken">🐔</div>
+      <div class="road" id="road"></div>
+    </div>
+
+    <!-- Win/Lose Overlay -->
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-card" id="winCard">
+        <div class="win-emoji" id="winEmoji">🎉</div>
+        <div class="win-text" id="winText">You Won!</div>
+        <div class="win-amount" id="winAmount"></div>
+        <div class="win-sub">Click to dismiss</div>
+      </div>
+    </div>
+
+    <!-- Bet Controls Overlay -->
+    <div class="bet-overlay">
+      <div class="bet-row">
         <div class="bet-grp">
-          <div class="lbl">Bet Amount</div>
-          <div class="bet-wrap">
+          <div class="bet-label">Bet Amount</div>
+          <div class="bet-input-wrap">
             <span class="bet-cur">$</span>
-            <input type="number" class="bet-inp" id="bet-inp" value="10.00" min="0.01" step="0.01">
-            <div class="bet-btns">
-              <button class="bet-adj" id="btn-half">½</button>
-              <button class="bet-adj" id="btn-2x">2×</button>
-            </div>
-          </div>
-        </div>
-        <div class="act-grp">
-          <button class="act-btn cross" id="act-btn"><span id="act-text">Cross</span></button>
-        </div>
-        <div class="pay-grp">
-          <div class="payout">
-            <div><div class="pay-lbl">Payout</div><div class="pay-val" id="pay-val">$0.00</div></div>
-            <div class="pay-mult" id="pay-mult">0.00×</div>
+            <input type="number" class="bet-input" id="betInput" value="10.00" min="0.01" step="any">
+            <button class="bet-adj" id="btnHalf">½</button>
+            <button class="bet-adj" id="btnDbl">2×</button>
           </div>
         </div>
         <div class="risk-grp">
-          <div class="lbl">Risk</div>
-          <div class="risk-grid">
-            <button class="risk-btn on" data-risk="easy">Easy</button>
-            <button class="risk-btn" data-risk="medium">Medium</button>
-            <button class="risk-btn" data-risk="hard">Hard</button>
-            <button class="risk-btn" data-risk="expert">Expert</button>
-          </div>
-        </div>
-        <div class="hist" id="hist-sec">
-          <div class="hist-title">Recent Bets</div>
-          <div class="hist-list" id="hist-list"></div>
+          <div class="bet-label">Risk</div>
+          <select class="risk-select" id="riskSelect">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+            <option value="expert">Expert</option>
+          </select>
         </div>
       </div>
+      <div class="btn-row">
+        <button class="btn-bet" id="btnBet">Bet</button>
+        <button class="btn-cross" id="btnCross">Cross</button>
+        <button class="btn-cashout" id="btnCashout">Cash Out</button>
+      </div>
+      <div class="info-row" id="infoRow" style="display:none">
+        <div class="info-item">Round: <span class="info-val" id="infoRound">0/5</span></div>
+        <div class="info-item">Multiplier: <span class="info-val green" id="infoMult">1.00×</span></div>
+        <div class="info-item">Payout: <span class="info-val green" id="infoPayout">$0.00</span></div>
+      </div>
+    </div>
+  </div>
 
-      <div class="game-area" id="game-area">
-        <div class="game-bar">
-          <div class="game-title"><span class="emoji">🐔</span>Chicken Cross</div>
-          <div class="mult-trail" id="mult-trail"></div>
-        </div>
-        <div class="canvas-box" id="canvas-box"></div>
-        <div class="result" id="result-ov"></div>
-        <div class="game-ft">
-          <div class="ft-info"><kbd>1</kbd>-<kbd>5</kbd> pick lane · <kbd>Space</kbd> cross/cashout · <kbd>Esc</kbd> cashout</div>
-          <button class="reset-btn" id="reset-btn" title="Reset balance">↻ Reset $</button>
-        </div>
-      </div>
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-left">
+      <div class="footer-icon" id="soundBtn">🔊</div>
+      <div class="footer-icon" id="kbBtn">⌨️</div>
+      <div class="footer-brand">Rainbet</div>
+    </div>
+    <div class="footer-right">
+      <button class="tab on">Manual</button>
+      <button class="tab">Auto</button>
     </div>
   </div>
 </div>
 
 <script>
-(function(){
-'use strict';
-
-// ===== Register GSAP PixiPlugin =====
-gsap.registerPlugin(PixiPlugin);
-PixiPlugin.registerPIXI(PIXI);
-
-// ===== CONSTANTS =====
-const ASSET_BASE = 'chicken-cross_files/assets';
-const IMG_PATH = ASSET_BASE + '/images';
-const AUDIO_PATH = ASSET_BASE + '/audio';
-const STORAGE_KEY = 'rainbet_chicken_balance';
-const BG_COLOR = 0x11152B;
-
-// ===== DIFFICULTY CONFIG (from Rainbet's actual code) =====
-// Multiplier formula: 96 / (prod_{i=0}^{n-1} (25-df-i)/(25-i) * 100)
-// df = difficultyFactor, n = round number (1-indexed)
-function calcMultiplier(round, difficultyFactor) {
-    let prob = 1;
-    for (let i = 0; i < round; i++) {
-        prob *= (25 - difficultyFactor - i) / (25 - i);
-    }
-    let mult = 96 / (prob * 100);
-    return Math.round(mult * 100) / 100; // 2 decimal places
-}
-
+// ===== DIFFICULTY CONFIG =====
 const DIFFICULTIES = {
-    easy:   { factor: 1,  maxRounds: 24, label: 'Easy' },
-    medium: { factor: 3,  maxRounds: 22, label: 'Medium' },
-    hard:   { factor: 5,  maxRounds: 20, label: 'Hard' },
-    expert: { factor: 10, maxRounds: 15, label: 'Expert' }
+  easy:   { tiles: 4, dangers: 1, lanes: 5, multipliers: [1.31, 1.74, 2.32, 3.09, 4.12] },
+  medium: { tiles: 3, dangers: 1, lanes: 5, multipliers: [1.47, 2.17, 3.20, 4.71, 6.94] },
+  hard:   { tiles: 2, dangers: 1, lanes: 5, multipliers: [1.96, 3.84, 7.53, 14.75, 28.91] },
+  expert: { tiles: 3, dangers: 2, lanes: 5, multipliers: [2.94, 8.65, 25.40, 74.67, 219.30] }
 };
 
-// Precompute multiplier tables
-for (const [key, diff] of Object.entries(DIFFICULTIES)) {
-    diff.multipliers = [];
-    for (let r = 1; r <= diff.maxRounds; r++) {
-        diff.multipliers.push(calcMultiplier(r, diff.factor));
-    }
-}
-
-// ===== PROVABLY FAIR ENGINE (HMAC-SHA512, from Rainbet's code) =====
-async function hmacSHA512(key, message) {
-    const enc = new TextEncoder();
-    const cryptoKey = await crypto.subtle.importKey(
-        'raw', enc.encode(key), { name: 'HMAC', hash: 'SHA-512' }, false, ['sign']
-    );
-    const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(message));
-    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function generateSeed() {
-    const arr = new Uint8Array(32);
-    crypto.getRandomValues(arr);
-    return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function computeFairValue(serverSeed, clientSeed, nonce, round) {
-    const hash = await hmacSHA512(serverSeed, `${clientSeed}:${nonce}:${round}`);
-    // Take first 4 bytes (8 hex chars)
-    const val = parseInt(hash.substring(0, 8), 16);
-    return val / 0x100000000; // 0 to 1
-}
-
-async function determineOutcome(serverSeed, clientSeed, nonce, round, difficulty) {
-    const fairValue = await computeFairValue(serverSeed, clientSeed, nonce, round);
-    const diff = DIFFICULTIES[difficulty];
-    const multiplier = diff.multipliers[round - 1];
-    const winPercentage = 96 / multiplier;
-    
-    if (100 * fairValue >= winPercentage) {
-        return { win: false, multiplier: 0, fairValue };
-    }
-    return { win: true, multiplier, fairValue };
-}
-
-// ===== BALANCE SYSTEM =====
-let balance = parseFloat(localStorage.getItem(STORAGE_KEY)) || 1247.83;
-
-function saveBalance() { localStorage.setItem(STORAGE_KEY, balance.toFixed(2)); }
-function fmtMoney(v) { return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-function updateBalanceUI() {
-    document.getElementById('bal-amt').textContent = fmtMoney(balance);
-    document.getElementById('mob-bal-amt').textContent = fmtMoney(balance);
-}
-
-// ===== GAME STATE =====
-let state = 'idle'; // idle | playing | cashing_out | game_over
-let currentRisk = 'easy';
-let currentRound = 0;
+// ===== STATE =====
+let balance = parseFloat(localStorage.getItem('cc_balance')) || 5293;
+let state = 'idle'; // idle | playing | game_over
 let betAmount = 0;
-let serverSeed = '';
-let clientSeed = '';
-let nonce = 0;
-let roundResults = [];
+let currentRisk = 'medium';
+let currentRound = 0;
+let laneResults = [];
+let cheatCharges = 0;
 
 // ===== DOM REFS =====
-const betInput = document.getElementById('bet-inp');
-const actBtn = document.getElementById('act-btn');
-const actText = document.getElementById('act-text');
-const payVal = document.getElementById('pay-val');
-const payMult = document.getElementById('pay-mult');
-const resultOv = document.getElementById('result-ov');
-const multTrail = document.getElementById('mult-trail');
-const histList = document.getElementById('hist-list');
-const canvasBox = document.getElementById('canvas-box');
+const balAmt     = document.getElementById('balAmt');
+const betInput   = document.getElementById('betInput');
+const riskSelect = document.getElementById('riskSelect');
+const btnBet     = document.getElementById('btnBet');
+const btnCross   = document.getElementById('btnCross');
+const btnCashout = document.getElementById('btnCashout');
+const road       = document.getElementById('road');
+const chicken    = document.getElementById('chicken');
+const winOverlay = document.getElementById('winOverlay');
+const winCard    = document.getElementById('winCard');
+const winEmoji   = document.getElementById('winEmoji');
+const winText    = document.getElementById('winText');
+const winAmountEl= document.getElementById('winAmount');
+const infoRow    = document.getElementById('infoRow');
+const infoRound  = document.getElementById('infoRound');
+const infoMult   = document.getElementById('infoMult');
+const infoPayout = document.getElementById('infoPayout');
+const fairBtn    = document.getElementById('fairBtn');
 
-// ===== SOUNDS (Howler.js) =====
-const sounds = {};
-function loadSounds() {
-    const sfx = {
-        chirp1: 'chirp-1.mp3',
-        chickenWin: 'chicken-win.mp3',
-        chickenLose: 'chicken-lose.mp3',
-        carHit1: 'car-hit-1.mp3',
-        carHit2: 'car-hit-2.mp3',
-        carStopping: 'car-stopping.mp3',
-        grateOpening: 'grate-opening.mp3',
-        barrierImpact0: 'barrier-impact-0.mp3',
-        barrierImpact1: 'barrier-impact-1.mp3',
-        barrierImpact2: 'barrier-impact-2.mp3',
-        trafficCarLoud1: 'traffic-car-1-loud.mp3',
-        trafficCarLoud2: 'traffic-car-2-loud.mp3',
-        trafficCarLoud3: 'traffic-car-3-loud.mp3',
-        trafficCarLoud4: 'traffic-car-4-loud.mp3',
-        trafficTruckLoud1: 'traffic-truck-1-loud.mp3',
-        trafficTruckLoud2: 'traffic-truck-2-loud.mp3',
-        trafficPoliceLoud: 'traffic-police-2-loud.mp3',
-    };
-    for (const [key, file] of Object.entries(sfx)) {
-        try {
-            sounds[key] = new Howl({ src: [AUDIO_PATH + '/' + file], html5: true, volume: 0.5 });
-        } catch(e) {}
+// ===== HELPERS =====
+function fmt(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) }
+function saveBalance(){ localStorage.setItem('cc_balance', balance.toFixed(2)) }
+function updateBalUI(){ balAmt.textContent = fmt(balance) }
+
+// ===== PROVABLY FAIR =====
+async function hashStr(s){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function genSeed(){ return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('') }
+
+let serverSeed='', clientSeed='', nonce=0;
+
+async function isDangerTile(laneIdx, tileIdx){
+  const diff = DIFFICULTIES[currentRisk];
+  const hash = await hashStr(serverSeed+':'+clientSeed+':'+nonce+':'+laneIdx);
+  const segment = hash.substring(tileIdx*8, tileIdx*8+8);
+  const val = parseInt(segment,16);
+  return (val % diff.tiles) < diff.dangers;
+}
+
+// ===== BUILD ROAD =====
+function buildRoad(){
+  const diff = DIFFICULTIES[currentRisk];
+  road.innerHTML = '';
+  for(let i = diff.lanes - 1; i >= 0; i--){
+    const lane = document.createElement('div');
+    lane.className = 'lane';
+    lane.dataset.lane = i;
+
+    const num = document.createElement('span');
+    num.className = 'lane-num';
+    num.textContent = i + 1;
+    lane.appendChild(num);
+
+    const mult = document.createElement('span');
+    mult.className = 'lane-mult';
+    mult.textContent = diff.multipliers[i].toFixed(2) + '×';
+    lane.appendChild(mult);
+
+    const tilesDiv = document.createElement('div');
+    tilesDiv.className = 'tiles';
+    for(let t = 0; t < diff.tiles; t++){
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.dataset.lane = i;
+      tile.dataset.tile = t;
+      tilesDiv.appendChild(tile);
     }
-}
-function playSound(key) { try { sounds[key] && sounds[key].play(); } catch(e) {} }
-
-// ===== PIXI APPLICATION =====
-let app, sceneRoot, sceneContent, chickenContainer, lanesContainer;
-let chickenSprites = {};
-let laneContainers = [];
-let spritesheets = {};
-let tileSprites = {};
-
-async function initPixi() {
-    app = new PIXI.Application({
-        width: canvasBox.clientWidth,
-        height: canvasBox.clientHeight,
-        autoDensity: true,
-        resolution: Math.min(window.devicePixelRatio || 1, 2),
-        antialias: true,
-        backgroundColor: BG_COLOR,
-    });
-    canvasBox.appendChild(app.view);
-    app.view.style.touchAction = 'none';
-
-    // Root containers
-    sceneRoot = new PIXI.Container();
-    sceneRoot.sortableChildren = true;
-    app.stage.addChild(sceneRoot);
-
-    sceneContent = new PIXI.Container();
-    sceneContent.sortableChildren = true;
-    sceneRoot.addChild(sceneContent);
-
-    // Load spritesheets
-    await loadSpritesheets();
-
-    // Build scene
-    buildScene();
-
-    // Resize handler
-    const ro = new ResizeObserver(() => {
-        if (!app) return;
-        const w = canvasBox.clientWidth;
-        const h = canvasBox.clientHeight;
-        app.renderer.resize(w, h);
-        layoutScene();
-    });
-    ro.observe(canvasBox);
-    layoutScene();
+    lane.appendChild(tilesDiv);
+    road.appendChild(lane);
+  }
 }
 
-async function loadSpritesheets() {
-    const sheets = [
-        { key: 'chicken-body', file: 'chicken-body-content.json' },
-        { key: 'chicken-faces', file: 'chicken-faces.json' },
-        { key: 'background-1', file: 'chicken-background-content-1.json' },
-        { key: 'background-2', file: 'chicken-background-content-2.json' },
-        { key: 'cars', file: 'chicken-cross-cars.json' },
-        { key: 'blocker', file: 'blocker.json' },
-    ];
+// ===== UPDATE LANE STATES =====
+function updateLanes(){
+  const diff = DIFFICULTIES[currentRisk];
+  const lanes = road.querySelectorAll('.lane');
+  lanes.forEach(lane => {
+    const idx = parseInt(lane.dataset.lane);
+    lane.classList.remove('active','cleared','dead');
+    const tiles = lane.querySelectorAll('.tile');
+    tiles.forEach(t => {
+      t.classList.remove('safe','danger','pothole','revealed');
+      t.onclick = null;
+    });
 
-    for (const s of sheets) {
-        try {
-            const jsonUrl = IMG_PATH + '/' + s.file;
-            const resp = await fetch(jsonUrl);
-            const json = await resp.json();
-            // Fix the image path to be relative
-            const imgName = json.meta.image;
-            const imgUrl = IMG_PATH + '/' + imgName;
-            
-            // Load the texture
-            const texture = await PIXI.Assets.load(imgUrl);
-            
-            // Create spritesheet
-            const sheet = new PIXI.Spritesheet(texture, json);
-            await sheet.parse();
-            spritesheets[s.key] = sheet;
-        } catch(e) {
-            console.warn('Failed to load spritesheet:', s.key, e);
+    if(state === 'playing'){
+      if(idx < currentRound){
+        lane.classList.add('cleared');
+        const result = laneResults[idx];
+        if(result){
+          tiles.forEach((t, ti) => {
+            if(ti === result.picked) t.classList.add('safe');
+            else t.classList.add('revealed');
+          });
         }
-    }
-}
-
-function getTexture(sheetKey, frameName) {
-    const sheet = spritesheets[sheetKey];
-    if (!sheet) return PIXI.Texture.WHITE;
-    return sheet.textures[frameName] || PIXI.Texture.WHITE;
-}
-
-// ===== BUILD THE SCENE =====
-function buildScene() {
-    lanesContainer = new PIXI.Container();
-    lanesContainer.sortableChildren = true;
-    lanesContainer.name = 'lanes';
-    sceneContent.addChild(lanesContainer);
-
-    // Build chicken character
-    buildChicken();
-
-    // Build initial lanes
-    rebuildLanes();
-}
-
-function buildChicken() {
-    chickenContainer = new PIXI.Container();
-    chickenContainer.name = 'chicken';
-    chickenContainer.zIndex = 10;
-    chickenContainer.scale.set(0.12);
-    
-    // Body parts from spritesheet
-    const parts = [
-        { key: 'tail', frame: 'chicken-tail.png', x: -120, y: -50 },
-        { key: 'body', frame: 'chicken-torso.png', x: 0, y: 0 },
-        { key: 'wing', frame: 'chicken-wing.png', x: 20, y: 10 },
-        { key: 'legL', frame: 'chicken-leg.png', x: -30, y: 80 },
-        { key: 'legR', frame: 'chicken-leg.png', x: 30, y: 80 },
-        { key: 'neck', frame: 'chicken-neck.png', x: 60, y: -60 },
-        { key: 'head', frame: 'chicken-red-head.png', x: 70, y: -100 },
-    ];
-
-    for (const p of parts) {
-        const tex = getTexture('chicken-body', p.frame);
-        const sprite = new PIXI.Sprite(tex);
-        sprite.anchor.set(0.5);
-        sprite.x = p.x;
-        sprite.y = p.y;
-        sprite.name = p.key;
-        chickenContainer.addChild(sprite);
-        chickenSprites[p.key] = sprite;
-    }
-
-    // Face
-    const faceTex = getTexture('chicken-faces', 'default.png');
-    const face = new PIXI.Sprite(faceTex);
-    face.anchor.set(0.5);
-    face.x = 85;
-    face.y = -120;
-    face.scale.set(0.9);
-    face.name = 'face';
-    chickenContainer.addChild(face);
-    chickenSprites.face = face;
-
-    sceneContent.addChild(chickenContainer);
-
-    // Start idle animation
-    startIdleAnimation();
-}
-
-function setChickenFace(frameName) {
-    const tex = getTexture('chicken-faces', frameName);
-    if (chickenSprites.face && tex !== PIXI.Texture.WHITE) {
-        chickenSprites.face.texture = tex;
-    }
-}
-
-function startIdleAnimation() {
-    // Gentle breathing/bobbing
-    gsap.killTweensOf(chickenContainer);
-    gsap.to(chickenContainer, {
-        pixi: { y: chickenContainer.y - 3 },
-        duration: 1.2,
-        yoyo: true,
-        repeat: -1,
-        ease: 'sine.inOut'
-    });
-    // Wing flutter
-    if (chickenSprites.wing) {
-        gsap.killTweensOf(chickenSprites.wing);
-        gsap.to(chickenSprites.wing, {
-            pixi: { rotation: 5 },
-            duration: 0.8,
-            yoyo: true,
-            repeat: -1,
-            ease: 'sine.inOut'
+      } else if(idx === currentRound){
+        lane.classList.add('active');
+        tiles.forEach(t => {
+          t.onclick = () => pickTile(idx, parseInt(t.dataset.tile));
         });
-    }
-}
-
-// ===== LANES =====
-function rebuildLanes() {
-    lanesContainer.removeChildren();
-    laneContainers = [];
-    tileSprites = {};
-
-    const diff = DIFFICULTIES[currentRisk];
-    const numLanes = Math.min(diff.maxRounds, 10); // Show up to 10 lanes on screen
-
-    for (let i = 0; i < numLanes; i++) {
-        const lane = new PIXI.Container();
-        lane.name = 'lane-' + i;
-        lane.sortableChildren = true;
-
-        // Road surface
-        const road = new PIXI.Graphics();
-        road.beginFill(0x1A1F3A);
-        road.drawRoundedRect(0, 0, 160, 50, 6);
-        road.endFill();
-        lane.addChild(road);
-
-        // Road line markings
-        const line = new PIXI.Graphics();
-        line.beginFill(0x2A3055, 0.5);
-        line.drawRect(10, 23, 30, 4);
-        line.drawRect(60, 23, 30, 4);
-        line.drawRect(110, 23, 30, 4);
-        line.endFill();
-        lane.addChild(line);
-
-        // Cover tile (clickable region visual)
-        const cover = new PIXI.Graphics();
-        cover.beginFill(0x262C50, 0);
-        cover.drawRoundedRect(0, 0, 160, 50, 6);
-        cover.endFill();
-        cover.name = 'cover';
-        lane.addChild(cover);
-
-        // Multiplier text
-        const multText = new PIXI.Text('', {
-            fontFamily: 'Inter, sans-serif',
-            fontSize: 11,
-            fontWeight: '700',
-            fill: '#5E679E',
-            align: 'center'
+      }
+    } else if(state === 'game_over'){
+      const result = laneResults[idx];
+      if(result){
+        lane.classList.add(result.safe ? 'cleared' : 'dead');
+        tiles.forEach((t, ti) => {
+          if(ti === result.picked){
+            t.classList.add(result.safe ? 'safe' : 'pothole');
+          } else if(result.dangerTiles && result.dangerTiles.includes(ti)){
+            t.classList.add('danger');
+          } else {
+            t.classList.add('revealed');
+          }
         });
-        multText.anchor.set(0.5);
-        multText.x = 80;
-        multText.y = 25;
-        multText.name = 'mult-text';
-        lane.addChild(multText);
-
-        // Barrier (blocker between lanes)
-        const barrierTex = getTexture('blocker', 'no-crack-barrier.png');
-        if (barrierTex !== PIXI.Texture.WHITE) {
-            const barrier = new PIXI.Sprite(barrierTex);
-            barrier.anchor.set(0.5, 1);
-            barrier.x = 80;
-            barrier.y = 0;
-            barrier.scale.set(0.15);
-            barrier.name = 'barrier';
-            barrier.zIndex = 2;
-            lane.addChild(barrier);
-        }
-
-        lanesContainer.addChild(lane);
-        laneContainers.push(lane);
+      }
     }
-
-    updateLaneVisuals();
+  });
 }
 
-function updateLaneVisuals() {
-    const diff = DIFFICULTIES[currentRisk];
-    const numLanes = laneContainers.length;
+// ===== MOVE CHICKEN =====
+function moveChicken(){
+  if(currentRound === 0){
+    chicken.style.transform = 'translateY(0)';
+  } else {
+    const laneHeight = 54;
+    chicken.style.transform = `translateY(-${currentRound * laneHeight}px)`;
+  }
+}
 
-    for (let i = 0; i < numLanes; i++) {
-        const lane = laneContainers[i];
-        const multText = lane.getChildByName('mult-text');
-        const cover = lane.getChildByName('cover');
+// ===== PICK A TILE =====
+async function pickTile(laneIdx, tileIdx){
+  if(state !== 'playing' || laneIdx !== currentRound) return;
 
-        if (i < diff.multipliers.length) {
-            const mult = diff.multipliers[i];
-            if (multText) {
-                multText.text = (mult >= 1000 ? mult.toFixed(0) : mult.toFixed(2)) + '×';
-                
-                if (state === 'playing') {
-                    if (i < currentRound) {
-                        // Cleared
-                        multText.style.fill = '#7DD934';
-                        multText.alpha = 0.7;
-                    } else if (i === currentRound) {
-                        // Current
-                        multText.style.fill = '#0077DB';
-                        multText.alpha = 1;
-                    } else {
-                        multText.style.fill = '#5E679E';
-                        multText.alpha = 0.5;
-                    }
-                } else {
-                    multText.style.fill = '#5E679E';
-                    multText.alpha = 0.6;
-                }
-            }
-        }
+  const diff = DIFFICULTIES[currentRisk];
+
+  // Determine all danger tiles for this lane
+  let dangerTiles = [];
+  for(let t = 0; t < diff.tiles; t++){
+    if(await isDangerTile(laneIdx, t)) dangerTiles.push(t);
+  }
+  // Ensure at least one safe tile exists
+  if(dangerTiles.length >= diff.tiles){
+    dangerTiles = dangerTiles.slice(0, diff.tiles - 1);
+  }
+
+  let safe = !dangerTiles.includes(tileIdx);
+
+  // Cheat: if unsafe and charges available, force safe
+  if(!safe && cheatCharges > 0){
+    safe = true;
+    cheatCharges--;
+  }
+
+  laneResults[laneIdx] = { picked: tileIdx, safe, dangerTiles };
+
+  if(safe){
+    currentRound++;
+    updateLanes();
+    moveChicken();
+    updateInfo();
+    updateButtons();
+
+    if(currentRound >= diff.lanes){
+      const mult = diff.multipliers[diff.lanes - 1];
+      const payout = betAmount * mult;
+      balance += payout;
+      saveBalance();
+      updateBalUI();
+      state = 'game_over';
+      updateButtons();
+      updateLanes();
+      showResult(true, payout, mult);
     }
+  } else {
+    chicken.classList.add('dead');
+    state = 'game_over';
+    updateLanes();
+    updateButtons();
+    setTimeout(() => showResult(false, betAmount, 0), 500);
+  }
 }
 
-// ===== LAYOUT =====
-function layoutScene() {
-    if (!app || !sceneContent) return;
-    const W = app.renderer.width / app.renderer.resolution;
-    const H = app.renderer.height / app.renderer.resolution;
-
-    const diff = DIFFICULTIES[currentRisk];
-    const numLanes = laneContainers.length;
-    const laneW = 160;
-    const laneH = 50;
-    const gap = 8;
-    const totalH = numLanes * (laneH + gap);
-
-    // Position lanes from bottom to top
-    const startY = H / 2 + totalH / 2 - laneH;
-    for (let i = 0; i < numLanes; i++) {
-        const lane = laneContainers[i];
-        lane.x = W / 2 - laneW / 2;
-        lane.y = startY - i * (laneH + gap);
-    }
-
-    // Position chicken
-    if (chickenContainer) {
-        const chickenLaneIdx = Math.min(currentRound, numLanes - 1);
-        const targetLane = laneContainers[chickenLaneIdx];
-        if (targetLane) {
-            chickenContainer.x = targetLane.x + laneW / 2;
-            chickenContainer.y = targetLane.y + laneH / 2 - 20;
-        }
-    }
-
-    // Camera follow - scroll if needed
-    if (state === 'playing' && currentRound > 3) {
-        const scrollAmt = (currentRound - 3) * (laneH + gap);
-        gsap.to(sceneContent, { y: scrollAmt, duration: 0.3, ease: 'power2.out' });
-    } else {
-        sceneContent.y = 0;
-    }
+// ===== CASH OUT =====
+function cashOut(){
+  if(state !== 'playing' || currentRound === 0) return;
+  const diff = DIFFICULTIES[currentRisk];
+  const mult = diff.multipliers[currentRound - 1];
+  const payout = betAmount * mult;
+  balance += payout;
+  saveBalance();
+  updateBalUI();
+  state = 'game_over';
+  updateButtons();
+  updateLanes();
+  showResult(true, payout, mult);
 }
 
-// ===== CHICKEN ANIMATIONS =====
-function animateChickenJump(targetLane, onComplete) {
-    if (!chickenContainer || !targetLane) { onComplete && onComplete(); return; }
+// ===== START GAME =====
+function startGame(){
+  betAmount = parseFloat(betInput.value) || 0;
+  if(betAmount <= 0){ betInput.focus(); return; }
+  if(betAmount > balance){ betAmount = balance; betInput.value = betAmount.toFixed(2); }
+  if(betAmount <= 0) return;
 
-    const targetX = targetLane.x + 80;
-    const targetY = targetLane.y + 5;
-    const jumpHeight = 40;
-    const duration = 0.35;
+  balance -= betAmount;
+  saveBalance();
+  updateBalUI();
 
-    // Anticipation squash
-    const tl = gsap.timeline();
-    
-    tl.to(chickenContainer.scale, { x: 0.14, y: 0.10, duration: 0.08, ease: 'power2.in' });
-    
-    // Jump up
-    tl.to(chickenContainer, {
-        pixi: { x: targetX, y: targetY - jumpHeight },
-        duration: duration * 0.5,
-        ease: 'power2.out'
-    });
-    tl.to(chickenContainer.scale, { x: 0.11, y: 0.13, duration: duration * 0.5, ease: 'power2.out' }, '<');
-    
-    // Fall down
-    tl.to(chickenContainer, {
-        pixi: { y: targetY },
-        duration: duration * 0.5,
-        ease: 'power2.in'
-    });
-    tl.to(chickenContainer.scale, { x: 0.12, y: 0.12, duration: duration * 0.3, ease: 'bounce.out' }, '>-0.1');
+  state = 'playing';
+  currentRound = 0;
+  currentRisk = riskSelect.value;
+  laneResults = [];
+  serverSeed = genSeed();
+  clientSeed = genSeed();
+  nonce = Math.floor(Math.random() * 1000000);
 
-    // Landing squash
-    tl.to(chickenContainer.scale, { x: 0.14, y: 0.10, duration: 0.06, ease: 'power2.in' });
-    tl.to(chickenContainer.scale, { x: 0.12, y: 0.12, duration: 0.12, ease: 'elastic.out(1.2, 0.5)' });
+  chicken.classList.remove('dead');
+  chicken.style.transform = 'translateY(0)';
+  winOverlay.classList.remove('show');
 
-    tl.call(() => {
-        startIdleAnimation();
-        onComplete && onComplete();
-    });
-}
+  buildRoad();
+  updateLanes();
+  updateButtons();
+  updateInfo();
 
-function animateChickenFail(failType, laneIndex) {
-    gsap.killTweensOf(chickenContainer);
-    gsap.killTweensOf(chickenSprites.wing);
-    setChickenFace('scared-1.png');
-
-    if (failType === 'car') {
-        // Vehicle hits chicken
-        const carSounds = ['trafficCarLoud1','trafficCarLoud2','trafficCarLoud3','trafficCarLoud4'];
-        playSound(carSounds[Math.floor(Math.random() * carSounds.length)]);
-
-        // Create a vehicle sprite
-        const carTex = getTexture('cars', 'car-a.png');
-        if (carTex !== PIXI.Texture.WHITE) {
-            const car = new PIXI.Sprite(carTex);
-            car.anchor.set(0.5);
-            car.scale.set(0.12);
-            car.zIndex = 15;
-            
-            const lane = laneContainers[Math.min(laneIndex, laneContainers.length - 1)];
-            if (lane) {
-                car.x = lane.x - 200;
-                car.y = lane.y + 25;
-                sceneContent.addChild(car);
-
-                gsap.to(car, {
-                    pixi: { x: lane.x + 300 },
-                    duration: 0.5,
-                    ease: 'power1.in',
-                    onComplete: () => { car.destroy(); }
-                });
-            }
-        }
-
-        // Chicken gets hit
-        setTimeout(() => {
-            setChickenFace('dead.png');
-            playSound(Math.random() > 0.5 ? 'carHit1' : 'carHit2');
-            
-            gsap.to(chickenContainer, {
-                pixi: { y: chickenContainer.y - 50, alpha: 0, rotation: 720 },
-                duration: 0.6,
-                ease: 'power2.out'
-            });
-        }, 200);
-
-    } else {
-        // Sewer/manhole death
-        playSound('grateOpening');
-        setTimeout(() => {
-            setChickenFace('scared-2.png');
-            playSound('chickenLose');
-            gsap.to(chickenContainer, {
-                pixi: { scaleX: 0.06, y: chickenContainer.y + 60, alpha: 0 },
-                duration: 0.5,
-                ease: 'power2.in'
-            });
-        }, 200);
-    }
-}
-
-function animateChickenWin() {
-    gsap.killTweensOf(chickenContainer);
-    setChickenFace('happy-1.png');
-    playSound('chickenWin');
-
-    // Victory dance
-    const tl = gsap.timeline();
-    tl.to(chickenContainer, { pixi: { y: chickenContainer.y - 30 }, duration: 0.2, ease: 'power2.out' });
-    tl.to(chickenContainer, { pixi: { y: chickenContainer.y }, duration: 0.2, ease: 'bounce.out' });
-    tl.to(chickenContainer, { pixi: { rotation: -10 }, duration: 0.15, ease: 'power1.out' });
-    tl.to(chickenContainer, { pixi: { rotation: 10 }, duration: 0.15, ease: 'power1.out' });
-    tl.to(chickenContainer, { pixi: { rotation: 0 }, duration: 0.15, ease: 'power1.out' });
-    
-    setTimeout(() => setChickenFace('laugh-1.png'), 600);
-}
-
-function resetChicken() {
-    if (!chickenContainer) return;
-    gsap.killTweensOf(chickenContainer);
-    if (chickenSprites.wing) gsap.killTweensOf(chickenSprites.wing);
-    
-    chickenContainer.alpha = 1;
-    chickenContainer.scale.set(0.12);
-    chickenContainer.rotation = 0;
-    setChickenFace('default.png');
-    
-    // Move to start
-    if (laneContainers[0]) {
-        chickenContainer.x = laneContainers[0].x + 80;
-        chickenContainer.y = laneContainers[0].y + 5;
-    }
-    
-    startIdleAnimation();
-}
-
-// ===== LANE CLICK HANDLING (HTML overlay) =====
-function buildLaneOverlay() {
-    // Remove existing
-    const existing = document.querySelector('.lanes-overlay');
-    if (existing) existing.remove();
-
-    const overlay = document.createElement('div');
-    overlay.className = 'lanes-overlay';
-    overlay.id = 'lanes-overlay';
-
-    const diff = DIFFICULTIES[currentRisk];
-    const numLanes = Math.min(diff.maxRounds, 10);
-
-    // Build from top (highest lane) to bottom (lane 0)
-    for (let i = numLanes - 1; i >= 0; i--) {
-        const row = document.createElement('div');
-        row.className = 'lane-row';
-        row.dataset.lane = i;
-
-        // 5 tiles per lane (the standard Rainbet layout)
-        for (let t = 0; t < 5; t++) {
-            const tile = document.createElement('button');
-            tile.className = 'lane-tile';
-            tile.dataset.lane = i;
-            tile.dataset.tile = t;
-            tile.textContent = '?';
-            tile.addEventListener('click', () => handleLaneClick(i, t));
-            row.appendChild(tile);
-        }
-
-        overlay.appendChild(row);
-    }
-
-    canvasBox.appendChild(overlay);
-}
-
-function updateLaneOverlay() {
-    const overlay = document.getElementById('lanes-overlay');
-    if (!overlay) return;
-
-    const tiles = overlay.querySelectorAll('.lane-tile');
-    tiles.forEach(tile => {
-        const laneIdx = parseInt(tile.dataset.lane);
-        const tileIdx = parseInt(tile.dataset.tile);
-
-        tile.className = 'lane-tile';
-        tile.textContent = '?';
-
-        if (state === 'playing' && laneIdx === currentRound) {
-            tile.classList.add('active');
-            tile.textContent = '?';
-        } else if (laneIdx < currentRound && roundResults[laneIdx]) {
-            const result = roundResults[laneIdx];
-            if (result.chosenTile === tileIdx) {
-                if (result.win) {
-                    tile.classList.add('safe');
-                    tile.textContent = '🐔';
-                } else {
-                    tile.classList.add('fail');
-                    tile.textContent = '💀';
-                }
-            } else {
-                tile.classList.add('revealed');
-                // Show where the danger was (if this lane was lost, show dangers on other tiles too)
-                if (!result.win && result.dangerTiles && result.dangerTiles.includes(tileIdx)) {
-                    tile.textContent = '🚗';
-                } else {
-                    tile.textContent = '✓';
-                }
-            }
-        } else if (state === 'game_over' && laneIdx >= currentRound) {
-            tile.classList.add('revealed');
-            tile.textContent = '';
-        }
-    });
-}
-
-// ===== GAME LOGIC =====
-async function startGame() {
-    betAmount = parseFloat(betInput.value) || 0;
-    if (betAmount <= 0) { betInput.focus(); return; }
-    if (betAmount > balance) { betAmount = balance; betInput.value = betAmount.toFixed(2); }
-    if (betAmount <= 0) return;
-
-    // Deduct bet
-    balance -= betAmount;
-    saveBalance();
-    updateBalanceUI();
-
-    // Setup game
-    state = 'playing';
-    currentRound = 0;
-    roundResults = [];
-    serverSeed = generateSeed();
-    clientSeed = generateSeed();
-    nonce = Math.floor(Math.random() * 1000000);
-
-    playSound('chirp1');
-
-    // Reset visuals
-    sceneContent.y = 0;
-    resetChicken();
-    rebuildLanes();
-    buildLaneOverlay();
-    updateLaneOverlay();
-    updateActionButton();
-    updatePayout();
-    updateMultTrail();
-    layoutScene();
-
-    // Disable inputs
-    betInput.disabled = true;
-    document.querySelectorAll('.risk-btn').forEach(b => b.style.pointerEvents = 'none');
-    document.querySelectorAll('.bet-adj').forEach(b => b.style.pointerEvents = 'none');
-}
-
-async function handleLaneClick(laneIdx, tileIdx) {
-    if (state !== 'playing' || laneIdx !== currentRound) return;
-
-    // Determine outcome using provably fair engine
-    const outcome = await determineOutcome(serverSeed, clientSeed, nonce, currentRound + 1, currentRisk);
-    
-    // Determine danger tile positions (based on difficulty)
-    const diff = DIFFICULTIES[currentRisk];
-    const numDangers = diff.factor; // Easy=1, Medium=3, Hard=5, Expert=10 — but max 4 per lane (5 tiles)
-    const actualDangers = Math.min(numDangers, 4); // Can't have more than 4 dangers in 5 tiles
-    
-    // Generate danger positions (excluding the chosen tile if win)
-    let dangerTiles = [];
-    if (outcome.win) {
-        // Player wins - chosen tile is safe, place dangers randomly among others
-        let others = [0,1,2,3,4].filter(t => t !== tileIdx);
-        for (let d = 0; d < Math.min(actualDangers, others.length); d++) {
-            const idx = Math.floor(Math.random() * others.length);
-            dangerTiles.push(others.splice(idx, 1)[0]);
-        }
-    } else {
-        // Player loses - chosen tile IS a danger
-        dangerTiles.push(tileIdx);
-        let others = [0,1,2,3,4].filter(t => t !== tileIdx);
-        for (let d = 1; d < Math.min(actualDangers, 5); d++) {
-            const idx = Math.floor(Math.random() * others.length);
-            dangerTiles.push(others.splice(idx, 1)[0]);
-        }
-    }
-
-    const result = {
-        win: outcome.win,
-        multiplier: outcome.multiplier,
-        chosenTile: tileIdx,
-        dangerTiles: dangerTiles
-    };
-    roundResults.push(result);
-
-    if (outcome.win) {
-        // Safe crossing
-        currentRound++;
-        playSound('chirp1');
-        setChickenFace('happy-1.png');
-
-        // Animate chicken jump
-        const targetLane = laneContainers[Math.min(currentRound, laneContainers.length - 1)];
-        animateChickenJump(targetLane, () => {
-            setChickenFace('default.png');
-            updateLaneOverlay();
-            updateLaneVisuals();
-            layoutScene();
-        });
-
-        updatePayout();
-        updateActionButton();
-        updateMultTrail();
-        updateLaneOverlay();
-        updateLaneVisuals();
-
-        // Check if max rounds reached
-        const maxR = DIFFICULTIES[currentRisk].maxRounds;
-        if (currentRound >= maxR || currentRound >= 10) {
-            // Auto cashout at max
-            setTimeout(() => cashOut(), 500);
-        }
-    } else {
-        // FAIL
-        state = 'game_over';
-        const failType = Math.random() > 0.5 ? 'car' : 'sewer';
-        animateChickenFail(failType, currentRound);
-        updateLaneOverlay();
-        updateLaneVisuals();
-
-        setTimeout(() => {
-            showResult(false, betAmount, 0);
-            addHistory(false, betAmount, 0, 0);
-            updateActionButton();
-            updatePayout();
-            enableInputs();
-        }, 800);
-    }
-}
-
-function cashOut() {
-    if (state !== 'playing' || currentRound === 0) return;
-
-    state = 'cashing_out';
-    const diff = DIFFICULTIES[currentRisk];
-    const mult = diff.multipliers[currentRound - 1];
-    const winAmount = betAmount * mult;
-
-    balance += winAmount;
-    saveBalance();
-    updateBalanceUI();
-
-    animateChickenWin();
-
-    setTimeout(() => {
-        state = 'game_over';
-        showResult(true, winAmount, mult);
-        addHistory(true, betAmount, winAmount, mult);
-        updateActionButton();
-        updatePayout();
-        enableInputs();
-    }, 600);
+  betInput.disabled = true;
+  riskSelect.disabled = true;
 }
 
 // ===== UI UPDATES =====
-function updateActionButton() {
-    if (state === 'idle' || state === 'game_over') {
-        actBtn.className = 'act-btn cross';
-        actText.textContent = 'Cross';
-        actBtn.disabled = false;
-    } else if (state === 'playing' && currentRound > 0) {
-        const diff = DIFFICULTIES[currentRisk];
-        const mult = diff.multipliers[currentRound - 1];
-        const payout = betAmount * mult;
-        actBtn.className = 'act-btn cashout';
-        actText.textContent = 'Cashout $' + fmtMoney(payout);
-        actBtn.disabled = false;
-    } else {
-        actBtn.className = 'act-btn cross';
-        actText.textContent = 'Pick a lane ☝️';
-        actBtn.disabled = true;
-    }
-}
-
-function updatePayout() {
-    if (state === 'playing' && currentRound > 0) {
-        const diff = DIFFICULTIES[currentRisk];
-        const mult = diff.multipliers[currentRound - 1];
-        const payout = betAmount * mult;
-        payVal.textContent = '$' + fmtMoney(payout);
-        payMult.textContent = (mult >= 1000 ? mult.toFixed(0) : mult.toFixed(2)) + '×';
-        payVal.style.color = '#7DD934';
-    } else {
-        payVal.textContent = '$0.00';
-        payMult.textContent = '0.00×';
-        payVal.style.color = '#8B8DB5';
-    }
-}
-
-function updateMultTrail() {
-    multTrail.innerHTML = '';
-    const diff = DIFFICULTIES[currentRisk];
-    const show = Math.min(8, diff.maxRounds, 10);
-    let start = 0;
-    if (state === 'playing' && currentRound > 3) start = currentRound - 3;
-    const end = Math.min(start + show, diff.multipliers.length);
-
-    for (let i = start; i < end; i++) {
-        const badge = document.createElement('span');
-        badge.className = 'mbadge';
-        const val = diff.multipliers[i];
-        badge.textContent = (val >= 1000 ? val.toFixed(0) : val.toFixed(2)) + '×';
-        if (state === 'playing' && i === currentRound) badge.classList.add('cur');
-        else if (i < currentRound) badge.classList.add('done');
-        multTrail.appendChild(badge);
-    }
-}
-
-function showResult(won, amount, mult) {
-    resultOv.className = 'result ' + (won ? 'win' : 'lose') + ' show';
-    if (won) {
-        resultOv.innerHTML = `<div class="result-card">
-            <div class="res-emoji">🎉</div>
-            <div class="res-text">You Won!</div>
-            <div class="res-amount">+$${fmtMoney(amount)}</div>
-            <div class="res-mult">${mult >= 1000 ? mult.toFixed(0) : mult.toFixed(2)}× multiplier</div>
-            <div class="res-dismiss">Click to dismiss</div>
-        </div>`;
-    } else {
-        resultOv.innerHTML = `<div class="result-card">
-            <div class="res-emoji">💀</div>
-            <div class="res-text">Busted!</div>
-            <div class="res-amount">-$${fmtMoney(amount)}</div>
-            <div class="res-mult">Better luck next time</div>
-            <div class="res-dismiss">Click to dismiss</div>
-        </div>`;
-    }
-    clearTimeout(window._rt);
-    window._rt = setTimeout(() => { resultOv.classList.remove('show'); }, 3500);
-}
-
-function addHistory(won, bet, winAmount, mult) {
-    const item = document.createElement('div');
-    item.className = 'hist-item ' + (won ? 'win' : 'lose');
-    item.innerHTML = won
-        ? `<span>🐔 ${mult >= 1000 ? mult.toFixed(0) : mult.toFixed(2)}×</span><span>+$${fmtMoney(winAmount)}</span>`
-        : `<span>💀 Busted</span><span>-$${fmtMoney(bet)}</span>`;
-    histList.insertBefore(item, histList.firstChild);
-    while (histList.children.length > 10) histList.removeChild(histList.lastChild);
-}
-
-function enableInputs() {
-    state = 'idle';
+function updateButtons(){
+  if(state === 'idle' || state === 'game_over'){
+    btnBet.style.display = '';
+    btnCross.style.display = 'none';
+    btnCashout.style.display = 'none';
+    btnBet.disabled = false;
     betInput.disabled = false;
-    document.querySelectorAll('.risk-btn').forEach(b => b.style.pointerEvents = 'auto');
-    document.querySelectorAll('.bet-adj').forEach(b => b.style.pointerEvents = 'auto');
+    riskSelect.disabled = false;
+  } else if(state === 'playing'){
+    btnBet.style.display = 'none';
+    if(currentRound > 0){
+      btnCross.style.display = 'none';
+      btnCashout.style.display = '';
+      const diff = DIFFICULTIES[currentRisk];
+      const mult = diff.multipliers[currentRound - 1];
+      btnCashout.textContent = 'Cash Out $' + fmt(betAmount * mult);
+    } else {
+      btnCross.style.display = '';
+      btnCross.textContent = 'Pick a lane ☝️';
+      btnCross.disabled = true;
+      btnCashout.style.display = 'none';
+    }
+  }
 }
+
+function updateInfo(){
+  if(state === 'playing'){
+    infoRow.style.display = '';
+    const diff = DIFFICULTIES[currentRisk];
+    infoRound.textContent = currentRound + '/' + diff.lanes;
+    if(currentRound > 0){
+      const mult = diff.multipliers[currentRound - 1];
+      infoMult.textContent = mult.toFixed(2) + '×';
+      infoPayout.textContent = '$' + fmt(betAmount * mult);
+    } else {
+      infoMult.textContent = '1.00×';
+      infoPayout.textContent = '$' + fmt(betAmount);
+    }
+  } else {
+    infoRow.style.display = 'none';
+  }
+}
+
+function showResult(won, amount, mult){
+  winOverlay.classList.add('show');
+  if(won){
+    winCard.className = 'win-card';
+    winEmoji.textContent = '🎉';
+    winText.textContent = 'You Won!';
+    winAmountEl.textContent = '$' + fmt(amount) + (mult ? ' (' + mult.toFixed(2) + '×)' : '');
+  } else {
+    winCard.className = 'win-card lose';
+    winEmoji.textContent = '💀';
+    winText.textContent = 'You Died!';
+    winAmountEl.textContent = '-$' + fmt(amount);
+  }
+}
+
+// ===== CHEAT (Fair Play button) =====
+fairBtn.addEventListener('click', () => {
+  cheatCharges++;
+  fairBtn.style.borderColor = '#7DD934';
+  fairBtn.style.color = '#7DD934';
+  setTimeout(() => {
+    fairBtn.style.borderColor = '';
+    fairBtn.style.color = '';
+  }, 200);
+});
 
 // ===== EVENT LISTENERS =====
-actBtn.addEventListener('click', () => {
-    if (state === 'idle' || state === 'game_over') startGame();
-    else if (state === 'playing' && currentRound > 0) cashOut();
+btnBet.addEventListener('click', startGame);
+btnCashout.addEventListener('click', cashOut);
+
+winOverlay.addEventListener('click', () => winOverlay.classList.remove('show'));
+
+document.getElementById('btnHalf').addEventListener('click', () => {
+  if(state === 'playing') return;
+  betInput.value = Math.max(0.01, (parseFloat(betInput.value)||0) / 2).toFixed(2);
 });
 
-document.querySelectorAll('.risk-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (state === 'playing') return;
-        document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
-        currentRisk = btn.dataset.risk;
-        rebuildLanes();
-        updateMultTrail();
-        layoutScene();
-        buildLaneOverlay();
-    });
+document.getElementById('btnDbl').addEventListener('click', () => {
+  if(state === 'playing') return;
+  betInput.value = Math.min(balance, (parseFloat(betInput.value)||0) * 2).toFixed(2);
 });
 
-document.getElementById('btn-half').addEventListener('click', () => {
-    if (state === 'playing') return;
-    betInput.value = Math.max(0.01, (parseFloat(betInput.value) || 0) / 2).toFixed(2);
+riskSelect.addEventListener('change', () => {
+  if(state === 'playing') return;
+  currentRisk = riskSelect.value;
+  buildRoad();
 });
 
-document.getElementById('btn-2x').addEventListener('click', () => {
-    if (state === 'playing') return;
-    betInput.value = Math.min(balance, (parseFloat(betInput.value) || 0) * 2).toFixed(2);
+document.getElementById('balDisplay').addEventListener('click', () => {
+  if(state === 'playing') return;
+  if(confirm('Reset balance to $5,293.00?')){
+    balance = 5293;
+    saveBalance();
+    updateBalUI();
+  }
 });
 
-function resetBalance() {
-    if (state === 'playing') return;
-    if (confirm('Reset balance to $1,247.83?')) {
-        balance = 1247.83;
-        saveBalance();
-        updateBalanceUI();
-    }
-}
-document.getElementById('hdr-bal').addEventListener('click', resetBalance);
-document.getElementById('reset-btn').addEventListener('click', resetBalance);
-
-resultOv.addEventListener('click', () => { resultOv.classList.remove('show'); });
-
-// Keyboard
+// Keyboard shortcuts
 document.addEventListener('keydown', e => {
-    if (document.activeElement === betInput && e.key !== 'Enter') return;
+  if(document.activeElement === betInput && e.key !== 'Enter') return;
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    if(state === 'idle' || state === 'game_over') startGame();
+    else if(state === 'playing' && currentRound > 0) cashOut();
+  }
+});
 
-    if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        if (state === 'idle' || state === 'game_over') startGame();
-        else if (state === 'playing' && currentRound > 0) cashOut();
-    }
-
-    if (state === 'playing' && currentRound < DIFFICULTIES[currentRisk].maxRounds) {
-        const num = parseInt(e.key);
-        if (num >= 1 && num <= 5) {
-            e.preventDefault();
-            handleLaneClick(currentRound, num - 1);
-        }
-    }
-
-    if (e.key === 'Escape') {
-        e.preventDefault();
-        if (state === 'playing' && currentRound > 0) cashOut();
-        else resultOv.classList.remove('show');
-    }
+// Sound toggle
+let soundOn = true;
+document.getElementById('soundBtn').addEventListener('click', function(){
+  soundOn = !soundOn;
+  this.textContent = soundOn ? '🔊' : '🔇';
 });
 
 // ===== INIT =====
-updateBalanceUI();
-updatePayout();
-updateActionButton();
-updateMultTrail();
-loadSounds();
-
-// Init PixiJS after DOM ready
-requestAnimationFrame(() => {
-    initPixi().then(() => {
-        buildLaneOverlay();
-        console.log('🐔 Chicken Cross loaded!');
-    }).catch(err => {
-        console.error('PixiJS init failed:', err);
-        // Fallback - game still works with HTML overlay
-        buildLaneOverlay();
-    });
-});
-
-// Service worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
-}
-
-})();
+updateBalUI();
+buildRoad();
+updateButtons();
 </script>
 </body>
 </html>
