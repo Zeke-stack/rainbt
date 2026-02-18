@@ -392,8 +392,10 @@ function buildScene() {
 
   for (let i = 0; i < numLanes; i++) {
     const lane = new PIXI.Container();
-    lane.x = i * LANE_W;
     lane.sortableChildren = true;
+    // Original: lanes pivoted at center, positioned at center
+    lane.pivot.set(LANE_W / 2, H / 2);
+    lane.position.set(i * LANE_W + LANE_W / 2, H / 2);
 
     // Road surface
     const road = new PIXI.Graphics();
@@ -414,16 +416,16 @@ function buildScene() {
       line.y = j * 60 + 10;
       stripContainer.addChild(line);
     }
+    stripContainer.zIndex = 1;
     lane.addChild(stripContainer);
 
-    // Manhole cover (tile)
+    // Manhole cover (tile) — centerOffsetY: -60
     const tileContainer = new PIXI.Container();
-    tileContainer.x = LANE_W / 2;
-    tileContainer.y = H / 2;
+    tileContainer.position.set(0, 60); // lane pivot is at H/2, so centerOffsetY -60 -> H/2 + 60 relative to pivot center
     tileContainer.scale.set(TILE_SCALE);
-    tileContainer.pivot.set(0, 0);
     tileContainer.interactive = false;
     tileContainer.cursor = 'pointer';
+    tileContainer.zIndex = 1;
 
     const coverTex = tex('chicken-background-content-2','base-cover-tile.png');
     const cover = new PIXI.Sprite(coverTex);
@@ -488,72 +490,115 @@ function buildScene() {
 
 function buildChicken() {
   chickenRoot = new PIXI.Container();
-  chickenRoot.zIndex = 10;
-  chickenRoot.scale.set(CHICKEN_SCALE);
+  chickenRoot.name = "chicken-character-root";
+  chickenRoot.zIndex = 5;
+  chickenRoot.sortableChildren = true;
 
-  // Body
-  chickenBody = PIXI.Sprite.from(tex('chicken-body-content','chicken-torso.png'));
-  chickenBody.anchor.set(0.5, 0.8);
-  chickenRoot.addChild(chickenBody);
+  // Body container
+  const bodyContainer = new PIXI.Container();
+  bodyContainer.name = "chicken-body-container";
+  bodyContainer.sortableChildren = true;
+  bodyContainer.zIndex = 0;
+
+  // Legs container
+  chickenLegs = new PIXI.Container();
+  chickenLegs.name = "chicken-legs-container";
+  chickenLegs.sortableChildren = true;
+  chickenLegs.zIndex = -1;
 
   // Head container
   const headContainer = new PIXI.Container();
-  headContainer.x = 150 * CHICKEN_SCALE;
-  headContainer.y = -100 * CHICKEN_SCALE;
+  headContainer.name = "chicken-head-container";
+  headContainer.sortableChildren = true;
+  headContainer.position.set(150, -100);
+  headContainer.zIndex = 3;
 
-  // Neck
+  // === TORSO ===
+  chickenBody = PIXI.Sprite.from(tex('chicken-body-content','chicken-torso.png'));
+  chickenBody.anchor.set(0.5);
+  chickenBody.position.set(0, 0);
+  chickenBody.name = "torso";
+  chickenBody.zIndex = 2;
+  bodyContainer.addChild(chickenBody);
+
+  // === WING ===
+  const wing = PIXI.Sprite.from(tex('chicken-body-content','chicken-wing.png'));
+  wing.anchor.set(0.7, 0);
+  wing.position.set(45, -100);
+  wing.name = "chicken-wing";
+  wing.zIndex = 3;
+  bodyContainer.addChild(wing);
+
+  // === TAIL === (position relative to torso size)
+  const tail = PIXI.Sprite.from(tex('chicken-body-content','chicken-tail.png'));
+  tail.anchor.set(0.8, 0.8);
+  const torsoW = chickenBody.texture.width || 618;
+  const torsoH = chickenBody.texture.height || 462;
+  tail.position.set(-(0.38 * torsoW), -(0.28 * torsoH));
+  tail.name = "chicken-tail";
+  tail.zIndex = 4;
+  bodyContainer.addChild(tail);
+
+  // === NECK ===
   const neck = PIXI.Sprite.from(tex('chicken-body-content','chicken-neck.png'));
   neck.anchor.set(0.5);
-  neck.angle = 7;
+  neck.position.set(0, 0);
+  neck.name = "neck";
+  neck.rotation = 7 * Math.PI / 180;
   headContainer.addChild(neck);
+  // Pivot head container at neck's vertical center
+  headContainer.pivot.set(0, 0.5 * neck.height);
 
-  // Face
+  // === FACE ===
   chickenFace = PIXI.Sprite.from(tex('chicken-faces','default.png'));
   chickenFace.anchor.set(0.5);
-  chickenFace.x = 65 * CHICKEN_SCALE;
-  chickenFace.y = -50 * CHICKEN_SCALE;
+  chickenFace.position.set(65, -50);
+  chickenFace.name = "face";
   headContainer.addChild(chickenFace);
 
-  // Red head comb
+  // === RED HEAD (CREST) ===
   const redHead = PIXI.Sprite.from(tex('chicken-body-content','chicken-red-head.png'));
   redHead.anchor.set(0.5);
-  redHead.x = 10 * CHICKEN_SCALE;
-  redHead.y = -175 * CHICKEN_SCALE;
+  redHead.position.set(10, -175);
+  redHead.name = "red-head";
+  redHead.zIndex = -1;
   headContainer.addChild(redHead);
 
-  chickenRoot.addChild(headContainer);
+  bodyContainer.addChild(headContainer);
 
-  // Wing
-  const wing = PIXI.Sprite.from(tex('chicken-body-content','chicken-wing.png'));
-  wing.anchor.set(0.5);
-  wing.x = 45 * CHICKEN_SCALE;
-  wing.y = -100 * CHICKEN_SCALE;
-  chickenRoot.addChild(wing);
+  // === LEGS ===
+  const legTex = tex('chicken-body-content','chicken-leg.png');
+  const leftLeg = PIXI.Sprite.from(legTex);
+  leftLeg.anchor.set(0.5, 0.11);
+  leftLeg.position.set(-15, 170);
+  leftLeg.name = "chicken-left-leg";
+  chickenLegs.addChild(leftLeg);
 
-  // Tail
-  const tail = PIXI.Sprite.from(tex('chicken-body-content','chicken-tail.png'));
-  tail.anchor.set(0.5);
-  tail.zIndex = 4;
-  chickenRoot.addChild(tail);
+  const rightLeg = PIXI.Sprite.from(legTex);
+  rightLeg.anchor.set(0.5, 0.17);
+  rightLeg.position.set(110, 170);
+  rightLeg.name = "chicken-right-leg";
+  chickenLegs.addChild(rightLeg);
 
-  // Legs (simple circles as proxies)
-  chickenLegs = new PIXI.Container();
-  chickenLegs.zIndex = -1;
-  const legL = new PIXI.Graphics();
-  legL.beginFill(0xE8A020);
-  legL.drawEllipse(0,0,3,8);
-  legL.endFill();
-  legL.x = -5; legL.y = 12;
-  chickenLegs.addChild(legL);
-  const legR = legL.clone();
-  legR.x = 5; legR.y = 12;
-  chickenLegs.addChild(legR);
+  // Assemble: root -> legs + body
   chickenRoot.addChild(chickenLegs);
+  chickenRoot.addChild(bodyContainer);
 
-  // Position chicken at start
+  // === PIVOT at center-bottom of bounds with 5% X offset ===
+  const bounds = chickenRoot.getLocalBounds();
+  const pivotX = bounds.x + bounds.width / 2 + bounds.width * 0.05;
+  const pivotY = bounds.y + bounds.height;
+  if (Number.isFinite(pivotX) && Number.isFinite(pivotY)) {
+    chickenRoot.pivot.set(pivotX, pivotY);
+  }
+
+  // Scale
+  chickenRoot.scale.set(CHICKEN_SCALE);
+
+  // Position chicken at start area
   const H = app.screen.height;
-  chickenRoot.x = START_W - 30;
-  chickenRoot.y = H / 2;
+  chickenRoot.x = START_W / 2;
+  chickenRoot.y = H / 2 + 65; // centerOffsetY = -65 -> screenH/2 - (-65)
   sceneContent.addChild(chickenRoot);
 }
 
@@ -599,7 +644,7 @@ function updateTiles() {
       t.container.on('pointertap', () => crossLane(i));
     } else if (i < currentRound) {
       // Crossed (safe)
-      const wonTex = tex('chicken-background-content-2','active-cover-tile.png');
+      const wonTex = tex('chicken-background-content-2','won-cover-tile.png');
       t.cover.texture = wonTex;
       t.multLabel.style.fill = '#7DD934';
       t.cover.tint = 0xFFFFFF;
@@ -633,10 +678,12 @@ async function crossLane(idx) {
   const isSafe = genResult();
   const H = app.screen.height;
   const targetX = START_W + idx * LANE_W + LANE_W / 2;
+  const baseY = H / 2 + 65; // match chicken starting Y
 
   playSound('step');
 
-  // Jump animation (from source: arc 500px, duration 0.2)
+  // Jump animation (from source: arc 500px * scale, duration 0.2)
+  const arcHeight = 500 * CHICKEN_SCALE; // arc in screen space
   const jumpTl = gsap.timeline();
   jumpTl.to(chickenRoot, {
     x: targetX,
@@ -644,7 +691,7 @@ async function crossLane(idx) {
     ease: 'power1.inOut'
   });
   jumpTl.to(chickenRoot, {
-    y: H/2 - 40,
+    y: baseY - arcHeight,
     duration: 0.12,
     ease: 'power2.out',
     yoyo: true,
@@ -660,7 +707,7 @@ async function crossLane(idx) {
 
     // Update tile to won
     const tile = tileSprites[idx];
-    const wonTex = tex('chicken-background-content-2','active-cover-tile.png');
+    const wonTex = tex('chicken-background-content-2','won-cover-tile.png');
     tile.cover.texture = wonTex;
     tile.multLabel.style.fill = '#7DD934';
 
@@ -709,10 +756,10 @@ async function deathCar(laneIdx) {
   // Create car
   const carTex = tex('chicken-cross-cars','pick-truck-b.png');
   const car = new PIXI.Sprite(carTex);
-  car.anchor.set(0.5);
+  car.anchor.set(0.5, 1);
   car.scale.set(CAR_SCALE);
   car.x = laneX + LANE_W / 2;
-  car.y = -100;
+  car.y = -200;
   car.zIndex = 15;
   sceneContent.addChild(car);
   vehicles.push(car);
