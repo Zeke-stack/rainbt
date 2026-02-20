@@ -7,6 +7,7 @@ const PORT = 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const CC_ASSETS = path.join(PUBLIC_DIR, 'chicken-cross_files');
 const BJ_ASSETS = path.join(PUBLIC_DIR, 'blackjack_files');
+const PL_ASSETS = path.join(PUBLIC_DIR, 'plinko_files');
 
 // ═══════════════════════════════════════════════════════════
 // SIMULATED USER
@@ -72,6 +73,43 @@ function makeCCGameResponse(session) {
     chicken_cross_difficulty: session.difficulty,
   };
 }
+
+// ═══════════════════════════════════════════════════════════
+// PLINKO GAME ENGINE
+// ═══════════════════════════════════════════════════════════
+const PLINKO_MULTIPLIERS = {
+  8: {
+    low: [5.6, 2.1, 1.1, 1, 0.5, 1, 1.1, 2.1, 5.6],
+    medium: [13, 3, 1.3, 0.7, 0.4, 0.7, 1.3, 3, 13],
+    high: [29, 4, 1.5, 0.3, 0.2, 0.3, 1.5, 4, 29]
+  },
+  12: {
+    low: [10, 3, 1.6, 1.4, 1.1, 1, 0.5, 1, 1.1, 1.4, 1.6, 3, 10],
+    medium: [18, 4, 1.9, 1.4, 1.1, 1, 0.5, 1, 1.1, 1.4, 1.9, 4, 18],
+    high: [43, 7, 2, 1.6, 1.2, 1, 0.3, 1, 1.2, 1.6, 2, 7, 43]
+  },
+  16: {
+    low: [16, 9, 2, 1.4, 1.4, 1.2, 1.1, 1, 0.5, 1, 1.1, 1.2, 1.4, 1.4, 2, 9, 16],
+    medium: [33, 11, 3, 2, 1.5, 1.3, 1.1, 1, 0.7, 1, 1.1, 1.3, 1.5, 2, 3, 11, 33],
+    high: [110, 41, 10, 5, 3, 1.5, 1, 0.5, 0.3, 0.5, 1, 1.5, 3, 5, 10, 41, 110]
+  }
+};
+
+function simulatePlinko(rows, risk) {
+  var position = rows / 2;
+  var path = [];
+  for (var i = 0; i < rows; i++) {
+    var direction = Math.random() < 0.5 ? -0.5 : 0.5;
+    position += direction;
+    path.push(direction > 0 ? 'R' : 'L');
+  }
+  var bucket = Math.round(position);
+  var multipliers = PLINKO_MULTIPLIERS[rows][risk];
+  var finalBucket = Math.max(0, Math.min(multipliers.length - 1, bucket));
+  return { path: path.join(''), bucket: finalBucket, multiplier: multipliers[finalBucket] };
+}
+
+var plinkoActiveBet = null;
 
 // ═══════════════════════════════════════════════════════════
 // BLACKJACK GAME ENGINE
@@ -527,6 +565,52 @@ var server = http.createServer(function (req, res) {
   }
 
   // ══════════════════════════════════════════════════════════
+  // PLINKO GAME ENDPOINTS
+  // ══════════════════════════════════════════════════════════
+  if (pathname === '/api/v1/original-games/plinko/active-session') {
+    return sendJSON(res, { data: { error: 'er_no_active_session' } });
+  }
+
+  if (pathname === '/api/v1/original-games/plinko/play' && req.method === 'POST') {
+    readBody(req, function(err, data) {
+      if (err) return sendJSON(res, { error: 'er_general' }, 400);
+      var betAmount = parseFloat(data.bet_amount) || 1;
+      var rows = parseInt(data.rows) || 16;
+      var risk = data.risk || 'low';
+      if (betAmount > USER.balance) return sendJSON(res, { error: 'er_insufficient_balance' });
+      if (![8, 12, 16].includes(rows)) return sendJSON(res, { error: 'er_invalid_rows' });
+      if (!['low', 'medium', 'high'].includes(risk)) return sendJSON(res, { error: 'er_invalid_risk' });
+      
+      USER.balance -= betAmount;
+      var result = simulatePlinko(rows, risk);
+      var payout = betAmount * result.multiplier;
+      USER.balance += payout;
+      
+      console.log('\\x1b[35m[PLINKO]\\x1b[0m $' + betAmount.toFixed(2) + ' × ' + result.multiplier + ' = $' + payout.toFixed(2) + ' (rows:' + rows + ' risk:' + risk + ' bucket:' + result.bucket + ') | Balance: $' + USER.balance.toFixed(2));
+      
+      return sendJSON(res, {
+        game_result: {
+          game_history_id: uuid(),
+          game_name: 'plinko',
+          bet_amount: betAmount,
+          currency: data.currency || USER.currency,
+          payout: payout.toFixed(2),
+          multiplier: result.multiplier,
+          game_over: true
+        },
+        plinko_result: {
+          path: result.path,
+          bucket: result.bucket,
+          multiplier: result.multiplier,
+          rows: rows,
+          risk: risk
+        }
+      });
+    });
+    return;
+  }
+
+  // ══════════════════════════════════════════════════════════
   // BLACKJACK GAME ENDPOINTS
   // ══════════════════════════════════════════════════════════
   if (pathname === '/api/v1/original-games/blackjack/active-session') {
@@ -722,6 +806,9 @@ var server = http.createServer(function (req, res) {
   if (pathname === '/casino/originals/blackjack' || pathname === '/en/casino/originals/blackjack') {
     return serveFile(res, path.join(PUBLIC_DIR, 'blackjack.html')) || send404(res, pathname);
   }
+  if (pathname === '/casino/originals/plinko' || pathname === '/en/casino/originals/plinko') {
+    return serveFile(res, path.join(PUBLIC_DIR, 'plinko.html')) || send404(res, pathname);
+  }
 
   // Root → launcher page
   if (pathname === '/' || pathname === '/index.html') {
@@ -729,7 +816,7 @@ var server = http.createServer(function (req, res) {
   }
 
   // Direct asset directory access
-  if (pathname.startsWith('/chicken-cross_files/') || pathname.startsWith('/blackjack_files/')) {
+  if (pathname.startsWith('/chicken-cross_files/') || pathname.startsWith('/blackjack_files/') || pathname.startsWith('/plinko_files/')) {
     var fp = path.join(PUBLIC_DIR, pathname);
     if (serveFile(res, fp)) return;
     // Try subdirectory (assets/)
@@ -798,8 +885,7 @@ if (require.main === module) {
     console.log('  =====================');
     console.log('  http://localhost:' + PORT);
     console.log('  http://localhost:' + PORT + '/casino/originals/chicken-cross');
-    console.log('  http://localhost:' + PORT + '/casino/originals/blackjack');
-    console.log('  Balance: $' + USER.balance.toFixed(2) + ' USD');
+    console.log('  http://localhost:' + PORT + '/casino/originals/blackjack');  console.log('  http://localhost:' + PORT + '/casino/originals/plinko');    console.log('  Balance: $' + USER.balance.toFixed(2) + ' USD');
     console.log('  Mode: DEMO\n');
   });
 }
