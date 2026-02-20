@@ -1,0 +1,60 @@
+{"frames": {
+
+"active-cover-tile.png":
+{
+	"frame": {"x":10,"y":10,"w":161,"h":150},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":150},
+	"sourceSize": {"w":161,"h":150}
+},
+"base-cover-tile.png":
+{
+	"frame": {"x":10,"y":185,"w":161,"h":150},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":150},
+	"sourceSize": {"w":161,"h":150}
+},
+"chicken-sign.png":
+{
+	"frame": {"x":334,"y":10,"w":62,"h":136},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":62,"h":136},
+	"sourceSize": {"w":67,"h":138}
+},
+"open-man-hole.png":
+{
+	"frame": {"x":174,"y":10,"w":161,"h":146},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":146},
+	"sourceSize": {"w":161,"h":146}
+},
+"road-line.png":
+{
+	"frame": {"x":334,"y":160,"w":5,"h":49},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":5,"h":49},
+	"sourceSize": {"w":5,"h":49}
+},
+"won-cover-tile.png":
+{
+	"frame": {"x":185,"y":185,"w":159,"h":148},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":159,"h":148},
+	"sourceSize": {"w":159,"h":148}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "chicken-background-content-2.png",
+	"format": "RGBA8888",
+	"size": {"w":406,"h":345},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ae50a80819c6bf2e25729aeda0ce8141:932f87e2f2e5a0e853bb056dd70784c3:4a1c05fd4a9b8ff1a97834595ae9801f$"
+}
+}

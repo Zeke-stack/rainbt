@@ -1,0 +1,92 @@
+{"frames": {
+
+"0012.png":
+{
+	"frame": {"x":739,"y":534,"w":724,"h":156},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":34,"y":60,"w":724,"h":156},
+	"sourceSize": {"w":816,"h":297}
+},
+"0013.png":
+{
+	"frame": {"x":5,"y":515,"w":728,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":65,"w":728,"h":150},
+	"sourceSize": {"w":816,"h":297}
+},
+"0014.png":
+{
+	"frame": {"x":746,"y":384,"w":731,"h":144},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":31,"y":70,"w":731,"h":144},
+	"sourceSize": {"w":816,"h":297}
+},
+"0015.png":
+{
+	"frame": {"x":5,"y":367,"w":735,"h":142},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":72,"w":735,"h":142},
+	"sourceSize": {"w":816,"h":297}
+},
+"0016.png":
+{
+	"frame": {"x":752,"y":240,"w":738,"h":138},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":73,"w":738,"h":138},
+	"sourceSize": {"w":816,"h":297}
+},
+"0017.png":
+{
+	"frame": {"x":5,"y":229,"w":741,"h":132},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":78,"w":741,"h":132},
+	"sourceSize": {"w":816,"h":297}
+},
+"0018.png":
+{
+	"frame": {"x":756,"y":105,"w":743,"h":129},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":80,"w":743,"h":129},
+	"sourceSize": {"w":816,"h":297}
+},
+"0019.png":
+{
+	"frame": {"x":5,"y":102,"w":745,"h":121},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":84,"w":745,"h":121},
+	"sourceSize": {"w":816,"h":297}
+},
+"0020.png":
+{
+	"frame": {"x":759,"y":5,"w":747,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":105,"w":747,"h":94},
+	"sourceSize": {"w":816,"h":297}
+},
+"0021.png":
+{
+	"frame": {"x":5,"y":5,"w":748,"h":91},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":106,"w":748,"h":91},
+	"sourceSize": {"w":816,"h":297}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "chicken-dust-part-2.png",
+	"format": "RGBA8888",
+	"size": {"w":1511,"h":695},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d5c7534b428626264f2f083ba6953548:0684e2092f083b3670ea8f42fc08f41d:7c2529bc1b12dae982fdcd697355f6f5$"
+}
+}
