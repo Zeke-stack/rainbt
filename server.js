@@ -444,6 +444,26 @@ var server = http.createServer(function (req, res) {
   if (pathname === '/v1/user/recent-games') return sendJSON(res, []);
   if (pathname.startsWith('/v1/user/') && !pathname.includes('balance') && !pathname.includes('wallet')) return sendJSON(res, {});
 
+  // Cloudflare scripts (stub them out)
+  if (pathname.startsWith('/cdn-cgi/')) {
+    res.writeHead(200, { 'Content-Type': 'application/javascript' });
+    res.end('// Cloudflare stub');
+    return;
+  }
+
+  // Generic game endpoints
+  if (pathname.match(/^\/api\/v1\/original-games\/[^\/]+\/game-info$/)) {
+    return sendJSON(res, {
+      game: { id: 'plinko', name: 'Plinko', enabled: true, min_bet: 0.01, max_bet: 10000 }
+    });
+  }
+
+  if (pathname.match(/^\/v1\/games\/[^\/]+$/)) {
+    return sendJSON(res, {
+      game: { id: 'plinko', slug: 'plinko', name: 'Plinko', provider: 'rainbet', enabled: true }
+    });
+  }
+
   // ══════════════════════════════════════════════════════════
   // CHICKEN CROSS GAME ENDPOINTS
   // ══════════════════════════════════════════════════════════
