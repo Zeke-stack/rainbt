@@ -444,6 +444,11 @@ var server = http.createServer(function (req, res) {
   if (pathname === '/v1/user/recent-games') return sendJSON(res, []);
   if (pathname.startsWith('/v1/user/') && !pathname.includes('balance') && !pathname.includes('wallet')) return sendJSON(res, {});
 
+  // Promotions
+  if (pathname === '/promotions/list' || pathname.startsWith('/api/promotions')) {
+    return sendJSON(res, { promotions: [] });
+  }
+
   // Cloudflare scripts (stub them out)
   if (pathname.startsWith('/cdn-cgi/')) {
     res.writeHead(200, { 'Content-Type': 'application/javascript' });
