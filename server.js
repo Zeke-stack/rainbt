@@ -399,6 +399,12 @@ var server = http.createServer(function (req, res) {
   // ══════════════════════════════════════════════════════════
   // AUTH / USER / WALLET ENDPOINTS (shared)
   // ══════════════════════════════════════════════════════════
+  
+  // Log all API requests for debugging
+  if (pathname.startsWith('/api/')) {
+    console.log('\x1b[36m[API]\x1b[0m ' + req.method + ' ' + pathname);
+  }
+  
   if (pathname === '/api/auth/session') {
     return sendJSON(res, {
       user: { access_token: 'demo-token', name: USER.username, email: USER.email, image: null },
