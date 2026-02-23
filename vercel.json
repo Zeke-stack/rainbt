@@ -1,12 +1,13 @@
 {
   "version": 2,
   "functions": {
-    "api/**": {
+    "api/index.js": {
       "maxDuration": 30,
+      "memory": 1024,
       "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,index.html,chicken-cross.html}"
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/$1" }
+    { "source": "/:path*", "destination": "/api?__vercel_path=:path*" }
   ]
 }
