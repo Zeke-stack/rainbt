@@ -1,4 +1,4 @@
-﻿// Rainbet Plinko - Local Game Server
+// Rainbet Plinko - Local Game Server
 // Serves the captured plinko page with local assets and game API
 const http = require('http');
 const fs = require('fs');
@@ -123,8 +123,9 @@ function pickRainRouletteMultiplier() {
 }
 
 // ============================================================
-// PLAYER STATE
+// PLAYER STATE (persisted to player-state.json)
 // ============================================================
+const STATE_FILE = path.join(PLINKO_DIR, 'player-state.json');
 let playerBalance = 10000.00;
 let vaultBalance = 0;
 let promotionalBalance = 0;
@@ -135,6 +136,43 @@ let totalDeposited = 0;
 let totalWithdrawn = 0;
 const betHistory = [];
 const transactionHistory = [];
+
+// Load persisted state on startup
+try {
+  if (fs.existsSync(STATE_FILE)) {
+    const saved = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    if (saved.playerBalance !== undefined) playerBalance = saved.playerBalance;
+    if (saved.vaultBalance !== undefined) vaultBalance = saved.vaultBalance;
+    if (saved.promotionalBalance !== undefined) promotionalBalance = saved.promotionalBalance;
+    if (saved.totalBets !== undefined) totalBets = saved.totalBets;
+    if (saved.totalWagered !== undefined) totalWagered = saved.totalWagered;
+    if (saved.totalProfit !== undefined) totalProfit = saved.totalProfit;
+    if (saved.totalDeposited !== undefined) totalDeposited = saved.totalDeposited;
+    if (saved.totalWithdrawn !== undefined) totalWithdrawn = saved.totalWithdrawn;
+    if (Array.isArray(saved.betHistory)) betHistory.push(...saved.betHistory);
+    if (Array.isArray(saved.transactionHistory)) transactionHistory.push(...saved.transactionHistory);
+    log(`Loaded saved state: $${playerBalance.toFixed(2)} balance, ${totalBets} bets`);
+  }
+} catch(e) { log('Could not load saved state: ' + e.message); }
+
+// Save state to disk (debounced to avoid excessive writes)
+let _saveTimer = null;
+function saveState() {
+  if (IS_VERCEL) return; // read-only filesystem on Vercel
+  if (_saveTimer) return; // already scheduled
+  _saveTimer = setTimeout(() => {
+    _saveTimer = null;
+    try {
+      const state = {
+        playerBalance, vaultBalance, promotionalBalance,
+        totalBets, totalWagered, totalProfit, totalDeposited, totalWithdrawn,
+        betHistory: betHistory.slice(0, 100), // keep last 100
+        transactionHistory: transactionHistory.slice(0, 100),
+      };
+      fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+    } catch(e) { log('Failed to save state: ' + e.message); }
+  }, 500);
+}
 
 // Provably fair seeds
 const serverSeed = crypto.randomBytes(32).toString('hex');
@@ -421,14 +459,16 @@ function resolveFile(filename) {
 // UNIVERSAL NAVIGATION SCRIPT (injected into all game pages)
 // ============================================================
 function buildNavScript(currentGame) {
-  // currentGame: 'plinko' | 'chicken-cross' | 'blackjack' | 'mines-game'
+  // currentGame: 'plinko' | 'chicken-cross' | 'blackjack' | 'mines-game' | 'homepage'
   const gameRouteMap = {
     'plinko':        '/casino/originals/plinko',
     'chicken-cross': '/casino/originals/chicken-cross',
     'blackjack':     '/casino/originals/blackjack',
     'mines-game':    '/casino/originals/mines-game',
+    'homepage':      '/casino',
   };
   const currentPath = gameRouteMap[currentGame] || '/';
+  const isHomepage = currentGame === 'homepage';
 
   return `<script id="nav-intercept">
 (function() {
@@ -451,6 +491,7 @@ function buildNavScript(currentGame) {
     '/casino/originals/mines-game': 'mines-game',
   };
   var HOME_ROUTES = { '/': true, '/casino': true, '/casino/originals': true, '/home': true, '/en/casino': true, '/en': true };
+  var IS_HOMEPAGE = ${isHomepage};
 
   // ── Navigate helper ──
   function navigateTo(path) { window.location.href = path; }
@@ -472,7 +513,7 @@ function buildNavScript(currentGame) {
     // Normalise /en/ prefix
     var normPath = localPath.replace(/^\\/en\\//, '/');
     // Intercept home/casino links
-    if (HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) {
+    if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
       e.preventDefault();
       e.stopPropagation();
       navigateTo('/casino');
@@ -505,7 +546,7 @@ function buildNavScript(currentGame) {
       navigateTo(norm);
       return true;
     }
-    if (HOME_ROUTES[norm]) {
+    if (HOME_ROUTES[norm] && !IS_HOMEPAGE) {
       navigateTo('/casino');
       return true;
     }
@@ -523,7 +564,7 @@ function buildNavScript(currentGame) {
     var norm = location.pathname.replace(/^\\/en\\//, '/');
     if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
       navigateTo(norm);
-    } else if (HOME_ROUTES[norm]) {
+    } else if (HOME_ROUTES[norm] && !IS_HOMEPAGE) {
       navigateTo('/casino');
     }
   });
@@ -1819,6 +1860,11 @@ async function handleRequest(req, res) {
 
   // Normalize: strip /casino/originals prefix so /casino/originals/v1/... â†’ /v1/...
   pathname = pathname.replace(/^\/casino\/originals/, '');
+
+  // Auto-save state after any POST request (balance may have changed)
+  if (req.method === 'POST') {
+    res.on('finish', saveState);
+  }
 
   // Log requests (skip noisy ones)
   if (!pathname.includes('.map') && !pathname.includes('favicon') && !pathname.includes('/cdn/'))
@@ -4277,4 +4323,8 @@ server.listen(PORT, () => {
   log('â•‘  Wallet: Rainbet native (built-in)            â•‘');
   log('â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
 });
+
+// Save state on clean shutdown
+process.on('SIGINT', () => { saveState(); setTimeout(() => process.exit(0), 600); });
+process.on('SIGTERM', () => { saveState(); setTimeout(() => process.exit(0), 600); });
 } // end if (require.main === module)

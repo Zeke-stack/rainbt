@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Player state (persisted locally, not deployed)
+plinko/player-state.json
+
 # Browser profiles (large, not needed for deployment)
 browser-profile/
 chrome-capture-profile/
