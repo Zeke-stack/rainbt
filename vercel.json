@@ -3,16 +3,7 @@
   "functions": {
     "api/[[...path]].js": {
       "maxDuration": 30,
-      "includeFiles": [
-        "plinko/**",
-        "chicken-cross_files/**",
-        "mines/**",
-        "homepage/**",
-        "rainbet/public/**",
-        "Images/**",
-        "index.html",
-        "chicken-cross.html"
-      ]
+      "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,index.html,chicken-cross.html}"
     }
   },
   "rewrites": [
