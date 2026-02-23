@@ -452,6 +452,30 @@ function buildNavScript(currentGame) {
   };
   var HOME_ROUTES = { '/': true, '/casino': true, '/casino/originals': true, '/home': true, '/en/casino': true, '/en': true };
 
+  // ── Helper: navigate by fetching page HTML and replacing document ──
+  // This avoids full-reload 404s on Vercel by keeping navigation client-side
+  var _origPushState = history.pushState.bind(history);
+  function navigateTo(targetPath) {
+    // Show a quick loading indicator
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(13,14,26,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-family:sans-serif;';
+    overlay.textContent = 'Loading...';
+    document.body.appendChild(overlay);
+
+    fetch(targetPath, { headers: { 'Accept': 'text/html' } })
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        _origPushState(null, '', targetPath);
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(function() {
+        // Fallback: hard navigate
+        window.location.href = targetPath;
+      });
+  }
+
   // ── 1. Click interceptor: force full page reload for game nav ──
   document.addEventListener('click', function(e) {
     var a = e.target.closest ? e.target.closest('a[href]') : null;
@@ -472,20 +496,20 @@ function buildNavScript(currentGame) {
     if (HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = '/casino';
+      navigateTo('/casino');
       return false;
     }
     if (GAME_SLUGS[normPath] && normPath !== CURRENT_PATH) {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = normPath;
+      navigateTo(normPath);
       return false;
     }
     // Also intercept "Games you might like" links
     if (GAME_ROUTES[localPath]) {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = localPath.replace(/^\\/en\\//, '/');
+      navigateTo(localPath.replace(/^\\/en\\//, '/'));
       return false;
     }
   }, true);
@@ -499,11 +523,11 @@ function buildNavScript(currentGame) {
     try { path = new URL(path, location.origin).pathname; } catch(e) {}
     var norm = path.replace(/^\\/en\\//, '/');
     if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
-      window.location.href = norm;
+      navigateTo(norm);
       return true;
     }
     if (HOME_ROUTES[norm]) {
-      window.location.href = '/casino';
+      navigateTo('/casino');
       return true;
     }
     return false;
@@ -519,9 +543,9 @@ function buildNavScript(currentGame) {
   window.addEventListener('popstate', function() {
     var norm = location.pathname.replace(/^\\/en\\//, '/');
     if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
-      window.location.href = norm;
+      navigateTo(norm);
     } else if (HOME_ROUTES[norm]) {
-      window.location.href = '/casino';
+      navigateTo('/casino');
     }
   });
 
