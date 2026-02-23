@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "api/[...path].js": {
+    "api/**": {
       "maxDuration": 30,
       "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,index.html,chicken-cross.html}"
     }
