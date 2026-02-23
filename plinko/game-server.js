@@ -490,6 +490,41 @@ function buildNavScript(currentGame) {
     }
   }, true);
 
+  // ── 1b. Intercept history.pushState/replaceState so Next.js client-side nav triggers reload ──
+  var origPush = history.pushState;
+  var origReplace = history.replaceState;
+  function checkNavChange(url) {
+    if (!url) return false;
+    var path = String(url);
+    try { path = new URL(path, location.origin).pathname; } catch(e) {}
+    var norm = path.replace(/^\\/en\\//, '/');
+    if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
+      window.location.href = norm;
+      return true;
+    }
+    if (HOME_ROUTES[norm]) {
+      window.location.href = '/casino';
+      return true;
+    }
+    return false;
+  }
+  history.pushState = function(state, title, url) {
+    if (checkNavChange(url)) return;
+    return origPush.apply(this, arguments);
+  };
+  history.replaceState = function(state, title, url) {
+    if (checkNavChange(url)) return;
+    return origReplace.apply(this, arguments);
+  };
+  window.addEventListener('popstate', function() {
+    var norm = location.pathname.replace(/^\\/en\\//, '/');
+    if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
+      window.location.href = norm;
+    } else if (HOME_ROUTES[norm]) {
+      window.location.href = '/casino';
+    }
+  });
+
   // ── 2. Active state + sidebar injection (runs after DOM ready) ──
   function fixSidebar() {
     // Set data-active on all sidebar game links
