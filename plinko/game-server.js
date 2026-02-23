@@ -452,35 +452,8 @@ function buildNavScript(currentGame) {
   };
   var HOME_ROUTES = { '/': true, '/casino': true, '/casino/originals': true, '/home': true, '/en/casino': true, '/en': true };
 
-  // ── Helper: navigate by fetching page HTML and replacing document ──
-  // Fetches directly from /api?__path=X to bypass Vercel rewrite issues
-  var _origPushState = history.pushState.bind(history);
-  function navigateTo(targetPath) {
-    // Show a quick loading indicator
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(13,14,26,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-family:sans-serif;';
-    overlay.textContent = 'Loading...';
-    document.body.appendChild(overlay);
-
-    // Fetch directly from the API endpoint to avoid rewrite issues
-    var fetchUrl = '/api?__path=' + encodeURIComponent(targetPath);
-
-    fetch(fetchUrl, { headers: { 'Accept': 'text/html' } })
-      .then(function(r) {
-        if (!r.ok) throw new Error(r.status);
-        return r.text();
-      })
-      .then(function(html) {
-        _origPushState(null, '', targetPath);
-        document.open();
-        document.write(html);
-        document.close();
-      })
-      .catch(function(err) {
-        // Last resort: just navigate - if this 404s, nothing we can do
-        window.location.assign(targetPath);
-      });
-  }
+  // ── Navigate helper ──
+  function navigateTo(path) { window.location.href = path; }
 
   // ── 1. Click interceptor: force full page reload for game nav ──
   document.addEventListener('click', function(e) {
