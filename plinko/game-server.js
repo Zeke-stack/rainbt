@@ -453,7 +453,7 @@ function buildNavScript(currentGame) {
   var HOME_ROUTES = { '/': true, '/casino': true, '/casino/originals': true, '/home': true, '/en/casino': true, '/en': true };
 
   // ── Helper: navigate by fetching page HTML and replacing document ──
-  // This avoids full-reload 404s on Vercel by keeping navigation client-side
+  // Fetches directly from /api?__path=X to bypass Vercel rewrite issues
   var _origPushState = history.pushState.bind(history);
   function navigateTo(targetPath) {
     // Show a quick loading indicator
@@ -462,17 +462,23 @@ function buildNavScript(currentGame) {
     overlay.textContent = 'Loading...';
     document.body.appendChild(overlay);
 
-    fetch(targetPath, { headers: { 'Accept': 'text/html' } })
-      .then(function(r) { return r.text(); })
+    // Fetch directly from the API endpoint to avoid rewrite issues
+    var fetchUrl = '/api?__path=' + encodeURIComponent(targetPath);
+
+    fetch(fetchUrl, { headers: { 'Accept': 'text/html' } })
+      .then(function(r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+      })
       .then(function(html) {
         _origPushState(null, '', targetPath);
         document.open();
         document.write(html);
         document.close();
       })
-      .catch(function() {
-        // Fallback: hard navigate
-        window.location.href = targetPath;
+      .catch(function(err) {
+        // Last resort: just navigate - if this 404s, nothing we can do
+        window.location.assign(targetPath);
       });
   }
 
