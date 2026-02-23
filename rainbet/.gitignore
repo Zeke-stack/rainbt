@@ -1,0 +1,7 @@
+# Ignore everything in rainbet/ except blackjack game files
+*
+!.gitignore
+!public/
+!public/blackjack.html
+!public/blackjack_files/
+!public/blackjack_files/**

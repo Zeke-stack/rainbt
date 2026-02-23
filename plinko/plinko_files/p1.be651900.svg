@@ -1,0 +1,35 @@
+<svg width="58" height="49" viewBox="0 0 58 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>1st Place Trophy</title>
+  <g filter="url(#filter0_d_5905_21539)">
+    <path d="M17.5423 17.8361L29 11.221L40.4577 17.8361V31.0663L29 37.6814L17.5423 31.0663V17.8361Z" fill="#D2BA7A"
+      fill-opacity="0.2" stroke="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:0.2;stroke:#D2BA7A;stroke:color(display-p3 0.8250 0.7278 0.4778);stroke-opacity:1;"
+      stroke-width="1.33333" />
+    <path d="M13.7305 23.8789L17.159 29.5932V26.1646L13.7305 23.8789Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+    <path d="M12.2852 19.3086L17.9994 28.4515V22.9657L12.2852 19.3086Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+    <path d="M10 12.4512L18 25.0226V17.4797L10 12.4512Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+    <path d="M44.3701 23.8789L40.9415 29.5932V26.1646L44.3701 23.8789Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+    <path d="M45.7148 19.3086L40.0006 28.4515V22.9657L45.7148 19.3086Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+    <path d="M48 12.4512L40 25.0226V17.4797L48 12.4512Z" fill="#D2BA7A"
+      style="fill:#D2BA7A;fill:color(display-p3 0.8235 0.7294 0.4784);fill-opacity:1;" />
+  </g>
+  <defs>
+    <filter id="filter0_d_5905_21539" x="0" y="0.451172" width="58" height="48" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+        result="hardAlpha" />
+      <feOffset />
+      <feGaussianBlur stdDeviation="5" />
+      <feComposite in2="hardAlpha" operator="out" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.823529 0 0 0 0 0.729412 0 0 0 0 0.478431 0 0 0 0.5 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_5905_21539" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_5905_21539" result="shape" />
+    </filter>
+  </defs>
+</svg>

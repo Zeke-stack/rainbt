@@ -1,0 +1,92 @@
+{"frames": {
+
+"blocker-shadow.png":
+{
+	"frame": {"x":9,"y":312,"w":548,"h":68},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":548,"h":68},
+	"sourceSize": {"w":548,"h":68}
+},
+"bottom-curb.png":
+{
+	"frame": {"x":109,"y":261,"w":37,"h":345},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":37,"h":345},
+	"sourceSize": {"w":37,"h":345}
+},
+"fingers.png":
+{
+	"frame": {"x":125,"y":160,"w":26,"h":31},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":31},
+	"sourceSize": {"w":26,"h":31}
+},
+"glowing-eyes.png":
+{
+	"frame": {"x":125,"y":205,"w":15,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":42},
+	"sourceSize": {"w":15,"h":42}
+},
+"lamp-light.png":
+{
+	"frame": {"x":9,"y":9,"w":146,"h":137},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":146,"h":137},
+	"sourceSize": {"w":155,"h":147}
+},
+"lamp.png":
+{
+	"frame": {"x":9,"y":160,"w":38,"h":102},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":102},
+	"sourceSize": {"w":38,"h":102}
+},
+"side-grate-background.png":
+{
+	"frame": {"x":9,"y":212,"w":36,"h":86},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":86},
+	"sourceSize": {"w":36,"h":86}
+},
+"side-grate.png":
+{
+	"frame": {"x":9,"y":262,"w":36,"h":86},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":86},
+	"sourceSize": {"w":36,"h":86}
+},
+"top-bench.png":
+{
+	"frame": {"x":91,"y":620,"w":66,"h":206},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":66,"h":206},
+	"sourceSize": {"w":66,"h":206}
+},
+"top-curb.png":
+{
+	"frame": {"x":169,"y":9,"w":37,"h":551},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":37,"h":551},
+	"sourceSize": {"w":37,"h":551}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "chicken-background-content-1.png",
+	"format": "RGBA8888",
+	"size": {"w":215,"h":869},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:13ec249819ea8de129538ea79d770a2c:b718ec1e12920cac2e164d3323850c3a:edce91cdd1fdb7e60226710b1bab0b5c$"
+}
+}

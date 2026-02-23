@@ -1,0 +1,76 @@
+{
+  "frames": {
+    "chicken-feather.png": {
+      "frame": { "x": 8, "y": 8, "w": 86, "h": 117 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 86, "h": 117 },
+      "sourceSize": { "w": 86, "h": 117 }
+    },
+    "chicken-leg.png": {
+      "frame": { "x": 224, "y": 8, "w": 111, "h": 275 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 111, "h": 275 },
+      "sourceSize": { "w": 111, "h": 275 }
+    },
+    "chicken-neck.png": {
+      "frame": { "x": 1123, "y": 8, "w": 368, "h": 398 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 368, "h": 398 },
+      "sourceSize": { "w": 368, "h": 398 }
+    },
+    "chicken-red-head.png": {
+      "frame": { "x": 528, "y": 8, "w": 223, "h": 169 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 223, "h": 169 },
+      "sourceSize": { "w": 223, "h": 169 }
+    },
+    "chicken-tail.png": {
+      "frame": { "x": 349, "y": 8, "w": 165, "h": 220 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 165, "h": 220 },
+      "sourceSize": { "w": 165, "h": 220 }
+    },
+    "chicken-torso.png": {
+      "frame": { "x": 8, "y": 420, "w": 618, "h": 462 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 618, "h": 462 },
+      "sourceSize": { "w": 618, "h": 462 }
+    },
+    "chicken-wing.png": {
+      "frame": { "x": 765, "y": 8, "w": 344, "h": 236 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 344, "h": 236 },
+      "sourceSize": { "w": 344, "h": 236 }
+    },
+    "dead-chicken.png": {
+      "frame": { "x": 640, "y": 420, "w": 831, "h": 525 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 831, "h": 525 },
+      "sourceSize": { "w": 831, "h": 525 }
+    },
+    "ghost-body.png": {
+      "frame": { "x": 108, "y": 8, "w": 102, "h": 246 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 102, "h": 246 },
+      "sourceSize": { "w": 102, "h": 246 }
+    }
+  },
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "version": "1.1",
+    "image": "chicken-body-content.png",
+    "format": "RGBA8888",
+    "size": { "w": 1499, "h": 953 },
+    "scale": "1",
+    "smartupdate": "$TexturePacker:SmartUpdate:ecd91c76db5bfe378f60803fff670e8a:6b9db6c26915b8e394f815aecc264513:8b32d0408907d3600d90f3eaf1f0a1d4$"
+  }
+}

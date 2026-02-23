@@ -1,0 +1,6 @@
+import{r as e,j as d,b as c}from"./main-BtHv9Qrc.js";import{C as S}from"./ChevronDown-CcjLNdWd.js";const f=250,T=({title:n,titleClassName:a="",titleContainerClassName:r="",openMaxHeight:o="!max-h-[1000px]",defaultOpen:t=!1,openButtonTestId:i,children:m,...h})=>{const[s,b]=e.useState(t),[p,l]=e.useState(t),[v,u]=e.useState(t);return e.useEffect(()=>{if(s){l(!0);const x=setTimeout(()=>{u(!0)},f);return()=>clearTimeout(x)}u(!1);const w=setTimeout(()=>{l(!1)},f);return()=>clearTimeout(w)},[s]),d("div",{...h,children:[d("button",{className:`flex items-center justify-between gap-2
+          bg-transparent border-b-[0.5px] border-solid
+          border-coldGray-5 dark:border-coldGray-60 ${r}`,type:"button",onClick:()=>{b(!s)},"data-testid":i,children:[c("p",{className:a,children:n}),c(S,{className:`transition-transform duration-250 ${s?"rotate-180":""}`})]}),c("div",{className:`max-h-0 transition-all duration-250
+          ${s?o:""}
+          ${v?"":"overflow-hidden"}`,children:p&&m})]})},R=()=>{const[n,a]=e.useState(!1),r=e.useRef(null);return e.useEffect(()=>{const o=r.current;if(!o)return;const t=new IntersectionObserver(([i])=>{a(i.isIntersecting)},{threshold:0});return t.observe(o),()=>t.disconnect()},[]),{isStuck:n,sentinelRef:r}};export{T as L,R as u};
+//# sourceMappingURL=useStickyBorder-Ca_2Q4fe.js.map

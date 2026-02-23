@@ -1,0 +1,100 @@
+{"frames": {
+
+"car-a.png":
+{
+	"frame": {"x":174,"y":277,"w":145,"h":268},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":145,"h":268},
+	"sourceSize": {"w":145,"h":268}
+},
+"head-lights.png":
+{
+	"frame": {"x":4,"y":872,"w":435,"h":349},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":435,"h":349},
+	"sourceSize": {"w":435,"h":349}
+},
+"pick-truck-b.png":
+{
+	"frame": {"x":329,"y":555,"w":148,"h":307},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":148,"h":307},
+	"sourceSize": {"w":148,"h":307}
+},
+"police-a.png":
+{
+	"frame": {"x":4,"y":555,"w":160,"h":268},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":268},
+	"sourceSize": {"w":160,"h":268}
+},
+"police-light-blue.png":
+{
+	"frame": {"x":234,"y":4,"w":160,"h":263},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":263},
+	"sourceSize": {"w":160,"h":263}
+},
+"police-light-red.png":
+{
+	"frame": {"x":4,"y":277,"w":160,"h":263},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":263},
+	"sourceSize": {"w":160,"h":263}
+},
+"taxi-a.png":
+{
+	"frame": {"x":174,"y":555,"w":145,"h":268},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":145,"h":268},
+	"sourceSize": {"w":145,"h":268}
+},
+"tire-tracks.png":
+{
+	"frame": {"x":162,"y":1231,"w":260,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":260,"h":512},
+	"sourceSize": {"w":260,"h":512}
+},
+"truck-b.png":
+{
+	"frame": {"x":4,"y":1231,"w":148,"h":355},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":148,"h":355},
+	"sourceSize": {"w":148,"h":355}
+},
+"wind-shield-a.png":
+{
+	"frame": {"x":122,"y":4,"w":102,"h":56},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":102,"h":56},
+	"sourceSize": {"w":102,"h":56}
+},
+"wind-shield-b.png":
+{
+	"frame": {"x":4,"y":4,"w":108,"h":51},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":108,"h":51},
+	"sourceSize": {"w":108,"h":51}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "chicken-cross-cars.png",
+	"format": "RGBA8888",
+	"size": {"w":481,"h":1747},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3ab1de89b7dd6e29e1203780b58db108:44572c934eff0e70a886f003fca262f0:f8c3a941d81f8106dde96ab3aa558ec2$"
+}
+}

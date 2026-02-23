@@ -1,0 +1,1 @@
+onmessage=function(e){e.isTrusted&&''===e.origin&&null===e.source&&eval(e.data)}

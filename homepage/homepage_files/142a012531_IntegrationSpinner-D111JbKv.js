@@ -1,0 +1,2 @@
+import{u as r,j as i,b as t,E as o,I as l}from"./main-BtHv9Qrc.js";const g=({className:n="",badge:a})=>{const{selectedIntegrationLogo:e,selectedIntegrationName:s}=r();return i("div",{className:`relative w-min ${n}`,children:[t(o,{size:"medium",className:"[--spinner:#787A87]"}),t(l,{size:"large",integrationLightIconUrl:e?.iconLightUrl,integrationDarkIconUrl:e?.iconDarkUrl,fallback:s[0]??"",className:"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",badge:a})]})};export{g as I};
+//# sourceMappingURL=IntegrationSpinner-D111JbKv.js.map

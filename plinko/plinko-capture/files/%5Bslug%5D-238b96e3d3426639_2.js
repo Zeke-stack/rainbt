@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[3351],{60039:function(n,_,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/casino/[type]/[slug]",function(){return u(62469)}])}},function(n){n.O(0,[4574,5983,9562,384,5325,1253,8145,8843,158,4430,7581,3573,5055,3794,9393,2067,5191,574,4122,2095,1238,2888,9774,179],function(){return n(n.s=60039)}),_N_E=n.O()}]);

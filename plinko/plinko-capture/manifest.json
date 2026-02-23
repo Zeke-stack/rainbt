@@ -1,0 +1,4825 @@
+[
+  {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/60138c04e6b2/api.js",
+    "file": "files\\api_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 51151,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/92375f45ea7a2b8d.css",
+    "file": "files\\92375f45ea7a2b8d_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 286517,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/webpack-2086391f239170c2.js",
+    "file": "files\\webpack-2086391f239170c2_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 11678,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/framework-6603b6fce1ea64cf.js",
+    "file": "files\\framework-6603b6fce1ea64cf_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 140001,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/main-f6acb701ea428681.js",
+    "file": "files\\main-f6acb701ea428681_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 158907,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/_app-a32a0248a19c9d94.js",
+    "file": "files\\_app-a32a0248a19c9d94_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 1271319,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4574-3f9fa13d92c96842.js",
+    "file": "files\\4574-3f9fa13d92c96842_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 56244,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5983-652a6d4310c6c344.js",
+    "file": "files\\5983-652a6d4310c6c344_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 124317,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9562-2e5c613305ad42da.js",
+    "file": "files\\9562-2e5c613305ad42da_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 6957,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/384-4c204fd46bc9eaef.js",
+    "file": "files\\384-4c204fd46bc9eaef_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 39029,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5325-38a6487a47a928d9.js",
+    "file": "files\\5325-38a6487a47a928d9_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 20886,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1253-03ece973ebe91b90.js",
+    "file": "files\\1253-03ece973ebe91b90_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 21263,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8145-1683775d419d7f3b.js",
+    "file": "files\\8145-1683775d419d7f3b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 12329,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8843-1f37cdb9c612a6dd.js",
+    "file": "files\\8843-1f37cdb9c612a6dd_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 24418,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/158-e4bd024e02960361.js",
+    "file": "files\\158-e4bd024e02960361_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 57289,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4430-5dc28848bcf32481.js",
+    "file": "files\\4430-5dc28848bcf32481_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 38544,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7356-f90101e249e07a9d.js",
+    "file": "files\\7356-f90101e249e07a9d_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 36414,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7581-9e05b1ee342152e8.js",
+    "file": "files\\7581-9e05b1ee342152e8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 9463,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3573-49cda7cf990af8fc.js",
+    "file": "files\\3573-49cda7cf990af8fc_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 51533,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3794-d19028dab6841c8b.js",
+    "file": "files\\3794-d19028dab6841c8b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 8831,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9393-1c7ab921b4f29775.js",
+    "file": "files\\9393-1c7ab921b4f29775_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 109695,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2067-1c18c73ca1c1f4c4.js",
+    "file": "files\\2067-1c18c73ca1c1f4c4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 36808,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/574-af38011058a07522.js",
+    "file": "files\\574-af38011058a07522_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 10069,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2095-f5d17f8213718f58.js",
+    "file": "files\\2095-f5d17f8213718f58_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 71006,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/casino/originals/%5Bgame%5D-ebaa43d8a788300e.js",
+    "file": "files\\%5Bgame%5D-ebaa43d8a788300e_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 22552,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/BXlsuE3dMi4odtiz7ehnZ/_buildManifest.js",
+    "file": "files\\_buildManifest_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 12884,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/BXlsuE3dMi4odtiz7ehnZ/_ssgManifest.js",
+    "file": "files\\_ssgManifest_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 119,
+    "status": 200
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-P7BHS72H",
+    "file": "files\\gtm_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 301465,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko",
+    "file": "files\\plinko_2",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167791,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Gifs/preloader-rainbet-med.webp",
+    "file": "files\\preloader-rainbet-med_2.webp",
+    "contentType": "image/webp",
+    "size": 87836,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/909e7c1e8b8dbda9.css",
+    "file": "files\\909e7c1e8b8dbda9_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 94185,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/98bbde5fafffa67d.css",
+    "file": "files\\98bbde5fafffa67d_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 27494,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/321895ea38daf01f.css",
+    "file": "files\\321895ea38daf01f_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 42909,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/a899cf31b82f1f07.css",
+    "file": "files\\a899cf31b82f1f07_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 659,
+    "status": 200
+  },
+  {
+    "url": "https://connect.facebook.net/en_US/fbevents.js",
+    "file": "files\\fbevents_2.js",
+    "contentType": "application/x-javascript; charset=utf-8",
+    "size": 359062,
+    "status": 200
+  },
+  {
+    "url": "https://connect.facebook.net/signals/config/1240395991347383?v=2.9.268&r=stable&domain=rainbet.com&hme=8c09666b801027ec77ae6e3d39d3827f08833acc316174b73d9ec4ab26e1bdc3&ex_m=96%2C188%2C136%2C21%2C68%2C69%2C129%2C64%2C43%2C130%2C73%2C63%2C10%2C144%2C82%2C15%2C95%2C124%2C117%2C71%2C74%2C123%2C141%2C104%2C146%2C7%2C3%2C4%2C6%2C5%2C2%2C83%2C93%2C147%2C152%2C202%2C57%2C168%2C169%2C50%2C240%2C28%2C70%2C214%2C213%2C212%2C30%2C56%2C9%2C59%2C89%2C90%2C91%2C97%2C120%2C29%2C27%2C122%2C119%2C118%2C137%2C72%2C140%2C138%2C139%2C45%2C55%2C113%2C14%2C143%2C40%2C228%2C229%2C227%2C24%2C25%2C26%2C17%2C19%2C39%2C35%2C37%2C36%2C78%2C84%2C88%2C102%2C128%2C131%2C41%2C103%2C22%2C20%2C109%2C65%2C33%2C133%2C132%2C134%2C125%2C23%2C32%2C54%2C101%2C142%2C66%2C16%2C135%2C106%2C77%2C62%2C18%2C31%2C252%2C195%2C182%2C183%2C181%2C255%2C247%2C196%2C99%2C121%2C76%2C111%2C49%2C42%2C44%2C105%2C110%2C116%2C53%2C60%2C115%2C48%2C51%2C47%2C92%2C145%2C0%2C114%2C13%2C112%2C11%2C1%2C52%2C85%2C58%2C61%2C108%2C81%2C80%2C148%2C149%2C86%2C87%2C8%2C94%2C46%2C126%2C79%2C75%2C67%2C107%2C98%2C38%2C127%2C34%2C100%2C12%2C150",
+    "file": "files\\1240395991347383_2",
+    "contentType": "application/x-javascript; charset=utf-8",
+    "size": 157235,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko&rl=&if=false&ts=1771710865399&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=856.7000000476837&it=1771710865387&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_44",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/32d988a72364d5a4.css",
+    "file": "files\\32d988a72364d5a4_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 26544,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/4aa176f6be7d20e9.css",
+    "file": "files\\4aa176f6be7d20e9_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 5237,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/1905ab78a73b4fcd.css",
+    "file": "files\\1905ab78a73b4fcd_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 37875,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/2babf006f5f31c38.css",
+    "file": "files\\2babf006f5f31c38_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 6550,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/55ebd617-ee2b2306ffca7875.js",
+    "file": "files\\55ebd617-ee2b2306ffca7875_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 51825,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/f134877f-cf94f396b8c8b4af.js",
+    "file": "files\\f134877f-cf94f396b8c8b4af_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 109738,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3131-31dfc62b3b17da68.js",
+    "file": "files\\3131-31dfc62b3b17da68_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 18617,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6325-3e8caad8563dc2b8.js",
+    "file": "files\\6325-3e8caad8563dc2b8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 24436,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6721-47f3ff6ed303c552.js",
+    "file": "files\\6721-47f3ff6ed303c552_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 245504,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8350-b0ab5ca7bd7cbb58.js",
+    "file": "files\\8350-b0ab5ca7bd7cbb58_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 62154,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3044-61fbb38582cba102.js",
+    "file": "files\\3044-61fbb38582cba102_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 271949,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2052-88a4612620f20521.js",
+    "file": "files\\2052-88a4612620f20521_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 12183,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1958-68a1ab7da693b834.js",
+    "file": "files\\1958-68a1ab7da693b834_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 176103,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1707-f681bd9010c6366c.js",
+    "file": "files\\1707-f681bd9010c6366c_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 34647,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4321-f01f48ba91d20d2a.js",
+    "file": "files\\4321-f01f48ba91d20d2a_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 21148,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9628-b165d76bcb061077.js",
+    "file": "files\\9628-b165d76bcb061077_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 311872,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4153.bc691ece3335fca4.js",
+    "file": "files\\4153.bc691ece3335fca4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 76015,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/2cb79b60422460d6.css",
+    "file": "files\\2cb79b60422460d6_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 5609,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7269.e8bb7bc8c2bfc6d0.js",
+    "file": "files\\7269.e8bb7bc8c2bfc6d0_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 17312,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/c828d42a4a747d76.css",
+    "file": "files\\c828d42a4a747d76_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 20087,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9594-9ede9b47f9bab9b6.js",
+    "file": "files\\9594-9ede9b47f9bab9b6_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 40820,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6214.869a4ee532bc17c3.js",
+    "file": "files\\6214.869a4ee532bc17c3_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 5345,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3460-1aad56ec76945362.js",
+    "file": "files\\3460-1aad56ec76945362_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 29555,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2831.506d1c27ca5fae3e.js",
+    "file": "files\\2831.506d1c27ca5fae3e_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 11598,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5722.d758b8c4a3e712f0.js",
+    "file": "files\\5722.d758b8c4a3e712f0_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 89057,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/103d6807c165782d.css",
+    "file": "files\\103d6807c165782d_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 3795,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9715.7215189f90a180b4.js",
+    "file": "files\\9715.7215189f90a180b4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 4867,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6531.666ae7bf12951fa8.js",
+    "file": "files\\6531.666ae7bf12951fa8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 102794,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/rewards/ranks/bronze.svg",
+    "file": "files\\bronze_2.svg",
+    "contentType": "image/webp",
+    "size": 544,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/rewards/ranks/platinum.svg",
+    "file": "files\\platinum_2.svg",
+    "contentType": "image/webp",
+    "size": 752,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/rewards/ranks/silver.svg",
+    "file": "files\\silver_2.svg",
+    "contentType": "image/webp",
+    "size": 556,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5034.ba663923712530d8.js",
+    "file": "files\\5034.ba663923712530d8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 14751,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8119.feacfda72bd581b4.js",
+    "file": "files\\8119.feacfda72bd581b4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 1047,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7688.4e53ff64fb6ddb7b.js",
+    "file": "files\\7688.4e53ff64fb6ddb7b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 12172,
+    "status": 200
+  },
+  {
+    "url": "https://widget.intercom.io/widget/w3maa0h3",
+    "file": "files\\w3maa0h3_2",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 7614,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7705-3ab9eb40accb0206.js",
+    "file": "files\\7705-3ab9eb40accb0206_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 30398,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3745.bd6ddf81f09f8f43.js",
+    "file": "files\\3745.bd6ddf81f09f8f43_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 34997,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/rainbet-logo.svg",
+    "file": "files\\rainbet-logo_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 7480,
+    "status": 200
+  },
+  {
+    "url": "https://b2ba2232-9d9f-4eed-868f-62dfae496dd4.snippet.anjouangaming.org/anj-seal.js",
+    "file": "files\\anj-seal_2.js",
+    "contentType": "text/javascript; charset=utf-8",
+    "size": 3092,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/auth/me",
+    "file": "files\\me_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 48,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/1fd3f41c79544661.css",
+    "file": "files\\1fd3f41c79544661_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 71356,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/ae3505c1a54671ef.css",
+    "file": "files\\ae3505c1a54671ef_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 129843,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/06b3a2684c8232ff.css",
+    "file": "files\\06b3a2684c8232ff_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 91574,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fchicken-cross.png&w=256&q=75",
+    "file": "files\\image_42",
+    "contentType": "image/webp",
+    "size": 10002,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fblackjack.png&w=256&q=75",
+    "file": "files\\image_43",
+    "contentType": "image/webp",
+    "size": 10176,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fmines.png&w=256&q=75",
+    "file": "files\\image_44",
+    "contentType": "image/webp",
+    "size": 8780,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fkeno.png&w=256&q=75",
+    "file": "files\\image_45",
+    "contentType": "image/webp",
+    "size": 7996,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fdice.png&w=256&q=75",
+    "file": "files\\image_46",
+    "contentType": "image/webp",
+    "size": 10918,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Flimbo.png&w=256&q=75",
+    "file": "files\\image_47",
+    "contentType": "image/webp",
+    "size": 9516,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Ftower.png&w=256&q=75",
+    "file": "files\\image_48",
+    "contentType": "image/webp",
+    "size": 9962,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Frock-paper-scissors.png&w=256&q=75",
+    "file": "files\\image_49",
+    "contentType": "image/webp",
+    "size": 10150,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fwheel.png&w=256&q=75",
+    "file": "files\\image_50",
+    "contentType": "image/webp",
+    "size": 8024,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/headset-icon.svg",
+    "file": "files\\headset-icon_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 1619,
+    "status": 200
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-40SG9F6WX6",
+    "file": "files\\js_4",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 455859,
+    "status": 200
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-40SG9F6WX6&cx=c&gtm=4e62i1",
+    "file": "files\\js_5",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 455870,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/providers",
+    "file": "files\\providers_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 8318,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/public/currencies",
+    "file": "files\\currencies_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2888,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/crypto",
+    "file": "files\\crypto_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 6977,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2925.9473bb228a2e55c1.js",
+    "file": "files\\2925.9473bb228a2e55c1_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 4979,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/icons/gift-icon.svg",
+    "file": "files\\gift-icon_2.svg",
+    "contentType": "image/webp",
+    "size": 478,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmini-ticket.175af0e7.png&w=32&q=75",
+    "file": "files\\image_51",
+    "contentType": "image/webp",
+    "size": 1012,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/icons/vip-trophy.svg",
+    "file": "files\\vip-trophy_2.svg",
+    "contentType": "image/webp",
+    "size": 740,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/race-crown-laurel.svg",
+    "file": "files\\race-crown-laurel_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 11482,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/cba8d7f3692d269c.css",
+    "file": "files\\cba8d7f3692d269c_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 81880,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/fa04275c74050f5c.css",
+    "file": "files\\fa04275c74050f5c_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 2504,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/360e32ab74aa35af.css",
+    "file": "files\\360e32ab74aa35af_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 79481,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user/balance/primary/USD",
+    "file": "files\\USD_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 12,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/public/ip",
+    "file": "files\\ip_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 145,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user/wallet",
+    "file": "files\\wallet_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 41,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user?filter=affiliate&filter=base&filter=profile&filter=promotion&filter=settings&filter=wallet",
+    "file": "files\\user_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 851,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/rewards/available?filter=chest_rewards,rakeback_boost,rakeback,calendar,keys,special_rewards,raffle_tickets",
+    "file": "files\\available_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 563,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/02becdb68d821205.css",
+    "file": "files\\02becdb68d821205_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 10592,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/36eb17a98ff55006.css",
+    "file": "files\\36eb17a98ff55006_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 382,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/62fa556bdafc7ec3.css",
+    "file": "files\\62fa556bdafc7ec3_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 24591,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user/favorites",
+    "file": "files\\favorites_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 22,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/game-history",
+    "file": "files\\game-history_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 4680,
+    "status": 201
+  },
+  {
+    "url": "https://services.rainbet.com/v1/public/ranks",
+    "file": "files\\ranks_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2372,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/x-logo.svg",
+    "file": "files\\x-logo_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 684,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/paper-plane.svg",
+    "file": "files\\paper-plane_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 774,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fplinko.png&w=1920&q=75",
+    "file": "files\\image_52",
+    "contentType": "image/webp",
+    "size": 31848,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/public/active-races?currency=USD",
+    "file": "files\\active-races_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 204,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/rewards/ranks/status",
+    "file": "files\\status_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2925,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/rewards/races/list",
+    "file": "files\\list_4",
+    "contentType": "application/json; charset=utf-8",
+    "size": 24,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/btc.svg",
+    "file": "files\\btc_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 956,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/ltc.svg",
+    "file": "files\\ltc_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 331,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/eth.svg",
+    "file": "files\\eth_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 528,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/trx.svg",
+    "file": "files\\trx_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 731,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/ton.svg",
+    "file": "files\\ton_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 860,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/link.svg",
+    "file": "files\\link_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 726,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/xrp.svg",
+    "file": "files\\xrp_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 796,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/bnb.svg",
+    "file": "files\\bnb_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 789,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/ada.svg",
+    "file": "files\\ada_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 17092,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/media/p1.be651900.svg",
+    "file": "files\\p1.be651900_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 2377,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/media/p2.21180981.svg",
+    "file": "files\\p2.21180981_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 1115,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/media/p3.1140355b.svg",
+    "file": "files\\p3.1140355b_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 800,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/media/p4.703705bd.svg",
+    "file": "files\\p4.703705bd_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 540,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FinteracLogo.f689ed2f.png&w=48&q=100",
+    "file": "files\\image_53",
+    "contentType": "image/webp",
+    "size": 1566,
+    "status": 200
+  },
+  {
+    "url": "https://cdn.rainbet.com/currencies/sol.svg",
+    "file": "files\\sol_3.svg",
+    "contentType": "image/svg+xml",
+    "size": 1726,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/btc.svg",
+    "file": "files\\btc_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 956,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/eth.svg",
+    "file": "files\\eth_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 528,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/trx.svg",
+    "file": "files\\trx_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 1969,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/ltc.svg",
+    "file": "files\\ltc_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 331,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/sol.svg",
+    "file": "files\\sol_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 1726,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/ton.svg",
+    "file": "files\\ton_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 860,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/xrp.svg",
+    "file": "files\\xrp_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 796,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/link.svg",
+    "file": "files\\link_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 726,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/bnb.svg",
+    "file": "files\\bnb_2.svg",
+    "contentType": "image/svg+xml",
+    "size": 789,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/raw/currencies/ada.svg",
+    "file": "files\\ada_4.svg",
+    "contentType": "image/svg+xml",
+    "size": 17092,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/rewards/ranks/diamond.svg",
+    "file": "files\\diamond_2.svg",
+    "contentType": "image/webp",
+    "size": 902,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-32/rewards/ranks/gold.svg",
+    "file": "files\\gold_2.svg",
+    "contentType": "image/webp",
+    "size": 632,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/user/update-settings",
+    "file": "files\\update-settings_2",
+    "contentType": "application/json",
+    "size": 16,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5374.6196889af6d31eb3.js",
+    "file": "files\\5374.6196889af6d31eb3_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 10895,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/331.9b1c060309f296e4.js",
+    "file": "files\\331.9b1c060309f296e4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 19999,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4367.1fa7198ac88fe495.js",
+    "file": "files\\4367.1fa7198ac88fe495_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 19941,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8864.fc5823d3c0a94a3b.js",
+    "file": "files\\8864.fc5823d3c0a94a3b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 445676,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3954.24e5bf2d351874ec.js",
+    "file": "files\\3954.24e5bf2d351874ec_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 15944,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8743.f47e4a6176e4d6ec.js",
+    "file": "files\\8743.f47e4a6176e4d6ec_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 17794,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7335.bfaa25c1e48a9074.js",
+    "file": "files\\7335.bfaa25c1e48a9074_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 43442,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4067.07f533fba5f2e26d.js",
+    "file": "files\\4067.07f533fba5f2e26d_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 33677,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3556.2e3e555fe7d4cf85.js",
+    "file": "files\\3556.2e3e555fe7d4cf85_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 100248,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4079.487b9fa02fd8ff18.js",
+    "file": "files\\4079.487b9fa02fd8ff18_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 22718,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/rewards/history",
+    "file": "files\\history_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 224,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/rewards/calendar",
+    "file": "files\\calendar_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 3809,
+    "status": 200
+  },
+  {
+    "url": "https://js.intercomcdn.com/frame-modern.c11e2f2b.js",
+    "file": "files\\frame-modern.c11e2f2b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 631538,
+    "status": 200
+  },
+  {
+    "url": "https://js.intercomcdn.com/vendor-modern.3fc458cc.js",
+    "file": "files\\vendor-modern.3fc458cc_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 473332,
+    "status": 200
+  },
+  {
+    "url": "https://b2ba2232-9d9f-4eed-868f-62dfae496dd4.snippet.anjcdn.org/sealassets/e4874efcc5e26f0d1fcd692961eda3e6-rainbet.com-bb1e239badc7447877a76594d7ae6858a8f9822770ab5f171f95c6004550f72a3b73a0497133eaab2c6af36e3fd68090-c2VhbC5wbmc%3D?status=valid",
+    "file": "files\\e4874efcc5e26f0d1fcd692961eda3e6-rainbet.com-bb1e239badc7447877a76594d7ae6858a8f9822770ab5f171f95c6004550f72a3b73a0497133eaab2c6af36e3fd68090-c2VhbC5wbmc%3D",
+    "contentType": "image/png",
+    "size": 18039,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/details",
+    "file": "files\\details_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2647,
+    "status": 200
+  },
+  {
+    "url": "https://b2ba2232-9d9f-4eed-868f-62dfae496dd4.snippet.anjcdn.org/54f396e0-b046-49b1-9cb3-0c69281d7ea9-beacon.png",
+    "file": "files\\54f396e0-b046-49b1-9cb3-0c69281d7ea9-beacon_2.png",
+    "contentType": "image/png",
+    "size": 68,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/005.png",
+    "file": "files\\005_10.png",
+    "contentType": "image/png",
+    "size": 91623,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/004.png",
+    "file": "files\\004_10.png",
+    "contentType": "image/png",
+    "size": 91847,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/021.png",
+    "file": "files\\021_10.png",
+    "contentType": "image/png",
+    "size": 91999,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/011.png",
+    "file": "files\\011_10.png",
+    "contentType": "image/png",
+    "size": 91217,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/010.png",
+    "file": "files\\010_10.png",
+    "contentType": "image/png",
+    "size": 8488,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/011.png",
+    "file": "files\\011_11.png",
+    "contentType": "image/png",
+    "size": 7453,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/024.png",
+    "file": "files\\024_6.png",
+    "contentType": "image/png",
+    "size": 7295,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/022.png",
+    "file": "files\\022_10.png",
+    "contentType": "image/png",
+    "size": 7867,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/021.png",
+    "file": "files\\021_11.png",
+    "contentType": "image/png",
+    "size": 10809,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/023.png",
+    "file": "files\\023_8.png",
+    "contentType": "image/png",
+    "size": 7316,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/012.png",
+    "file": "files\\012_10.png",
+    "contentType": "image/png",
+    "size": 7295,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/028.png",
+    "file": "files\\028_6.png",
+    "contentType": "image/png",
+    "size": 26707,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/001.png",
+    "file": "files\\001_10.png",
+    "contentType": "image/png",
+    "size": 92247,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/009.png",
+    "file": "files\\009_10.png",
+    "contentType": "image/png",
+    "size": 14139,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/033.png",
+    "file": "files\\033_6.png",
+    "contentType": "image/png",
+    "size": 9333,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/034.png",
+    "file": "files\\034_6.png",
+    "contentType": "image/png",
+    "size": 7668,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/032.png",
+    "file": "files\\032_6.png",
+    "contentType": "image/png",
+    "size": 12814,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/020.png",
+    "file": "files\\020_10.png",
+    "contentType": "image/png",
+    "size": 18057,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/029.png",
+    "file": "files\\029_6.png",
+    "contentType": "image/png",
+    "size": 27099,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/035.png",
+    "file": "files\\035_6.png",
+    "contentType": "image/png",
+    "size": 7308,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/036.png",
+    "file": "files\\036_6.png",
+    "contentType": "image/png",
+    "size": 7295,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/2120-f01be554096ee9db.js",
+    "file": "files\\2120-f01be554096ee9db_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 17139,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8225-1455dbcb23d51db4.js",
+    "file": "files\\8225-1455dbcb23d51db4_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 7920,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4237-e566e9c065ca5b1b.js",
+    "file": "files\\4237-e566e9c065ca5b1b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 22481,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/850-ece92f1729f00f7d.js",
+    "file": "files\\850-ece92f1729f00f7d_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 11387,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/casino-1d8bf86313f82219.js",
+    "file": "files\\casino-1d8bf86313f82219_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 19169,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6309-3d7a3e8d7f42d6ea.js",
+    "file": "files\\6309-3d7a3e8d7f42d6ea_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 18586,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/raffle-cd300d5ad548c3df.js",
+    "file": "files\\raffle-cd300d5ad548c3df_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 163959,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9639-3e8bd22707cbcd3b.js",
+    "file": "files\\9639-3e8bd22707cbcd3b_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 14550,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7154-60d5782cdbdbbc5a.js",
+    "file": "files\\7154-60d5782cdbdbbc5a_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 7954,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/index-e5756a0185bd25a7.js",
+    "file": "files\\index-e5756a0185bd25a7_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 96285,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1673-63e5c662a096d9de.js",
+    "file": "files\\1673-63e5c662a096d9de_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 11085,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/favorites-bfe6abf77ff67000.js",
+    "file": "files\\favorites-bfe6abf77ff67000_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 438,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/recently-played-ac7f56cef878ab04.js",
+    "file": "files\\recently-played-ac7f56cef878ab04_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 444,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/new-releases-7ae71583ea6e458e.js",
+    "file": "files\\new-releases-7ae71583ea6e458e_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 5024,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/4122-a6058e5b84ba83eb.js",
+    "file": "files\\4122-a6058e5b84ba83eb_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 22011,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1238-1120527e53550f7a.js",
+    "file": "files\\1238-1120527e53550f7a_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 6590,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/casino/%5Btype%5D-fe7c43b67976d418.js",
+    "file": "files\\%5Btype%5D-fe7c43b67976d418_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 500,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/casino/%5Btype%5D/%5Bslug%5D-238b96e3d3426639.js",
+    "file": "files\\%5Bslug%5D-238b96e3d3426639_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 369,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/008.png",
+    "file": "files\\008_10.png",
+    "contentType": "image/png",
+    "size": 27610,
+    "status": 200
+  },
+  {
+    "url": "https://api-iam.intercom.io/messenger/web/ping",
+    "file": "files\\ping_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 6267,
+    "status": 200
+  },
+  {
+    "url": "https://originals.rainbet.com/api/v1/original-games/freeplays",
+    "file": "files\\freeplays_2",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/sportsbook/%5B%5B...slug%5D%5D-4d818d62be9183ac.js",
+    "file": "files\\%5B%5B...slug%5D%5D-4d818d62be9183ac_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 16403,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/031.png",
+    "file": "files\\031_6.png",
+    "contentType": "image/png",
+    "size": 22727,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/030.png",
+    "file": "files\\030_6.png",
+    "contentType": "image/png",
+    "size": 26096,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/046.png",
+    "file": "files\\046_6.png",
+    "contentType": "image/png",
+    "size": 8525,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/047.png",
+    "file": "files\\047_6.png",
+    "contentType": "image/png",
+    "size": 7363,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/002.png",
+    "file": "files\\002_10.png",
+    "contentType": "image/png",
+    "size": 8068,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/019.png",
+    "file": "files\\019_10.png",
+    "contentType": "image/png",
+    "size": 38438,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/001.png",
+    "file": "files\\001_11.png",
+    "contentType": "image/png",
+    "size": 7295,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/025.png",
+    "file": "files\\025_6.png",
+    "contentType": "image/png",
+    "size": 39481,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/e723a6c90661e0b9.css",
+    "file": "files\\e723a6c90661e0b9_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 15868,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/045.png",
+    "file": "files\\045_6.png",
+    "contentType": "image/png",
+    "size": 13425,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/9f5087186f995ef3.css",
+    "file": "files\\9f5087186f995ef3_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 22952,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/e2e56da87a717637.css",
+    "file": "files\\e2e56da87a717637_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 105982,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/b54c6a35b29fcfc3.css",
+    "file": "files\\b54c6a35b29fcfc3_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 19134,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/b8162d3de56abbcf.css",
+    "file": "files\\b8162d3de56abbcf_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 9055,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/003.png",
+    "file": "files\\003_10.png",
+    "contentType": "image/png",
+    "size": 9446,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/015.png",
+    "file": "files\\015_10.png",
+    "contentType": "image/png",
+    "size": 47409,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/017.png",
+    "file": "files\\017_10.png",
+    "contentType": "image/png",
+    "size": 46831,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/014.png",
+    "file": "files\\014_10.png",
+    "contentType": "image/png",
+    "size": 47387,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/016.png",
+    "file": "files\\016_10.png",
+    "contentType": "image/png",
+    "size": 47493,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/004.png",
+    "file": "files\\004_11.png",
+    "contentType": "image/png",
+    "size": 10518,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/018.png",
+    "file": "files\\018_10.png",
+    "contentType": "image/png",
+    "size": 44802,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/013.png",
+    "file": "files\\013_10.png",
+    "contentType": "image/png",
+    "size": 46834,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/044.png",
+    "file": "files\\044_6.png",
+    "contentType": "image/png",
+    "size": 24616,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/001.png",
+    "file": "files\\001_12.png",
+    "contentType": "image/png",
+    "size": 81982,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/010.png",
+    "file": "files\\010_11.png",
+    "contentType": "image/png",
+    "size": 91109,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/046.png",
+    "file": "files\\046_7.png",
+    "contentType": "image/png",
+    "size": 91691,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/014.png",
+    "file": "files\\014_11.png",
+    "contentType": "image/png",
+    "size": 91530,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/026.png",
+    "file": "files\\026_6.png",
+    "contentType": "image/png",
+    "size": 59012,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/007.png",
+    "file": "files\\007_10.png",
+    "contentType": "image/png",
+    "size": 14523,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/006.png",
+    "file": "files\\006_10.png",
+    "contentType": "image/png",
+    "size": 13562,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/022.png",
+    "file": "files\\022_11.png",
+    "contentType": "image/png",
+    "size": 91558,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/025.png",
+    "file": "files\\025_7.png",
+    "contentType": "image/png",
+    "size": 91574,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/038.png",
+    "file": "files\\038_6.png",
+    "contentType": "image/png",
+    "size": 92741,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/039.png",
+    "file": "files\\039_6.png",
+    "contentType": "image/png",
+    "size": 92793,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/048.png",
+    "file": "files\\048_4.png",
+    "contentType": "image/png",
+    "size": 91465,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/027.png",
+    "file": "files\\027_6.png",
+    "contentType": "image/png",
+    "size": 68613,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/024.png",
+    "file": "files\\024_7.png",
+    "contentType": "image/png",
+    "size": 91465,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/019.png",
+    "file": "files\\019_11.png",
+    "contentType": "image/png",
+    "size": 8860,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/005.png",
+    "file": "files\\005_11.png",
+    "contentType": "image/png",
+    "size": 13562,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/020.png",
+    "file": "files\\020_11.png",
+    "contentType": "image/png",
+    "size": 8123,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/007.png",
+    "file": "files\\007_11.png",
+    "contentType": "image/png",
+    "size": 68256,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/017.png",
+    "file": "files\\017_11.png",
+    "contentType": "image/png",
+    "size": 12818,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/009.png",
+    "file": "files\\009_11.png",
+    "contentType": "image/png",
+    "size": 19409,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/008.png",
+    "file": "files\\008_11.png",
+    "contentType": "image/png",
+    "size": 21823,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/022.png",
+    "file": "files\\022_12.png",
+    "contentType": "image/png",
+    "size": 7584,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/021.png",
+    "file": "files\\021_12.png",
+    "contentType": "image/png",
+    "size": 8123,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/019.png",
+    "file": "files\\019_12.png",
+    "contentType": "image/png",
+    "size": 91579,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/018.png",
+    "file": "files\\018_11.png",
+    "contentType": "image/png",
+    "size": 10881,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/012.png",
+    "file": "files\\012_11.png",
+    "contentType": "image/png",
+    "size": 91474,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/030.png",
+    "file": "files\\030_7.png",
+    "contentType": "image/png",
+    "size": 91983,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/033.png",
+    "file": "files\\033_7.png",
+    "contentType": "image/png",
+    "size": 92793,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/031.png",
+    "file": "files\\031_7.png",
+    "contentType": "image/png",
+    "size": 92566,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/040.png",
+    "file": "files\\040_6.png",
+    "contentType": "image/png",
+    "size": 93059,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/050.png",
+    "file": "files\\050_4.png",
+    "contentType": "image/png",
+    "size": 91558,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/044.png",
+    "file": "files\\044_7.png",
+    "contentType": "image/png",
+    "size": 91773,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/065.png",
+    "file": "files\\065_4.png",
+    "contentType": "image/png",
+    "size": 91647,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/012.png",
+    "file": "files\\012_12.png",
+    "contentType": "image/png",
+    "size": 22137,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/003.png",
+    "file": "files\\003_11.png",
+    "contentType": "image/png",
+    "size": 83225,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/005.png",
+    "file": "files\\005_12.png",
+    "contentType": "image/png",
+    "size": 83631,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/027.png",
+    "file": "files\\027_7.png",
+    "contentType": "image/png",
+    "size": 91874,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/041.png",
+    "file": "files\\041_6.png",
+    "contentType": "image/png",
+    "size": 92566,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/042.png",
+    "file": "files\\042_6.png",
+    "contentType": "image/png",
+    "size": 91983,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/016.png",
+    "file": "files\\016_11.png",
+    "contentType": "image/png",
+    "size": 18717,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/015.png",
+    "file": "files\\015_11.png",
+    "contentType": "image/png",
+    "size": 18717,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/014.png",
+    "file": "files\\014_12.png",
+    "contentType": "image/png",
+    "size": 18915,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/016.png",
+    "file": "files\\016_12.png",
+    "contentType": "image/png",
+    "size": 91423,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/017.png",
+    "file": "files\\017_12.png",
+    "contentType": "image/png",
+    "size": 91659,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/043.png",
+    "file": "files\\043_6.png",
+    "contentType": "image/png",
+    "size": 91903,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/010.png",
+    "file": "files\\010_12.png",
+    "contentType": "image/png",
+    "size": 24788,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/043.png",
+    "file": "files\\043_7.png",
+    "contentType": "image/png",
+    "size": 55494,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/011.png",
+    "file": "files\\011_12.png",
+    "contentType": "image/png",
+    "size": 24788,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/013.png",
+    "file": "files\\013_11.png",
+    "contentType": "image/png",
+    "size": 91081,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/splashOne/013.png",
+    "file": "files\\013_12.png",
+    "contentType": "image/png",
+    "size": 22796,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/006.png",
+    "file": "files\\006_11.png",
+    "contentType": "image/png",
+    "size": 79691,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/070.png",
+    "file": "files\\070_4.png",
+    "contentType": "image/png",
+    "size": 91754,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/002.png",
+    "file": "files\\002_11.png",
+    "contentType": "image/png",
+    "size": 91754,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/037.png",
+    "file": "files\\037_6.png",
+    "contentType": "image/png",
+    "size": 66245,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/002.png",
+    "file": "files\\002_12.png",
+    "contentType": "image/png",
+    "size": 82921,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/029.png",
+    "file": "files\\029_7.png",
+    "contentType": "image/png",
+    "size": 91903,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/034.png",
+    "file": "files\\034_7.png",
+    "contentType": "image/png",
+    "size": 92741,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/052.png",
+    "file": "files\\052_4.png",
+    "contentType": "image/png",
+    "size": 91589,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/059.png",
+    "file": "files\\059_4.png",
+    "contentType": "image/png",
+    "size": 91081,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/015.png",
+    "file": "files\\015_12.png",
+    "contentType": "image/png",
+    "size": 91243,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/020.png",
+    "file": "files\\020_12.png",
+    "contentType": "image/png",
+    "size": 91589,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/023.png",
+    "file": "files\\023_9.png",
+    "contentType": "image/png",
+    "size": 91140,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/061.png",
+    "file": "files\\061_4.png",
+    "contentType": "image/png",
+    "size": 91217,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/060.png",
+    "file": "files\\060_4.png",
+    "contentType": "image/png",
+    "size": 91474,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/054.png",
+    "file": "files\\054_4.png",
+    "contentType": "image/png",
+    "size": 91794,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/orb.png",
+    "file": "files\\orb_2.png",
+    "contentType": "image/png",
+    "size": 14703,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/062.png",
+    "file": "files\\062_4.png",
+    "contentType": "image/png",
+    "size": 91109,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/069.png",
+    "file": "files\\069_4.png",
+    "contentType": "image/png",
+    "size": 91915,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/057.png",
+    "file": "files\\057_4.png",
+    "contentType": "image/png",
+    "size": 91243,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/047.png",
+    "file": "files\\047_7.png",
+    "contentType": "image/png",
+    "size": 91574,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/038.png",
+    "file": "files\\038_7.png",
+    "contentType": "image/png",
+    "size": 66933,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/032.png",
+    "file": "files\\032_7.png",
+    "contentType": "image/png",
+    "size": 93059,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/063.png",
+    "file": "files\\063_4.png",
+    "contentType": "image/png",
+    "size": 91096,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/064.png",
+    "file": "files\\064_4.png",
+    "contentType": "image/png",
+    "size": 91719,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/007.png",
+    "file": "files\\007_12.png",
+    "contentType": "image/png",
+    "size": 91647,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/037.png",
+    "file": "files\\037_7.png",
+    "contentType": "image/png",
+    "size": 93084,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/055.png",
+    "file": "files\\055_4.png",
+    "contentType": "image/png",
+    "size": 91659,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/040.png",
+    "file": "files\\040_7.png",
+    "contentType": "image/png",
+    "size": 67636,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/049.png",
+    "file": "files\\049_4.png",
+    "contentType": "image/png",
+    "size": 91140,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/004.png",
+    "file": "files\\004_12.png",
+    "contentType": "image/png",
+    "size": 83788,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/035.png",
+    "file": "files\\035_7.png",
+    "contentType": "image/png",
+    "size": 93084,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/003.png",
+    "file": "files\\003_12.png",
+    "contentType": "image/png",
+    "size": 91915,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/008.png",
+    "file": "files\\008_12.png",
+    "contentType": "image/png",
+    "size": 91719,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/009.png",
+    "file": "files\\009_12.png",
+    "contentType": "image/png",
+    "size": 91096,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/026.png",
+    "file": "files\\026_7.png",
+    "contentType": "image/png",
+    "size": 91691,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/045.png",
+    "file": "files\\045_7.png",
+    "contentType": "image/png",
+    "size": 91874,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/051.png",
+    "file": "files\\051_4.png",
+    "contentType": "image/png",
+    "size": 91999,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/071.png",
+    "file": "files\\071_4.png",
+    "contentType": "image/png",
+    "size": 92247,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/036.png",
+    "file": "files\\036_7.png",
+    "contentType": "image/png",
+    "size": 92793,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/018.png",
+    "file": "files\\018_12.png",
+    "contentType": "image/png",
+    "size": 91794,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/041.png",
+    "file": "files\\041_7.png",
+    "contentType": "image/png",
+    "size": 67637,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/039.png",
+    "file": "files\\039_7.png",
+    "contentType": "image/png",
+    "size": 67156,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/053.png",
+    "file": "files\\053_4.png",
+    "contentType": "image/png",
+    "size": 91579,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/056.png",
+    "file": "files\\056_4.png",
+    "contentType": "image/png",
+    "size": 91423,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/068.png",
+    "file": "files\\068_4.png",
+    "contentType": "image/png",
+    "size": 91847,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/028.png",
+    "file": "files\\028_7.png",
+    "contentType": "image/png",
+    "size": 91773,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/lightning/042.png",
+    "file": "files\\042_7.png",
+    "contentType": "image/png",
+    "size": 64195,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/006.png",
+    "file": "files\\006_12.png",
+    "contentType": "image/png",
+    "size": 91724,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/066.png",
+    "file": "files\\066_4.png",
+    "contentType": "image/png",
+    "size": 91724,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/067.png",
+    "file": "files\\067_4.png",
+    "contentType": "image/png",
+    "size": 91623,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-texture-1.png",
+    "file": "files\\ball-texture-1_2.png",
+    "contentType": "image/png",
+    "size": 33337,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/cloudsV2/058.png",
+    "file": "files\\058_4.png",
+    "contentType": "image/png",
+    "size": 91530,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-animation/top-corner-frame.png",
+    "file": "files\\top-corner-frame_2.png",
+    "contentType": "image/png",
+    "size": 24846,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/002.png",
+    "file": "files\\002_13.png",
+    "contentType": "image/png",
+    "size": 59454,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/001.png",
+    "file": "files\\001_13.png",
+    "contentType": "image/png",
+    "size": 58953,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/003.png",
+    "file": "files\\003_13.png",
+    "contentType": "image/png",
+    "size": 62498,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/004.png",
+    "file": "files\\004_13.png",
+    "contentType": "image/png",
+    "size": 66059,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/005.png",
+    "file": "files\\005_13.png",
+    "contentType": "image/png",
+    "size": 70010,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/006.png",
+    "file": "files\\006_13.png",
+    "contentType": "image/png",
+    "size": 72179,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/011.png",
+    "file": "files\\011_13.png",
+    "contentType": "image/png",
+    "size": 69460,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/007.png",
+    "file": "files\\007_13.png",
+    "contentType": "image/png",
+    "size": 74215,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/008.png",
+    "file": "files\\008_13.png",
+    "contentType": "image/png",
+    "size": 72735,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/045.png",
+    "file": "files\\045_8.png",
+    "contentType": "image/png",
+    "size": 53171,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/010.png",
+    "file": "files\\010_13.png",
+    "contentType": "image/png",
+    "size": 68468,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/046.png",
+    "file": "files\\046_8.png",
+    "contentType": "image/png",
+    "size": 54915,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/009.png",
+    "file": "files\\009_13.png",
+    "contentType": "image/png",
+    "size": 71525,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/044.png",
+    "file": "files\\044_8.png",
+    "contentType": "image/png",
+    "size": 60106,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/047.png",
+    "file": "files\\047_8.png",
+    "contentType": "image/png",
+    "size": 52970,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/048.png",
+    "file": "files\\048_5.png",
+    "contentType": "image/png",
+    "size": 51699,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/042.png",
+    "file": "files\\042_8.png",
+    "contentType": "image/png",
+    "size": 62926,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/038.png",
+    "file": "files\\038_8.png",
+    "contentType": "image/png",
+    "size": 67338,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/036.png",
+    "file": "files\\036_8.png",
+    "contentType": "image/png",
+    "size": 66236,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/025.png",
+    "file": "files\\025_8.png",
+    "contentType": "image/png",
+    "size": 82708,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/013.png",
+    "file": "files\\013_13.png",
+    "contentType": "image/png",
+    "size": 89867,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/012.png",
+    "file": "files\\012_13.png",
+    "contentType": "image/png",
+    "size": 85407,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/049.png",
+    "file": "files\\049_5.png",
+    "contentType": "image/png",
+    "size": 62380,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/043.png",
+    "file": "files\\043_8.png",
+    "contentType": "image/png",
+    "size": 61788,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/039.png",
+    "file": "files\\039_8.png",
+    "contentType": "image/png",
+    "size": 70085,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/032.png",
+    "file": "files\\032_8.png",
+    "contentType": "image/png",
+    "size": 74662,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/037.png",
+    "file": "files\\037_8.png",
+    "contentType": "image/png",
+    "size": 67685,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/016.png",
+    "file": "files\\016_13.png",
+    "contentType": "image/png",
+    "size": 91707,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/029.png",
+    "file": "files\\029_8.png",
+    "contentType": "image/png",
+    "size": 74580,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/040.png",
+    "file": "files\\040_8.png",
+    "contentType": "image/png",
+    "size": 65032,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/041.png",
+    "file": "files\\041_8.png",
+    "contentType": "image/png",
+    "size": 64833,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/057.png",
+    "file": "files\\057_5.png",
+    "contentType": "image/png",
+    "size": 65596,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/056.png",
+    "file": "files\\056_5.png",
+    "contentType": "image/png",
+    "size": 65856,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/058.png",
+    "file": "files\\058_5.png",
+    "contentType": "image/png",
+    "size": 66219,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/031.png",
+    "file": "files\\031_8.png",
+    "contentType": "image/png",
+    "size": 75696,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/033.png",
+    "file": "files\\033_8.png",
+    "contentType": "image/png",
+    "size": 77728,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/017.png",
+    "file": "files\\017_13.png",
+    "contentType": "image/png",
+    "size": 90941,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/035.png",
+    "file": "files\\035_8.png",
+    "contentType": "image/png",
+    "size": 74068,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/015.png",
+    "file": "files\\015_13.png",
+    "contentType": "image/png",
+    "size": 89808,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/028.png",
+    "file": "files\\028_8.png",
+    "contentType": "image/png",
+    "size": 73192,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/030.png",
+    "file": "files\\030_8.png",
+    "contentType": "image/png",
+    "size": 76092,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/026.png",
+    "file": "files\\026_8.png",
+    "contentType": "image/png",
+    "size": 71090,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/024.png",
+    "file": "files\\024_8.png",
+    "contentType": "image/png",
+    "size": 84948,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/027.png",
+    "file": "files\\027_8.png",
+    "contentType": "image/png",
+    "size": 70664,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/019.png",
+    "file": "files\\019_13.png",
+    "contentType": "image/png",
+    "size": 94000,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/052.png",
+    "file": "files\\052_5.png",
+    "contentType": "image/png",
+    "size": 78719,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/034.png",
+    "file": "files\\034_8.png",
+    "contentType": "image/png",
+    "size": 78517,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/014.png",
+    "file": "files\\014_13.png",
+    "contentType": "image/png",
+    "size": 91827,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/002.jpg",
+    "file": "files\\002_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32438,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/020.png",
+    "file": "files\\020_13.png",
+    "contentType": "image/png",
+    "size": 99108,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/055.png",
+    "file": "files\\055_5.png",
+    "contentType": "image/png",
+    "size": 70585,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/059.png",
+    "file": "files\\059_5.png",
+    "contentType": "image/png",
+    "size": 66969,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/050.png",
+    "file": "files\\050_5.png",
+    "contentType": "image/png",
+    "size": 77162,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/053.png",
+    "file": "files\\053_5.png",
+    "contentType": "image/png",
+    "size": 75962,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/060.png",
+    "file": "files\\060_5.png",
+    "contentType": "image/png",
+    "size": 72064,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/051.png",
+    "file": "files\\051_5.png",
+    "contentType": "image/png",
+    "size": 82334,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/001.jpg",
+    "file": "files\\001_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32637,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/054.png",
+    "file": "files\\054_5.png",
+    "contentType": "image/png",
+    "size": 74233,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/023.png",
+    "file": "files\\023_10.png",
+    "contentType": "image/png",
+    "size": 95684,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-animation/bottom-corner-frame.png",
+    "file": "files\\bottom-corner-frame_2.png",
+    "contentType": "image/png",
+    "size": 59524,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/022.png",
+    "file": "files\\022_13.png",
+    "contentType": "image/png",
+    "size": 93423,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/018.png",
+    "file": "files\\018_13.png",
+    "contentType": "image/png",
+    "size": 94432,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/021.png",
+    "file": "files\\021_13.png",
+    "contentType": "image/png",
+    "size": 97018,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/003.jpg",
+    "file": "files\\003_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32398,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/063.png",
+    "file": "files\\063_5.png",
+    "contentType": "image/png",
+    "size": 88946,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/064.png",
+    "file": "files\\064_5.png",
+    "contentType": "image/png",
+    "size": 92138,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/061.png",
+    "file": "files\\061_5.png",
+    "contentType": "image/png",
+    "size": 86626,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/073.png",
+    "file": "files\\073_2.png",
+    "contentType": "image/png",
+    "size": 84210,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/007.jpg",
+    "file": "files\\007_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35871,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/075.png",
+    "file": "files\\075_2.png",
+    "contentType": "image/png",
+    "size": 82596,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/011.jpg",
+    "file": "files\\011_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 33576,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/071.png",
+    "file": "files\\071_5.png",
+    "contentType": "image/png",
+    "size": 86766,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/008.jpg",
+    "file": "files\\008_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35833,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/010.jpg",
+    "file": "files\\010_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 33528,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/062.png",
+    "file": "files\\062_5.png",
+    "contentType": "image/png",
+    "size": 88109,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/005.jpg",
+    "file": "files\\005_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 41436,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/065.png",
+    "file": "files\\065_5.png",
+    "contentType": "image/png",
+    "size": 90435,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/019.jpg",
+    "file": "files\\019_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25052,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/006.jpg",
+    "file": "files\\006_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 41173,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/009.jpg",
+    "file": "files\\009_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35717,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/072.png",
+    "file": "files\\072_2.png",
+    "contentType": "image/png",
+    "size": 86363,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/067.png",
+    "file": "files\\067_5.png",
+    "contentType": "image/png",
+    "size": 92263,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/025.jpg",
+    "file": "files\\025_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25308,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/013.jpg",
+    "file": "files\\013_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 34058,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/074.png",
+    "file": "files\\074_2.png",
+    "contentType": "image/png",
+    "size": 82392,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/012.jpg",
+    "file": "files\\012_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 34072,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/004.jpg",
+    "file": "files\\004_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 49575,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/024.jpg",
+    "file": "files\\024_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25273,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/068.png",
+    "file": "files\\068_5.png",
+    "contentType": "image/png",
+    "size": 93666,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/audios/games/ui/button-click-very-low.mp3",
+    "file": "files\\button-click-very-low_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 3133,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/029.jpg",
+    "file": "files\\029_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24590,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/021.jpg",
+    "file": "files\\021_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25364,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/069.png",
+    "file": "files\\069_5.png",
+    "contentType": "image/png",
+    "size": 90677,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/018.jpg",
+    "file": "files\\018_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35478,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/032.jpg",
+    "file": "files\\032_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24530,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/020.jpg",
+    "file": "files\\020_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25316,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/022.jpg",
+    "file": "files\\022_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 26460,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/023.jpg",
+    "file": "files\\023_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 26453,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/036.jpg",
+    "file": "files\\036_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25321,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/014.jpg",
+    "file": "files\\014_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 38737,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/017.jpg",
+    "file": "files\\017_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35518,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/027.jpg",
+    "file": "files\\027_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25127,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/070.png",
+    "file": "files\\070_5.png",
+    "contentType": "image/png",
+    "size": 90057,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/035.jpg",
+    "file": "files\\035_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24860,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/026.jpg",
+    "file": "files\\026_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25321,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/033.jpg",
+    "file": "files\\033_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24590,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/031.jpg",
+    "file": "files\\031_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24542,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/039.jpg",
+    "file": "files\\039_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25891,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/028.jpg",
+    "file": "files\\028_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24860,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/ball-lightning/066.png",
+    "file": "files\\066_5.png",
+    "contentType": "image/png",
+    "size": 97656,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/045.jpg",
+    "file": "files\\045_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25052,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/038.jpg",
+    "file": "files\\038_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25273,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/040.jpg",
+    "file": "files\\040_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25845,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/042.jpg",
+    "file": "files\\042_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25364,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/044.jpg",
+    "file": "files\\044_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25086,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/037.jpg",
+    "file": "files\\037_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25308,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/034.jpg",
+    "file": "files\\034_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24712,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/041.jpg",
+    "file": "files\\041_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 26460,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/043.jpg",
+    "file": "files\\043_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 25316,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/030.jpg",
+    "file": "files\\030_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 24530,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/015.jpg",
+    "file": "files\\015_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 52307,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/sweet_2_2.mp3",
+    "file": "files\\sweet_2_2_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 5223,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/sweet_3_3.mp3",
+    "file": "files\\sweet_3_3_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 9403,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/sweet_1_3.mp3",
+    "file": "files\\sweet_1_3_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 6268,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/046.jpg",
+    "file": "files\\046_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35518,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/052.jpg",
+    "file": "files\\052_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 33528,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/016.jpg",
+    "file": "files\\016_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 52220,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/001.png",
+    "file": "files\\001_14.png",
+    "contentType": "image/png",
+    "size": 124606,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/050.jpg",
+    "file": "files\\050_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 34072,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/049.jpg",
+    "file": "files\\049_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 38737,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/051.jpg",
+    "file": "files\\051_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 33576,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/048.jpg",
+    "file": "files\\048_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 38784,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/053.jpg",
+    "file": "files\\053_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35740,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/054.jpg",
+    "file": "files\\054_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35717,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/060.jpg",
+    "file": "files\\060_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32438,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/055.jpg",
+    "file": "files\\055_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 35871,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/062.jpg",
+    "file": "files\\062_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32609,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/057.jpg",
+    "file": "files\\057_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 41436,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/004.png",
+    "file": "files\\004_14.png",
+    "contentType": "image/png",
+    "size": 120655,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/008.png",
+    "file": "files\\008_14.png",
+    "contentType": "image/png",
+    "size": 121349,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/010.png",
+    "file": "files\\010_14.png",
+    "contentType": "image/png",
+    "size": 119031,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/020.png",
+    "file": "files\\020_14.png",
+    "contentType": "image/png",
+    "size": 118082,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/056.jpg",
+    "file": "files\\056_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 41173,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/058.jpg",
+    "file": "files\\058_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 49411,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/002.png",
+    "file": "files\\002_14.png",
+    "contentType": "image/png",
+    "size": 121240,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/003.png",
+    "file": "files\\003_14.png",
+    "contentType": "image/png",
+    "size": 122571,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/015.png",
+    "file": "files\\015_14.png",
+    "contentType": "image/png",
+    "size": 124777,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/011.png",
+    "file": "files\\011_14.png",
+    "contentType": "image/png",
+    "size": 127933,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/013.png",
+    "file": "files\\013_14.png",
+    "contentType": "image/png",
+    "size": 121412,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/014.png",
+    "file": "files\\014_14.png",
+    "contentType": "image/png",
+    "size": 126056,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/022.png",
+    "file": "files\\022_14.png",
+    "contentType": "image/png",
+    "size": 120109,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/007.png",
+    "file": "files\\007_14.png",
+    "contentType": "image/png",
+    "size": 133424,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/047.jpg",
+    "file": "files\\047_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 52220,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/023.png",
+    "file": "files\\023_11.png",
+    "contentType": "image/png",
+    "size": 122972,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/061.jpg",
+    "file": "files\\061_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 32637,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/009.png",
+    "file": "files\\009_14.png",
+    "contentType": "image/png",
+    "size": 128810,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/background-atmosphere/059.jpg",
+    "file": "files\\059_2.jpg",
+    "contentType": "image/jpeg",
+    "size": 49575,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/005.png",
+    "file": "files\\005_14.png",
+    "contentType": "image/png",
+    "size": 129724,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/plinko-lightning-strike-low.mp3",
+    "file": "files\\plinko-lightning-strike-low_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 57468,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/rain-ball-sound-2.mp3",
+    "file": "files\\rain-ball-sound-2_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 42240,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/021.png",
+    "file": "files\\021_14.png",
+    "contentType": "image/png",
+    "size": 131112,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/017.png",
+    "file": "files\\017_14.png",
+    "contentType": "image/png",
+    "size": 128756,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/019.png",
+    "file": "files\\019_14.png",
+    "contentType": "image/png",
+    "size": 128993,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/006.png",
+    "file": "files\\006_14.png",
+    "contentType": "image/png",
+    "size": 125471,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/012.png",
+    "file": "files\\012_14.png",
+    "contentType": "image/png",
+    "size": 124545,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/016.png",
+    "file": "files\\016_14.png",
+    "contentType": "image/png",
+    "size": 125057,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/shared/bg-sprites/rain-fall/018.png",
+    "file": "files\\018_14.png",
+    "contentType": "image/png",
+    "size": 127172,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/games/plinko/audio/thunder-background_low_2.mp3",
+    "file": "files\\thunder-background_low_2_1.mp3",
+    "contentType": "audio/mpeg",
+    "size": 512640,
+    "status": 206
+  },
+  {
+    "url": "https://www.facebook.com/tr/",
+    "file": "files\\unknown_45",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=deposit",
+    "file": "files\\plinko_3",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167824,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Ddeposit&rl=&if=false&ts=1771710906598&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=936.6999999880791&it=1771710906587&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_46",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2FImages%2Fwallet-modal-blue-banner.png&w=1920&q=100",
+    "file": "files\\image_54",
+    "contentType": "image/webp",
+    "size": 29124,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2FImages%2Fwallet-modal-purple-banner.png&w=1920&q=100",
+    "file": "files\\image_55",
+    "contentType": "image/webp",
+    "size": 31542,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-16/icons/close-icon.svg",
+    "file": "files\\close-icon_1.svg",
+    "contentType": "image/webp",
+    "size": 170,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3612-ba078ead1dd49bb7.js",
+    "file": "files\\3612-ba078ead1dd49bb7_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 463191,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3035.cf53d349227dd1e0.js",
+    "file": "files\\3035.cf53d349227dd1e0_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 8618,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8367.24f6f4a4fabd7f82.js",
+    "file": "files\\8367.24f6f4a4fabd7f82_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 92838,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/promotions/list",
+    "file": "files\\list_5",
+    "contentType": "application/json",
+    "size": 176,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/audios/notification.mp3",
+    "file": "files\\notification.mp3",
+    "contentType": "audio/mpeg",
+    "size": 14880,
+    "status": 206
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fall_crypto_icon.d3d1287a.png&w=32&q=75",
+    "file": "files\\image_56",
+    "contentType": "image/webp",
+    "size": 962,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/all-banking.svg",
+    "file": "files\\all-banking_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 8471,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/payment-methods",
+    "file": "files\\payment-methods_1",
+    "contentType": "application/json; charset=utf-8",
+    "size": 894,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/mesh/access",
+    "file": "files\\access_1",
+    "contentType": "application/json; charset=utf-8",
+    "size": 16,
+    "status": 200
+  },
+  {
+    "url": "https://b2ba2232-9d9f-4eed-868f-62dfae496dd4.snippet.anjcdn.org/sealassets/408638d2860ef69d400a4735306c6fd3-rainbet.com-bb1e239badc7447877a76594d7ae6858a8f9822770ab5f171f95c6004550f72a3b73a0497133eaab2c6af36e3fd68090-c2VhbC5wbmc%3D?status=valid",
+    "file": "files\\408638d2860ef69d400a4735306c6fd3-rainbet.com-bb1e239badc7447877a76594d7ae6858a8f9822770ab5f171f95c6004550f72a3b73a0497133eaab2c6af36e3fd68090-c2VhbC5wbmc%3D",
+    "contentType": "image/png",
+    "size": 18039,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/Images/mesh-icon.svg",
+    "file": "files\\mesh-icon_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 41723,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Duser%26user%3D212G2Y24BVOKJX5O0V4LSP3QWZKC3KK3&rl=&if=false&ts=1771710915744&sw=1920&sh=1080&v=2.9.268&r=stable&ec=1&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=936.6999999880791&it=1771710915738&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_47",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/public/profile",
+    "file": "files\\profile",
+    "contentType": "application/json",
+    "size": 212,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-256/icons/total-bets-icon.svg",
+    "file": "files\\total-bets-icon.svg",
+    "contentType": "image/webp",
+    "size": 5942,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-256/icons/wallet-icon.svg",
+    "file": "files\\wallet-icon.svg",
+    "contentType": "image/webp",
+    "size": 2162,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=withdraw",
+    "file": "files\\plinko_4",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167825,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dwithdraw&rl=&if=false&ts=1771710919762&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=889.8999999761581&it=1771710919751&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_48",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/8579.91c53847f66c3686.js",
+    "file": "files\\8579.91c53847f66c3686_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 14790,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=buy-crypto",
+    "file": "files\\plinko_5",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167827,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dbuy-crypto&rl=&if=false&ts=1771710932201&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=893.5&it=1771710932190&coo=false&exp=s1&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_49",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/3277.d7835b16e27ada52.js",
+    "file": "files\\3277.d7835b16e27ada52_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 20425,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/6451.14687f3f29fa78b5.js",
+    "file": "files\\6451.14687f3f29fa78b5_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 18764,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/terms-047d85380cbce1d6.js",
+    "file": "files\\terms-047d85380cbce1d6_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2943,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/data/BXlsuE3dMi4odtiz7ehnZ/en/casino/originals/plinko.json?modal=wallet&tab=buy-crypto&game=plinko&method=ETH",
+    "file": "files\\plinko_3.json",
+    "contentType": "application/json",
+    "size": 23590,
+    "status": 200
+  },
+  {
+    "url": "https://static.moonpay.com/web-sdk/v1/moonpay-web-sdk.min.js",
+    "file": "files\\moonpay-web-sdk.min_1.js",
+    "contentType": "application/javascript",
+    "size": 34939,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dbuy-crypto%26method%3DETH&rl=&if=false&ts=1771710934943&sw=1920&sh=1080&v=2.9.268&r=stable&ec=1&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=893.5&it=1771710934936&coo=false&exp=s1&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_50",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/ddb969d9ecb26394.css",
+    "file": "files\\ddb969d9ecb26394_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 11215,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/crypto/deposit-address",
+    "file": "files\\deposit-address_1",
+    "contentType": "application/json",
+    "size": 114,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/crypto/moonpay",
+    "file": "files\\moonpay",
+    "contentType": "application/json",
+    "size": 76,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dgift-card&rl=&if=false&ts=1771710943888&sw=1920&sh=1080&v=2.9.268&r=stable&ec=3&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=893.5&it=1771710943882&coo=false&exp=s1&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_51",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://api.rainbet.com/giftcards/list-retailers",
+    "file": "files\\list-retailers_1",
+    "contentType": "application/json",
+    "size": 1221,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=tip",
+    "file": "files\\plinko_6",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167820,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dtip&rl=&if=false&ts=1771710946386&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=800.6000000238419&it=1771710946372&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_52",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1348.c41f43a6b069544c.js",
+    "file": "files\\1348.c41f43a6b069544c_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 6905,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=redeem",
+    "file": "files\\plinko_7",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167823,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dredeem&rl=&if=false&ts=1771710957956&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=1223.199999988079&it=1771710957947&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_53",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/1970.721fe083fe56fcff.js",
+    "file": "files\\1970.721fe083fe56fcff_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2765,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=affiliate",
+    "file": "files\\plinko_8",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167826,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Daffiliate&rl=&if=false&ts=1771710967393&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=787.6999999880791&it=1771710967378&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_54",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/949.4d2e3b9649e4ad09.js",
+    "file": "files\\949.4d2e3b9649e4ad09_1.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 1862,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=wallet&tab=promotions",
+    "file": "files\\plinko_9",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167827,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dpromotions&rl=&if=false&ts=1771710977129&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=1064.699999988079&it=1771710977105&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_55",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=fairplay",
+    "file": "files\\plinko_10",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167810,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dfairplay&rl=&if=false&ts=1771710986732&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=843.6999999880791&it=1771710986719&coo=false&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_56",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko&rl=&if=false&ts=1771710987669&sw=1920&sh=1080&v=2.9.268&r=stable&ec=1&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=843.6999999880791&it=1771710987665&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_57",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=vault",
+    "file": "files\\plinko_11",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167807,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dvault&rl=&if=false&ts=1771710996124&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=863.5999999642372&it=1771710996108&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_58",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user/balance/vault/USD",
+    "file": "files\\USD_3",
+    "contentType": "application/json; charset=utf-8",
+    "size": 12,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=profile",
+    "file": "files\\plinko_12",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167809,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dprofile&rl=&if=false&ts=1771711005116&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=870.4000000357628&it=1771711005105&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_59",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=settings",
+    "file": "files\\plinko_13",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167810,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dsettings&rl=&if=false&ts=1771711014240&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=961.1999999880791&it=1771711014229&coo=false&exp=s0&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct2&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_60",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=search",
+    "file": "files\\plinko_14",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167808,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dsearch&rl=&if=false&ts=1771711023138&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=886&it=1771711023127&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_61",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5132.6638169c5b8d6823.js",
+    "file": "files\\5132.6638169c5b8d6823_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 10881,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/user/recent-games",
+    "file": "files\\recent-games_1",
+    "contentType": "application/json; charset=utf-8",
+    "size": 2721,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fassets.rbgcdn.com%2F223k2P3%2Fraw%2Foriginals%2Ftower.png&w=256&q=75",
+    "file": "files\\image_57",
+    "contentType": "image/webp",
+    "size": 7684,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fassets.rbgcdn.com%2F223k2P3%2Fraw%2Foriginals%2Fchicken-cross.png&w=256&q=75",
+    "file": "files\\image_58",
+    "contentType": "image/webp",
+    "size": 10002,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/list?sort_by=popular&grouping=slots&country=US",
+    "file": "files\\list_6",
+    "contentType": "application/json; charset=utf-8",
+    "size": 21854,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FGates%20of%20Olympus%20Super%20Scatter%20ssa.png&w=256&q=75",
+    "file": "files\\image_59",
+    "contentType": "image/webp",
+    "size": 15380,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/pragmaticplay.svg",
+    "file": "files\\pragmaticplay_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 5683,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/evolution.svg",
+    "file": "files\\evolution_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 4320,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/relax.svg",
+    "file": "files\\relax_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 18437,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/bgaming.svg",
+    "file": "files\\bgaming_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 7600,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/hacksaw.svg",
+    "file": "files\\hacksaw_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 7160,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/thunderkick.svg",
+    "file": "files\\thunderkick_1.svg",
+    "contentType": "image/svg+xml",
+    "size": 13745,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FRAINBET%20AVIAMASTERSssxxz.png&w=256&q=75",
+    "file": "files\\image_60",
+    "contentType": "image/webp",
+    "size": 10548,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9123.1de62571a89c8647.js",
+    "file": "files\\9123.1de62571a89c8647_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2134,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSweet%20Bonanza%201000ssa.png&w=256&q=75",
+    "file": "files\\image_61",
+    "contentType": "image/webp",
+    "size": 9540,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FLe%20Banditss.png&w=256&q=75",
+    "file": "files\\image_62",
+    "contentType": "image/webp",
+    "size": 14008,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSugar%20Rush%201000%20(2).png&w=256&q=75",
+    "file": "files\\image_63",
+    "contentType": "image/webp",
+    "size": 13654,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FWanted%20Dead%20or%20a%20Wildxxa.png&w=256&q=75",
+    "file": "files\\image_64",
+    "contentType": "image/webp",
+    "size": 9256,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FDuck%20Hunters%20xxa.png&w=256&q=75",
+    "file": "files\\image_65",
+    "contentType": "image/webp",
+    "size": 13136,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=notifications",
+    "file": "files\\plinko_15",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167815,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dnotifications&rl=&if=false&ts=1771711032773&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=899.5&it=1771711032762&coo=false&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct2&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_62",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=two-factor",
+    "file": "files\\plinko_16",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167812,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dtwo-factor&rl=&if=false&ts=1771711041722&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=907.8999999761581&it=1771711041711&coo=false&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_63",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko&rl=&if=false&ts=1771711042660&sw=1920&sh=1080&v=2.9.268&r=stable&ec=1&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=907.8999999761581&it=1771711042656&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_64",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=verification",
+    "file": "files\\plinko_17",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167814,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dverification&rl=&if=false&ts=1771711051848&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=895.8999999761581&it=1771711051838&coo=false&exp=s1&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_65",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=transactions",
+    "file": "files\\plinko_18",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167814,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dtransactions&rl=&if=false&ts=1771711060830&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=956.3999999761581&it=1771711060816&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_66",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/casino/originals-d5764c161f0a9f43.js",
+    "file": "files\\originals-d5764c161f0a9f43_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 26837,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/35b7e6f601128a7f.css",
+    "file": "files\\35b7e6f601128a7f_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 23714,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/rewards-4efd56f757614f12.js",
+    "file": "files\\rewards-4efd56f757614f12_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 98032,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/promotions-a12022e820da9e57.js",
+    "file": "files\\promotions-a12022e820da9e57_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 28683,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/responsible-gambling-c8745798fabc2509.js",
+    "file": "files\\responsible-gambling-c8745798fabc2509_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 115007,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/aml-5f4004a36aa82545.js",
+    "file": "files\\aml-5f4004a36aa82545_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2937,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/sportsbook-rules-e398e10b66a2aa70.js",
+    "file": "files\\sportsbook-rules-e398e10b66a2aa70_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2954,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9118-d15e87e39645f9ea.js",
+    "file": "files\\9118-d15e87e39645f9ea_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 17139,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/7633-f727af85e6e52415.js",
+    "file": "files\\7633-f727af85e6e52415_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 28704,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/provably-fair-4e29406d27a81e20.js",
+    "file": "files\\provably-fair-4e29406d27a81e20_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 416,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/contact-us-8ce0d8c1b292eea8.js",
+    "file": "files\\contact-us-8ce0d8c1b292eea8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 3941,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/accessibility-d1828e1d7c8fc7e9.js",
+    "file": "files\\accessibility-d1828e1d7c8fc7e9_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2951,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/code-of-ethics-1d2e51da0559957c.js",
+    "file": "files\\code-of-ethics-1d2e51da0559957c_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2952,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/cookie-policy-99afc1bb2d57117a.js",
+    "file": "files\\cookie-policy-99afc1bb2d57117a_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2951,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/editorial-policy-248e93f0e2e7262c.js",
+    "file": "files\\editorial-policy-248e93f0e2e7262c_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2952,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/modern-slavery-statement-bfe72c14e738e4d2.js",
+    "file": "files\\modern-slavery-statement-bfe72c14e738e4d2_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2962,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/complaints-policy-a24bbd464bb01cb8.js",
+    "file": "files\\complaints-policy-a24bbd464bb01cb8_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2955,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/privacy-policy-545b8215cb847b62.js",
+    "file": "files\\privacy-policy-545b8215cb847b62_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2952,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/pages/disclaimer-8efd29767468fe09.js",
+    "file": "files\\disclaimer-8efd29767468fe09_2.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/446fecb46f301347.css",
+    "file": "files\\446fecb46f301347_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 16974,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/473a3d6cc6468563.css",
+    "file": "files\\473a3d6cc6468563_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 17365,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/css/bc0ecb6a7c164eea.css",
+    "file": "files\\bc0ecb6a7c164eea_2.css",
+    "contentType": "text/css; charset=UTF-8",
+    "size": 43112,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino/originals/plinko?modal=referrals",
+    "file": "files\\plinko_19",
+    "contentType": "text/html; charset=utf-8",
+    "size": 167811,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dreferrals&rl=&if=false&ts=1771711070767&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=947&it=1771711070756&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_67",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Ddeposit&rl=&if=false&ts=1771711074539&sw=1920&sh=1080&v=2.9.268&r=stable&ec=1&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711074531&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_68",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dwithdraw&rl=&if=false&ts=1771711076196&sw=1920&sh=1080&v=2.9.268&r=stable&ec=3&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711076193&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_69",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dbuy-crypto&rl=&if=false&ts=1771711077362&sw=1920&sh=1080&v=2.9.268&r=stable&ec=5&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711077359&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_70",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dbuy-crypto%26method%3DETH&rl=&if=false&ts=1771711078184&sw=1920&sh=1080&v=2.9.268&r=stable&ec=6&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711078180&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_71",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dtip&rl=&if=false&ts=1771711079303&sw=1920&sh=1080&v=2.9.268&r=stable&ec=8&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711079300&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_72",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko%3Fmodal%3Dwallet%26tab%3Dredeem&rl=&if=false&ts=1771711080483&sw=1920&sh=1080&v=2.9.268&r=stable&ec=10&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711080479&coo=false&expv2[0]=pl0&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_73",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko&rl=&if=false&ts=1771711082165&sw=1920&sh=1080&v=2.9.268&r=stable&ec=12&o=13342&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Play%20Plinko%20Game%20Online%20for%20Real%20Money%20at%20Rainbet&pmd[description]=Play%20the%20exciting%20Plinko%20online%20game%20at%20Rainbet!%20Choose%20your%20risk%20level%20and%20enjoy%20the%20chance%20to%20win%20up%20to%201000x%20your%20bet%20in%20our%20crypto%20casino.&plt=947&it=1771711082163&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_74",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/rewards",
+    "file": "files\\rewards",
+    "contentType": "text/html; charset=utf-8",
+    "size": 140756,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Frewards&rl=&if=false&ts=1771711088031&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=1366.3999999761581&it=1771711088023&coo=false&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_75",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-48/rewards/ranks/bronze.svg",
+    "file": "files\\bronze_3.svg",
+    "contentType": "image/webp",
+    "size": 830,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-48/rewards/ranks/silver.svg",
+    "file": "files\\silver_3.svg",
+    "contentType": "image/webp",
+    "size": 792,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/promotions",
+    "file": "files\\promotions",
+    "contentType": "text/html; charset=utf-8",
+    "size": 144307,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fpromotions&rl=&if=false&ts=1771711094862&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=710&it=1771711094848&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_76",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/9510.09c6ef3f8bef262d.js",
+    "file": "files\\9510.09c6ef3f8bef262d_1.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 5980,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/casino",
+    "file": "files\\casino_1",
+    "contentType": "text/html; charset=utf-8",
+    "size": 157563,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino&rl=&if=false&ts=1771711101757&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=626&it=1771711101745&coo=false&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im1&expv2[6]=hf0&rqm=GET",
+    "file": "files\\unknown_77",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=%2FImages%2Fbanner_pragmatic_icon.png&w=96&q=100",
+    "file": "files\\image_66",
+    "contentType": "image/webp",
+    "size": 4152,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-750/banners/casino-banner-chicken-cross.png",
+    "file": "files\\casino-banner-chicken-cross.png",
+    "contentType": "image/webp",
+    "size": 16008,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-750/banners/casino-banner-card-games-february.png",
+    "file": "files\\casino-banner-card-games-february.png",
+    "contentType": "image/webp",
+    "size": 34944,
+    "status": 200
+  },
+  {
+    "url": "https://assets.rbgcdn.com/223k2P3/max-w-750/banners/casino-banner-nip-ryan.png",
+    "file": "files\\casino-banner-nip-ryan.png",
+    "contentType": "image/webp",
+    "size": 40480,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/static/chunks/5797.991d0186867fff3b.js",
+    "file": "files\\5797.991d0186867fff3b_1.js",
+    "contentType": "application/javascript; charset=UTF-8",
+    "size": 2052,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/nolimit.svg",
+    "file": "files\\nolimit.svg",
+    "contentType": "image/svg+xml",
+    "size": 7717,
+    "status": 200
+  },
+  {
+    "url": "https://usercontent.cc/logos/providers/white/playngo.svg",
+    "file": "files\\playngo.svg",
+    "contentType": "image/svg+xml",
+    "size": 8957,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fgames%2Fplinko.png&w=256&q=75",
+    "file": "files\\image_67",
+    "contentType": "image/webp",
+    "size": 14082,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fthumbs.alea.com%2F66823a5e_elk-studios_pirots-4-final-world_400x400.webp&w=128&q=75",
+    "file": "files\\image_68",
+    "contentType": "image/webp",
+    "size": 3786,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2F5%20Lions%20Megaways%20xza.png&w=128&q=75",
+    "file": "files\\image_69",
+    "contentType": "image/webp",
+    "size": 8558,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Frainbet-images.nyc3.cdn.digitaloceanspaces.com%2Fslots%2Fpragmatic-play-great-rhino-megaways.png&w=128&q=75",
+    "file": "files\\image_70",
+    "contentType": "image/webp",
+    "size": 5140,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSugar%20Rush%201000%20(2).png&w=128&q=75",
+    "file": "files\\image_71",
+    "contentType": "image/webp",
+    "size": 5588,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FReturn%20of%20The%20Green%20Knight%20xxd.png&w=128&q=75",
+    "file": "files\\image_72",
+    "contentType": "image/webp",
+    "size": 6112,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2Fzillion-egypt-sun-deluxe.jpg&w=128&q=75",
+    "file": "files\\image_73",
+    "contentType": "image/webp",
+    "size": 4014,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FRoulette%20xxas.png&w=128&q=75",
+    "file": "files\\image_74",
+    "contentType": "image/webp",
+    "size": 4270,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/list?sort_by=recommended&grouping=slots&country=US",
+    "file": "files\\list_7",
+    "contentType": "application/json; charset=utf-8",
+    "size": 21357,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FRainbet%20Rush%201000ssaa.png&w=256&q=75",
+    "file": "files\\image_75",
+    "contentType": "image/webp",
+    "size": 13908,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSupersized.png&w=256&q=75",
+    "file": "files\\image_76",
+    "contentType": "image/webp",
+    "size": 15992,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSweet%20Rush%20Bonanzasssa.png&w=256&q=75",
+    "file": "files\\image_77",
+    "contentType": "image/webp",
+    "size": 10576,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSugar%20Rush%20Super%20Scatter.png&w=256&q=75",
+    "file": "files\\image_78",
+    "contentType": "image/webp",
+    "size": 12964,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FJaws%20of%20Justice%20xxz.png&w=256&q=75",
+    "file": "files\\image_79",
+    "contentType": "image/webp",
+    "size": 13856,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FBarbarossa%20Dragon%20Empire%20xx.png&w=256&q=75",
+    "file": "files\\image_80",
+    "contentType": "image/webp",
+    "size": 13174,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FDuck%20Hunters_%20Happy%20Hour%20(1).png&w=256&q=75",
+    "file": "files\\image_81",
+    "contentType": "image/webp",
+    "size": 15840,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FGreedy%20Alice.png&w=256&q=75",
+    "file": "files\\image_82",
+    "contentType": "image/webp",
+    "size": 14292,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2F222.png&w=256&q=75",
+    "file": "files\\image_83",
+    "contentType": "image/webp",
+    "size": 15970,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSwollxza.png&w=256&q=75",
+    "file": "files\\image_84",
+    "contentType": "image/webp",
+    "size": 9720,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FWild%20Wild%20Banks.png&w=256&q=75",
+    "file": "files\\image_85",
+    "contentType": "image/webp",
+    "size": 11110,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FZombie%20Roadss.png&w=256&q=75",
+    "file": "files\\image_86",
+    "contentType": "image/webp",
+    "size": 10096,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/list?sort_by=release&grouping=slots&country=US",
+    "file": "files\\list_8",
+    "contentType": "application/json; charset=utf-8",
+    "size": 22825,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2F8s%20on%20Fire_%20Supercharged.png&w=256&q=75",
+    "file": "files\\image_87",
+    "contentType": "image/webp",
+    "size": 18616,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FPoseidon%27s%20Trident%20Strike.png&w=256&q=75",
+    "file": "files\\image_88",
+    "contentType": "image/webp",
+    "size": 20632,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSails%20of%20Riches.png&w=256&q=75",
+    "file": "files\\image_89",
+    "contentType": "image/webp",
+    "size": 13488,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FDragon%20Boyz.png&w=256&q=75",
+    "file": "files\\image_90",
+    "contentType": "image/webp",
+    "size": 15112,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FTreasures%20of%20Osiris.png&w=256&q=75",
+    "file": "files\\image_91",
+    "contentType": "image/webp",
+    "size": 15518,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FMagic%20Fruit%24%20Oranges.png&w=256&q=75",
+    "file": "files\\image_92",
+    "contentType": "image/webp",
+    "size": 8886,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FMagic%20Fruit%24%20Oranges%20Burning%20Board.png&w=256&q=75",
+    "file": "files\\image_93",
+    "contentType": "image/webp",
+    "size": 10144,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FPharaoh%27s%20Last%20Wish.png&w=256&q=75",
+    "file": "files\\image_94",
+    "contentType": "image/webp",
+    "size": 14030,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FFrankenstein%27s%20Fortune.png&w=256&q=75",
+    "file": "files\\image_95",
+    "contentType": "image/webp",
+    "size": 13230,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FGems%20of%20Ra.png&w=256&q=75",
+    "file": "files\\image_96",
+    "contentType": "image/webp",
+    "size": 14536,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FVery%20Lucky%20256.png&w=256&q=75",
+    "file": "files\\image_97",
+    "contentType": "image/webp",
+    "size": 14292,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FJackpot%20Gems%20Claw.png&w=256&q=75",
+    "file": "files\\image_98",
+    "contentType": "image/webp",
+    "size": 16792,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FPanda%20Fortune%20Rush.png&w=256&q=75",
+    "file": "files\\image_99",
+    "contentType": "image/webp",
+    "size": 9424,
+    "status": 200
+  },
+  {
+    "url": "https://services.rainbet.com/v1/slots/list?sort_by=popular&grouping=live&country=US",
+    "file": "files\\list_9",
+    "contentType": "application/json; charset=utf-8",
+    "size": 23914,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FBlackjack%20Lobby%20xxas.png&w=256&q=75",
+    "file": "files\\image_100",
+    "contentType": "image/webp",
+    "size": 16014,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSpeed%20Baccarat%20fx.png&w=256&q=75",
+    "file": "files\\image_101",
+    "contentType": "image/webp",
+    "size": 10842,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FMega%20Roulette%20xfs.png&w=256&q=75",
+    "file": "files\\image_102",
+    "contentType": "image/webp",
+    "size": 10140,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FONE%20Blackjack%20xaz.png&w=256&q=75",
+    "file": "files\\image_103",
+    "contentType": "image/webp",
+    "size": 8724,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FBaccarat%20fxx%20pragmatic.png&w=256&q=75",
+    "file": "files\\image_104",
+    "contentType": "image/webp",
+    "size": 9426,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FBlackjack%20xxf.png&w=256&q=75",
+    "file": "files\\image_105",
+    "contentType": "image/webp",
+    "size": 6504,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSpeed%20Roulette%20xxs.png&w=256&q=75",
+    "file": "files\\image_106",
+    "contentType": "image/webp",
+    "size": 8428,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FSweet%20Bonanza%20CandyLand%20fx.png&w=256&q=75",
+    "file": "files\\image_107",
+    "contentType": "image/webp",
+    "size": 12162,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FBlackjack%20Classic%20ssa.png&w=256&q=75",
+    "file": "files\\image_108",
+    "contentType": "image/webp",
+    "size": 10348,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Frainbet-images.nyc3.cdn.digitaloceanspaces.com%2Fslots%2Fevolution-crazy-time.jpg&w=256&q=75",
+    "file": "files\\image_109",
+    "contentType": "image/webp",
+    "size": 10088,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FAuto-Roulette%20xxaz.png&w=256&q=75",
+    "file": "files\\image_110",
+    "contentType": "image/webp",
+    "size": 15020,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2Fpragmatic-play-mega-wheel.jpg&w=256&q=75",
+    "file": "files\\image_111",
+    "contentType": "image/webp",
+    "size": 14662,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FMega%20Baccarat%20xxaz.png&w=256&q=75",
+    "file": "files\\image_112",
+    "contentType": "image/webp",
+    "size": 13040,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2FLe%20Cowboy%20xx.png&w=128&q=75",
+    "file": "files\\image_113",
+    "contentType": "image/webp",
+    "size": 5594,
+    "status": 200
+  },
+  {
+    "url": "https://rainbet.com/_next/image?url=https%3A%2F%2Fcdn.rainbet.com%2Fslots%2Fbackseat-gaming-clumsy-cowboys.jpg&w=128&q=75",
+    "file": "files\\image_114",
+    "contentType": "image/webp",
+    "size": 6058,
+    "status": 200
+  },
+  {
+    "url": "https://www.facebook.com/tr/?id=1240395991347383&ev=PageView&dl=https%3A%2F%2Frainbet.com%2Fcasino%2Foriginals%2Fplinko&rl=&if=false&ts=1771711109508&sw=1920&sh=1080&v=2.9.268&r=stable&ec=0&o=12318&fbp=fb.1.1771710823536.352572157749008571&ler=empty&pmd[title]=Rainbet%20-%20Crypto%20Casino%20%26%20Sportsbook%20%7C%20Instant%20Crypto%20Transactions&pmd[description]=Play%20at%20Rainbet%2C%20an%20online%20crypto%20casino%20with%20Bitcoin%20games%20and%20fast%20withdrawals.%20Enjoy%20a%20welcome%20bonus%20and%20secure%20gaming%20at%20one%20of%20the%20best%20casinos%20for%20crypto%20players.&plt=874.8000000119209&it=1771711109497&coo=false&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=im0&expv2[6]=hf1&rqm=GET",
+    "file": "files\\unknown_78",
+    "contentType": "text/plain",
+    "size": 0,
+    "status": 200
+  }
+]

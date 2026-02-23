@@ -1,0 +1,55 @@
+{"frames": {
+
+"crack-1.png":
+{
+	"frame": {"x":3,"y":555,"w":39,"h":97},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":97},
+	"sourceSize": {"w":39,"h":97}
+},
+"crack-2.png":
+{
+	"frame": {"x":157,"y":555,"w":48,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":40},
+	"sourceSize": {"w":48,"h":40}
+},
+"crack-3.png":
+{
+	"frame": {"x":104,"y":555,"w":66,"h":49},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":66,"h":49},
+	"sourceSize": {"w":66,"h":49}
+},
+"crack-4.png":
+{
+	"frame": {"x":3,"y":598,"w":30,"h":49},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":49},
+	"sourceSize": {"w":30,"h":49}
+},
+"no-crack-barrier.png":
+{
+	"frame": {"x":3,"y":3,"w":548,"h":209},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":548,"h":209},
+	"sourceSize": {"w":548,"h":209}
+}},
+"animations": {
+	"crack": ["crack-1.png","crack-2.png","crack-3.png","crack-4.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "blocker.png",
+	"format": "RGBA8888",
+	"size": {"w":215,"h":631},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ebf95c72d04ed04ba28e804977724b06:d789d87a028f703d0b1e27d5678de40e:b1591679badbbb5f12447971561e6db2$"
+}
+}

@@ -1,0 +1,180 @@
+{"frames": {
+
+"0000.png":
+{
+	"frame": {"x":594,"y":1390,"w":231,"h":640},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":2,"w":231,"h":640},
+	"sourceSize": {"w":234,"h":654}
+},
+"0001.png":
+{
+	"frame": {"x":1236,"y":1390,"w":231,"h":641},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":2,"w":231,"h":641},
+	"sourceSize": {"w":234,"h":654}
+},
+"0002.png":
+{
+	"frame": {"x":1186,"y":230,"w":230,"h":642},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":230,"h":642},
+	"sourceSize": {"w":234,"h":654}
+},
+"0003.png":
+{
+	"frame": {"x":1178,"y":462,"w":230,"h":645},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":645},
+	"sourceSize": {"w":234,"h":654}
+},
+"0004.png":
+{
+	"frame": {"x":1,"y":693,"w":230,"h":646},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":646},
+	"sourceSize": {"w":234,"h":654}
+},
+"0005.png":
+{
+	"frame": {"x":649,"y":694,"w":230,"h":646},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":230,"h":646},
+	"sourceSize": {"w":234,"h":654}
+},
+"0006.png":
+{
+	"frame": {"x":592,"y":926,"w":230,"h":648},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":230,"h":648},
+	"sourceSize": {"w":234,"h":654}
+},
+"0007.png":
+{
+	"frame": {"x":1242,"y":926,"w":230,"h":650},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":650},
+	"sourceSize": {"w":234,"h":654}
+},
+"0008.png":
+{
+	"frame": {"x":1,"y":1158,"w":230,"h":651},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":651},
+	"sourceSize": {"w":234,"h":654}
+},
+"0009.png":
+{
+	"frame": {"x":654,"y":1158,"w":230,"h":652},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":652},
+	"sourceSize": {"w":234,"h":654}
+},
+"0010.png":
+{
+	"frame": {"x":600,"y":229,"w":230,"h":584},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":584},
+	"sourceSize": {"w":234,"h":654}
+},
+"0011.png":
+{
+	"frame": {"x":1,"y":458,"w":230,"h":586},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":586},
+	"sourceSize": {"w":234,"h":654}
+},
+"0012.png":
+{
+	"frame": {"x":589,"y":461,"w":230,"h":587},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":587},
+	"sourceSize": {"w":234,"h":654}
+},
+"0013.png":
+{
+	"frame": {"x":1297,"y":694,"w":230,"h":588},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":230,"h":588},
+	"sourceSize": {"w":234,"h":654}
+},
+"0014.png":
+{
+	"frame": {"x":1,"y":925,"w":230,"h":589},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":230,"h":589},
+	"sourceSize": {"w":234,"h":654}
+},
+"0015.png":
+{
+	"frame": {"x":1308,"y":1158,"w":230,"h":590},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":230,"h":590},
+	"sourceSize": {"w":234,"h":654}
+},
+"0016.png":
+{
+	"frame": {"x":1,"y":1390,"w":230,"h":591},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":230,"h":591},
+	"sourceSize": {"w":234,"h":654}
+},
+"0017.png":
+{
+	"frame": {"x":1,"y":1,"w":226,"h":591},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":2,"w":226,"h":591},
+	"sourceSize": {"w":234,"h":654}
+},
+"0018.png":
+{
+	"frame": {"x":594,"y":1,"w":226,"h":591},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":3,"w":226,"h":591},
+	"sourceSize": {"w":234,"h":654}
+},
+"0019.png":
+{
+	"frame": {"x":1187,"y":1,"w":227,"h":593},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":227,"h":593},
+	"sourceSize": {"w":234,"h":654}
+},
+"0020.png":
+{
+	"frame": {"x":1,"y":229,"w":227,"h":597},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":227,"h":597},
+	"sourceSize": {"w":234,"h":654}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "snow-1.png",
+	"format": "RGBA8888",
+	"size": {"w":1899,"h":1622},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3ad3d9e6a0c8d70807de0c055a991bf4:ee25c82ea921311657000abd9423017a:91ff3436dbb8021ca840f63c19cc7fc8$"
+}
+}

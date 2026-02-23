@@ -1,0 +1,28 @@
+{"frames": {
+
+"pine-tree.png":
+{
+	"frame": {"x":4,"y":4,"w":372,"h":536},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":372,"h":536},
+	"sourceSize": {"w":372,"h":536}
+},
+"side-walk-snow.png":
+{
+	"frame": {"x":383,"y":4,"w":17,"h":563},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":563},
+	"sourceSize": {"w":17,"h":563}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "snow-theme.png",
+	"format": "RGBA8888",
+	"size": {"w":404,"h":571},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1dce8683ca3611d9f83b62278bbbb2dd:4d259e41fc09ed4938d9cf9f4dfc5881:c31b77a70564d156edc97dc9d5c0de4c$"
+}
+}

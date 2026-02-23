@@ -1,0 +1,99 @@
+# Dependencies
+node_modules/
+
+# Browser profiles (large, not needed for deployment)
+browser-profile/
+chrome-capture-profile/
+chrome-debug-profile/
+chrome-profile/
+chrome-profile-v4/
+opera-capture-profile/
+
+# HTTrack cache & output
+hts-cache/
+httrack-output/
+rainbet.com/
+blackjack-capture/
+plinko-fresh/
+
+# Debug / test output
+/*.png
+/*.jpg
+build_output.txt
+check_dup_output.txt
+bj_analysis.txt
+bj_files_check.txt
+font_check.txt
+hts-log.txt
+plinko_ctx.txt
+plinko_result_contexts.txt
+debug_mines_output.html
+debug_mines_output2.html
+test_result.json
+verify_bj2.txt
+plinko/server.log
+plinko/served.html
+
+# Capture / analysis / check / test scripts (not needed for runtime)
+capture-*.js
+rainbet-capture.js
+httrack-blackjack.js
+analyze_bj_html.js
+build_bj_from_capture.js
+build_bj_html.js
+check_*.js
+fix_*.js
+download_*.js
+get_chunks.js
+inject_early_css.js
+patch.js
+patch_bj.js
+patch_mines_api.js
+remove_modal.js
+repair_html.js
+setup_blackjack.js
+setup-blackjack.js
+temp_*.js
+test_*.js
+verify_*.js
+add_mines.js
+
+# Plinko utility scripts (not needed for runtime)
+plinko/analyze*.js
+plinko/capture-*.js
+plinko/diag.js
+plinko/fix_*.js
+plinko/patch_ws.js
+plinko/plinko-component-stub.js
+plinko/rainbet-capture.js
+plinko/test-browser.js
+
+# Research docs (not needed for deployment)
+*.md
+*.txt
+
+# Alternate / duplicate HTML files
+Play Chicken Cross Game Online at Rainbet.html
+chicken-cross-raw.html
+chicken-cross.html
+Blackjack Originals*.html
+Blackjack Originals*_files/
+
+# Cookie files
+cookie*.txt
+cookies*.txt
+
+# Demo files
+_demo_module*.txt
+
+# Root server.js (old, game-server.js is the real one)
+/server.js
+/game-server.js
+
+# Misc
+2/
+url-mapping.json
+package-lock.json
+
+# Plinko HTML in wrong location (real source is plinko-capture/plinko.html)
+plinko/plinko.html

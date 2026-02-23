@@ -1,0 +1,17 @@
+{
+  "name": "rainbet-games",
+  "version": "1.0.0",
+  "description": "Local Rainbet game server (plinko, chicken-cross, blackjack, mines)",
+  "main": "plinko/game-server.js",
+  "scripts": {
+    "start": "node plinko/game-server.js",
+    "dev": "node plinko/game-server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  }
+}
