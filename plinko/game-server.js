@@ -1,4 +1,4 @@
-﻿// Rainbet Plinko - Local Game Server
+// Rainbet Plinko - Local Game Server
 // Serves the captured plinko page with local assets and game API
 const http = require('http');
 const fs = require('fs');
@@ -1509,6 +1509,18 @@ function buildHomepageHTML() {
 (function() {
   'use strict';
 
+  // -- DOM tolerance patches (prevent React hydration crashes) --
+  var _origRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function(child) {
+    if (child && child.parentNode !== this) return child;
+    return _origRemoveChild.call(this, child);
+  };
+  var _origInsertBefore = Node.prototype.insertBefore;
+  Node.prototype.insertBefore = function(newNode, refNode) {
+    if (refNode && refNode.parentNode !== this) return _origInsertBefore.call(this, newNode, null);
+    return _origInsertBefore.call(this, newNode, refNode);
+  };
+
   window.__LOCAL_BALANCE__ = ${playerBalance};
   window.__LOCAL_API__ = window.location.origin;
 
@@ -1760,6 +1772,18 @@ function buildPlinkoHTML() {
 <script id="local-runtime-patches">
 (function() {
   'use strict';
+  // -- DOM tolerance patches (prevent React hydration crashes) --
+  var _origRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function(child) {
+    if (child && child.parentNode !== this) return child;
+    return _origRemoveChild.call(this, child);
+  };
+  var _origInsertBefore = Node.prototype.insertBefore;
+  Node.prototype.insertBefore = function(newNode, refNode) {
+    if (refNode && refNode.parentNode !== this) return _origInsertBefore.call(this, newNode, null);
+    return _origInsertBefore.call(this, newNode, refNode);
+  };
+
 
   // Ã¢â€â‚¬Ã¢â€â‚¬ Balance tracking Ã¢â€â‚¬Ã¢â€â‚¬
   window.__LOCAL_BALANCE__ = ${playerBalance};
@@ -2079,7 +2103,7 @@ function buildPlinkoHTML() {
     if (watchTarget) obs.observe(watchTarget, { childList: true, subtree: true });
   }
 })();
-<\\/script>`;
+</script>`;
   html = html.replace('</head>', function() { return clickToTarget + '</head>'; });
 
   // -- Cache-bust JS chunk URLs to prevent stale browser cache --
