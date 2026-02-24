@@ -348,6 +348,9 @@ let _plinkoCacheGz = null;
 let _ccCacheGz = null;
 let _bjCacheGz = null;
 
+// Stripped _buildManifest.js (cached, game routes removed)
+let _strippedBuildManifest = null;
+
 // Send response with gzip if client supports it
 function sendHTML(req, res, html, gzCache) {
   const ae = req.headers['accept-encoding'] || '';
@@ -785,6 +788,39 @@ function buildNavScript(currentGame) {
   // Also run after a short delay to catch React-rendered sidebars
   setTimeout(fixSidebar, 1500);
   setTimeout(fixSidebar, 4000);
+
+  // ---- 3. Nuclear fallback: MutationObserver detects 404 page rendering ----
+  // If Next.js somehow renders a 404/error page, immediately reload to let
+  // the server serve the correct HTML page.
+  var _notFoundObserver = new MutationObserver(function(mutations) {
+    if (window.__NAV_IN_PROGRESS__) return;
+    for (var i = 0; i < mutations.length; i++) {
+      var nodes = mutations[i].addedNodes;
+      for (var j = 0; j < nodes.length; j++) {
+        var node = nodes[j];
+        if (node.nodeType !== 1) continue;
+        // Rainbet 404 page has "Page Not Found" h1 or specific error text
+        var text = node.textContent || '';
+        if (text.indexOf('Page Not Found') !== -1 || text.indexOf('page not found') !== -1) {
+          // Check it's actually a full-page 404, not just a random text node
+          var h1 = node.querySelector ? node.querySelector('h1, h2') : null;
+          if (h1 && (h1.textContent.indexOf('Not Found') !== -1 || h1.textContent.indexOf('404') !== -1)) {
+            console.log('[NAV] 404 page detected, reloading...');
+            _notFoundObserver.disconnect();
+            window.location.reload();
+            return;
+          }
+        }
+      }
+    }
+  });
+  // Start observing after hydration completes
+  setTimeout(function() {
+    _notFoundObserver.observe(document.body || document.documentElement, {
+      childList: true, subtree: true
+    });
+  }, 2000);
+
 })();
 </script>`;
 }
@@ -4649,9 +4685,57 @@ console.log('[Mines] Local patches loaded');
   }
 
   // Build manifests: /_next/static/BUILD_ID/_buildManifest.js & _ssgManifest.js
+  // Serve a STRIPPED _buildManifest that removes game/casino page routes.
+  // This prevents Next.js from attempting client-side navigation to other pages
+  // (which would render a 404 since each game is a separate HTML page).
   if (pathname.includes('_buildManifest.js')) {
-    const filePath = resolveFile('_buildManifest.js');
-    if (filePath) { res.writeHead(200, {'Content-Type':'application/javascript', 'Cache-Control': STATIC_CACHE_HEADER}); res.end(cachedReadFile(filePath)); return; }
+    if (!_strippedBuildManifest) {
+      const filePath = resolveFile('_buildManifest.js');
+      if (filePath) {
+        let src = cachedReadFile(filePath).toString();
+        // Remove routes that would trigger client-side nav to other pages:
+        // /casino/originals/[game], /casino/[type], /casino, /, etc.
+        // Keep /_error, /404, and non-game routes intact
+        const routesToStrip = [
+          '/casino/originals/[game]', '/casino/originals/[game]/[case]',
+          '/casino/[type]', '/casino/[type]/[slug]', '/casino/[type]/[slug]/[game]',
+          '/casino', '/casino/originals', '/',
+          '/casino/originals/case-battles/create-battle', '/casino/originals/case-battles/[lobby]',
+        ];
+        for (const route of routesToStrip) {
+          // Find the route key and balanced-bracket remove its array value
+          const key = '"' + route + '"';
+          let idx = src.indexOf(key);
+          while (idx !== -1) {
+            const arrStart = src.indexOf('[', idx + key.length);
+            if (arrStart === -1) break;
+            // Balance brackets to find end of array (handles strings containing ] )
+            let depth = 0, inStr = false, j;
+            for (j = arrStart; j < src.length; j++) {
+              if (inStr) { if (src[j] === '"' && src[j-1] !== '\\\\') inStr = false; continue; }
+              if (src[j] === '"') { inStr = true; continue; }
+              if (src[j] === '[') depth++;
+              if (src[j] === ']') { depth--; if (depth === 0) break; }
+            }
+            // Remove from key start to end of array, plus trailing/leading comma
+            let removeStart = idx;
+            let removeEnd = j + 1;
+            if (removeStart > 0 && src[removeStart - 1] === ',') removeStart--;
+            else if (removeEnd < src.length && src[removeEnd] === ',') removeEnd++;
+            src = src.substring(0, removeStart) + src.substring(removeEnd);
+            idx = src.indexOf(key);
+          }
+        }
+        // Clean up any leading commas after removal
+        src = src.replace(/\{,/g, '{');
+        _strippedBuildManifest = src;
+      }
+    }
+    if (_strippedBuildManifest) {
+      res.writeHead(200, {'Content-Type':'application/javascript', 'Cache-Control': STATIC_CACHE_HEADER});
+      res.end(_strippedBuildManifest);
+      return;
+    }
   }
   if (pathname.includes('_ssgManifest.js')) {
     const filePath = resolveFile('_ssgManifest.js');
