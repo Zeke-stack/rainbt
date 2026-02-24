@@ -1,4 +1,4 @@
-// Rainbet Plinko - Local Game Server
+﻿// Rainbet Plinko - Local Game Server
 // Serves the captured plinko page with local assets and game API
 const http = require('http');
 const fs = require('fs');
@@ -21,7 +21,7 @@ function getOrigin(req) {
 }
 let _currentOrigin = 'http://localhost:' + PORT;
 
-// Request log file (skipped on Vercel — read-only filesystem)
+// Request log file (skipped on Vercel â€” read-only filesystem)
 const IS_VERCEL = !!process.env.VERCEL;
 const LOG_FILE = IS_VERCEL ? null : path.join(PLINKO_DIR, 'server.log');
 if (LOG_FILE) try { fs.writeFileSync(LOG_FILE, `Server started at ${new Date().toISOString()}\n`); } catch(e) {}
@@ -33,7 +33,7 @@ function log(msg) {
 const CAPTURE_DIR = path.join(PLINKO_DIR, 'plinko-capture');
 const CAPTURE_FILES = path.join(CAPTURE_DIR, 'files');
 
-// Build sprite URL â†’ local file lookup from url-map.json
+// Build sprite URL Ã¢â€ â€™ local file lookup from url-map.json
 // The capture tool saves colliding filenames with suffixes (_1, _2, etc.) but
 // the suffix for each sprite group varies per frame number, so we need a full lookup.
 const SPRITE_URL_MAP = {};
@@ -51,7 +51,7 @@ try {
 }
 
 // ============================================================
-// PLINKO MULTIPLIER TABLES (rows 8—16, risk low/medium/high/rain)
+// PLINKO MULTIPLIER TABLES (rows 8â€”16, risk low/medium/high/rain)
 // Extracted directly from chunk 3556 (module 7687)
 // ============================================================
 const MULTIPLIERS = {
@@ -159,7 +159,7 @@ try {
 let _saveTimer = null;
 function saveState() {
   if (IS_VERCEL) return; // read-only filesystem on Vercel
-  if (_saveTimer) return; // already scheduled
+  if (_saveTimer) clearTimeout(_saveTimer); // reschedule to capture latest state
   _saveTimer = setTimeout(() => {
     _saveTimer = null;
     try {
@@ -183,15 +183,31 @@ let nonce = 0;
 // ============================================================
 // PLINKO GAME LOGIC
 // ============================================================
-function simulatePlinko(rowCount, riskType) {
+function generateTargetedPath(rowCount, targetBucket) {
+  // Generate a random path that ends at exactly targetBucket
+  // bucketIndex = sum of 1s in path, so we need exactly targetBucket 1s
+  const ones = Math.max(0, Math.min(targetBucket, rowCount));
+  const arr = [];
+  for (let i = 0; i < ones; i++) arr.push(1);
+  for (let i = ones; i < rowCount; i++) arr.push(0);
+  // Fisher-Yates shuffle to randomize the path
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function simulatePlinko(rowCount, riskType, targetBucket) {
   const multipliers = MULTIPLIERS[riskType]?.[rowCount];
   if (!multipliers) throw new Error(`Invalid rowCount=${rowCount} or riskType=${riskType}`);
   const pathResults = [];
   let accumulatedMultiplier = 1;
 
   const simulate = () => {
-    const path = [];
-    for (let i = 0; i < rowCount; i++) path.push(Math.random() < 0.5 ? 0 : 1);
+    const path = (targetBucket !== undefined && targetBucket !== null && targetBucket >= 0 && targetBucket < multipliers.length)
+      ? generateTargetedPath(rowCount, targetBucket)
+      : (() => { const p = []; for (let i = 0; i < rowCount; i++) p.push(Math.random() < 0.5 ? 0 : 1); return p; })();
     const bucketIndex = path.reduce((sum, v) => sum + v, 0);
     const bucketMultiplier = multipliers[bucketIndex];
 
@@ -199,7 +215,7 @@ function simulatePlinko(rowCount, riskType) {
       const rouletteMultiplier = pickRainRouletteMultiplier();
       accumulatedMultiplier = Math.min(accumulatedMultiplier * rouletteMultiplier, 10000);
       pathResults.push({ path, bucketMultiplier: -1, bucketIndex, rouletteMultiplier, accumulatedMultiplier });
-      simulate(); // recurse — ball re-drops
+      simulate(); // recurse â€” ball re-drops
     } else {
       const finalMult = riskType === 'rain' ? bucketMultiplier * accumulatedMultiplier : bucketMultiplier;
       pathResults.push({
@@ -227,7 +243,8 @@ function handleDropBall(body, isFreeplay) {
   if (!['low', 'medium', 'high', 'rain'].includes(risk)) return { error: 'Invalid risk type', status: 400 };
 
   if (!isFreeplay) playerBalance -= amount;
-  const { pathResult, multiplier } = simulatePlinko(rows, risk);
+  const targetBucket = (body.targetBucket !== undefined && body.targetBucket !== null) ? parseInt(body.targetBucket) : undefined;
+  const { pathResult, multiplier } = simulatePlinko(rows, risk, targetBucket);
   const payout = isFreeplay ? 0 : parseFloat((amount * multiplier).toFixed(2));
   if (!isFreeplay) playerBalance = parseFloat((playerBalance + payout).toFixed(2));
   totalBets++;
@@ -242,7 +259,7 @@ function handleDropBall(body, isFreeplay) {
   });
   if (betHistory.length > 100) betHistory.pop();
 
-  log(`BET: $${amount} ${risk} ${rows}rows â†’ ${multiplier}x = $${payout} (balance: $${playerBalance})`);
+  log(`BET: $${amount} ${risk} ${rows}rows Ã¢â€ â€™ ${multiplier}x = $${payout} (balance: $${playerBalance})`);
 
   return {
     result: { riskType: risk, currency_payout: payout, bet_id: betId, multiplier, pathResult },
@@ -283,7 +300,12 @@ let _plinkoCache = null;
 let _ccCache = null;
 let _minesCache = null;
 let _bjCache = null;
-let _lastBalanceKey = '';
+
+// Per-page balance keys â€” each page tracks when IT was last built
+let _homepageBK = '';
+let _plinkoBK = '';
+let _ccBK = '';
+let _bjBK = '';
 
 function getBalanceKey() {
   return `${playerBalance}|${promotionalBalance}|${vaultBalance}`;
@@ -299,7 +321,10 @@ function invalidatePageCaches() {
   _minesCache = null;
   _bjCache = null;
   _bjCacheGz = null;
-  _lastBalanceKey = '';
+  _homepageBK = '';
+  _plinkoBK = '';
+  _ccBK = '';
+  _bjBK = '';
 }
 
 // Pre-compressed gzip caches for large HTML pages
@@ -350,11 +375,11 @@ function indexFiles() {
       }
     }
   }
-  // Index chicken-cross_files (strip hash prefix: "9d95661016__app-xxx.js" → "_app-xxx.js")
+  // Index chicken-cross_files (strip hash prefix: "9d95661016__app-xxx.js" â†’ "_app-xxx.js")
   if (fs.existsSync(CC_ASSETS_DIR)) {
     for (const f of fs.readdirSync(CC_ASSETS_DIR)) {
       const absPath = path.join(CC_ASSETS_DIR, f);
-      // Strip the 10-char hash prefix + underscore: "9d95661016_filename" → "filename"
+      // Strip the 10-char hash prefix + underscore: "9d95661016_filename" â†’ "filename"
       const stripped = f.replace(/^[a-f0-9]{10}_/, '');
       if (stripped !== f && !fileIndex.has(stripped)) {
         fileIndex.set(stripped, absPath);
@@ -493,11 +518,24 @@ function buildNavScript(currentGame) {
   var HOME_ROUTES = { '/': true, '/casino': true, '/casino/originals': true, '/home': true, '/en/casino': true, '/en': true };
   var IS_HOMEPAGE = ${isHomepage};
 
-  // ── Navigate helper ──
-  function navigateTo(path) { window.location.href = path; }
+  // â”€â”€ Navigate helper (force full page load) â”€â”€
+  function navigateTo(path) {
+    // Prevent duplicate navigations
+    if (window.__NAV_IN_PROGRESS__) return;
+    window.__NAV_IN_PROGRESS__ = true;
+    window.location.href = path;
+    // Fallback: if location.href didn't navigate (same URL after pushState), force reload
+    setTimeout(function() {
+      var norm = location.pathname.replace(/^\\/en\\//, '/');
+      if (norm === path || norm === path.replace(/^\\/en\\//, '/')) {
+        location.reload();
+      }
+    }, 100);
+  }
 
-  // ── 1. Click interceptor: force full page reload for game nav ──
-  document.addEventListener('click', function(e) {
+  // â”€â”€ 1. Click interceptor: force full page reload for game nav â”€â”€
+  // Use both click AND touchend for mobile reliability
+  function handleNavClick(e) {
     var a = e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
     var href = a.getAttribute('href');
@@ -505,7 +543,7 @@ function buildNavScript(currentGame) {
 
     // Let wallet/auth modal links pass through to React's router
     if (href.indexOf('modal=wallet') !== -1 || href.indexOf('modal=auth') !== -1) {
-      return; // don't intercept — let Next.js handle it
+      return; // don't intercept â€” let Next.js handle it
     }
 
     var localPath = href.replace(/^https?:\\/\\/[a-z0-9.-]*rainbet\\.com/, '');
@@ -516,12 +554,14 @@ function buildNavScript(currentGame) {
     if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
       e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       navigateTo('/casino');
       return false;
     }
     if (GAME_SLUGS[normPath] && normPath !== CURRENT_PATH) {
       e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       navigateTo(normPath);
       return false;
     }
@@ -529,12 +569,36 @@ function buildNavScript(currentGame) {
     if (GAME_ROUTES[localPath]) {
       e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       navigateTo(localPath.replace(/^\\/en\\//, '/'));
       return false;
     }
+  }
+  document.addEventListener('click', handleNavClick, true);
+  // touchend fires before click on mobile â€” intercept early
+  document.addEventListener('touchend', function(e) {
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href) return;
+    if (href.indexOf('modal=wallet') !== -1 || href.indexOf('modal=auth') !== -1) return;
+    var localPath = href.replace(/^https?:\\/\\/[a-z0-9.-]*rainbet\\.com/, '');
+    localPath = localPath.split('?')[0].split('#')[0];
+    var normPath = localPath.replace(/^\\/en\\//, '/');
+    if ((GAME_ROUTES[normPath] || GAME_SLUGS[normPath]) && normPath !== CURRENT_PATH) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      navigateTo(normPath);
+    } else if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      navigateTo('/casino');
+    }
   }, true);
 
-  // ── 1b. Intercept history.pushState/replaceState so Next.js client-side nav triggers reload ──
+  // â”€â”€ 1b. Intercept history.pushState/replaceState so Next.js client-side nav triggers reload â”€â”€
   var origPush = history.pushState;
   var origReplace = history.replaceState;
   function checkNavChange(url) {
@@ -569,7 +633,69 @@ function buildNavScript(currentGame) {
     }
   });
 
-  // ── 2. Active state + sidebar injection (runs after DOM ready) ──
+  // â”€â”€ 1c. URL-change polling fallback (catches mobile client-side nav that bypasses interceptors) â”€â”€
+  var _lastHref = location.href;
+  setInterval(function() {
+    if (window.__NAV_IN_PROGRESS__) return;
+    if (location.href !== _lastHref) {
+      _lastHref = location.href;
+      var norm = location.pathname.replace(/^\\/en\\//, '/');
+      if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
+        location.reload();
+        return;
+      }
+      if (HOME_ROUTES[norm] && !IS_HOMEPAGE) {
+        window.location.href = '/casino';
+        return;
+      }
+    }
+  }, 150);
+
+  // ---- 1d. Kill Next.js client-side router ---- force full page loads for game navigation
+  function killNextRouter() {
+    if (!window.next || !window.next.router) return;
+    var r = window.next.router;
+    if (r.__killed) return;
+    r.__killed = true;
+    var origPushR = r.push;
+    r.push = function(url) {
+      var p = typeof url === 'string' ? url : (url && (url.pathname || url.href || url.asPath) ? (url.pathname || url.href || url.asPath) : String(url));
+      var norm = p.replace(/^\\/en\\//, '/').split('?')[0].split('#')[0];
+      if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) { navigateTo(norm); return Promise.resolve(true); }
+      if (HOME_ROUTES[norm] && !IS_HOMEPAGE) { navigateTo('/casino'); return Promise.resolve(true); }
+      return origPushR.apply(this, arguments);
+    };
+    var origRepR = r.replace;
+    r.replace = function(url) {
+      var p = typeof url === 'string' ? url : (url && (url.pathname || url.href || url.asPath) ? (url.pathname || url.href || url.asPath) : String(url));
+      var norm = p.replace(/^\\/en\\//, '/').split('?')[0].split('#')[0];
+      if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) { navigateTo(norm); return Promise.resolve(true); }
+      if (HOME_ROUTES[norm] && !IS_HOMEPAGE) { navigateTo('/casino'); return Promise.resolve(true); }
+      return origRepR.apply(this, arguments);
+    };
+    r.prefetch = function() { return Promise.resolve(); };
+  }
+  killNextRouter();
+  var _krCount = 0;
+  var _krTid = setInterval(function() {
+    killNextRouter();
+    if (++_krCount > 60) clearInterval(_krTid);
+  }, 200);
+
+  // ---- 1e. Intercept _next/data fetches ---- redirect game route client-nav to full page load
+  var _outerFetch = window.fetch;
+  window.fetch = function(url, opts) {
+    var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
+    if (u.includes('/_next/data/')) {
+      var dataPath = u.replace(/.*\\/_next\\/data\\/[^/]+/, '').replace(/\\.json.*$/, '');
+      var normData = dataPath.replace(/^\\/en\\//, '/');
+      if (GAME_ROUTES[normData] && normData !== CURRENT_PATH) { navigateTo(normData); return new Promise(function(){}); }
+      if (HOME_ROUTES[normData] && !IS_HOMEPAGE) { navigateTo('/casino'); return new Promise(function(){}); }
+    }
+    return _outerFetch.apply(this, arguments);
+  };
+
+  // â”€â”€ 2. Active state + sidebar injection (runs after DOM ready) â”€â”€
   function fixSidebar() {
     // Set data-active on all sidebar game links
     var allLinks = document.querySelectorAll('a[href*="/casino/originals/"]');
@@ -699,6 +825,10 @@ function ccMakeGameResponse(session) {
     },
     chicken_cross_result: session.results,
     chicken_cross_difficulty: session.difficulty,
+    wallet: {
+      active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' }
+    },
+    balance: playerBalance,
   };
 }
 
@@ -1034,6 +1164,16 @@ function bjMakeGameState(session) {
     insuranceOffered: session.insuranceOffered,
     insuranceTaken: session.insuranceTaken,
     insuranceWon: session.insuranceWon,
+    // Include wallet so client can update balance display
+    wallet: {
+      active: {
+        primary: playerBalance,
+        promotional: promotionalBalance,
+        vault: vaultBalance,
+        currency: 'USD'
+      }
+    },
+    balance: playerBalance,
   };
 }
 
@@ -1071,7 +1211,7 @@ function bjCalcPayout(session) {
   }
   // Insurance payout
   if (session.insuranceTaken && session.insuranceWon) {
-    payout += session.betAmount * 0.5 * 2; // insurance costs 0.5×bet, pays 2:1
+    payout += session.betAmount * 0.5 * 2; // insurance costs 0.5Ã—bet, pays 2:1
   }
   return Math.round(payout * 100) / 100;
 }
@@ -1085,7 +1225,7 @@ function bjAdvanceHand(session) {
       return;
     }
   }
-  // No more hands — check if any non-bust hand exists
+  // No more hands â€” check if any non-bust hand exists
   const anyAlive = session.hands.some(h => !h.isBust);
   if (anyAlive) {
     session.status = 'dealerTurn';
@@ -1148,7 +1288,7 @@ function bjStartGame(betAmount, currency) {
 
   // Check naturals
   if (playerTotal === 21 && dealerTotal === 21) {
-    // Both blackjack — push
+    // Both blackjack â€” push
     session.hands[0].result = 'push';
     session.hands[0].isActive = false;
     session.status = 'finished';
@@ -1164,7 +1304,7 @@ function bjStartGame(betAmount, currency) {
     playerBalance = Math.round((playerBalance + payout) * 100) / 100;
     session.payout = payout;
   } else if (dealerUpValue === 10) {
-    // Dealer shows 10-value — peek for blackjack
+    // Dealer shows 10-value â€” peek for blackjack
     if (dealerTotal === 21) {
       session.hands[0].result = 'lose';
       session.hands[0].isActive = false;
@@ -1172,7 +1312,7 @@ function bjStartGame(betAmount, currency) {
       session.payout = 0;
     }
   } else if (dealerCard1[0] === 'A') {
-    // Dealer shows Ace — offer insurance
+    // Dealer shows Ace â€” offer insurance
     session.insuranceOffered = true;
   }
 
@@ -1313,7 +1453,7 @@ function buildHomepageHTML() {
   // Rewrite asset paths: ./homepage_files/ -> /homepage_files/
   html = html.replace(/\.\/homepage_files\//g, '/homepage_files/');
 
-  // ── 1. Patch __NEXT_DATA__ ──
+  // â”€â”€ 1. Patch __NEXT_DATA__ â”€â”€
   const ndTag = 'id="__NEXT_DATA__"';
   const ndStart = html.indexOf(ndTag);
   if (ndStart >= 0) {
@@ -1345,7 +1485,7 @@ function buildHomepageHTML() {
     '</style>';
   html = html.replace(/<head>/i, '<head>' + earlyCSS);
 
-  // ── 2. Remove third-party/tracking scripts ──
+  // â”€â”€ 2. Remove third-party/tracking scripts â”€â”€
   html = html.replace(/<script[^>]*id="gtm-head"[^>]*>[\s\S]*?<\/script>/gi, '');
   html = html.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io)[^"]*"[^>]*><\/script>/gi, '');
   html = html.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io)[^"]*"[^>]*>/gi, '');
@@ -1359,11 +1499,11 @@ function buildHomepageHTML() {
   html = html.replace(/<script[^>]*src="https?:\/\/[^"]*\.(cloudflare|intercom|facebook|google)[^"]*"[^>]*><\/script>/gi, '');
   html = html.replace(/<script[^>]*src="https?:\/\/[^"]*\.(cloudflare|intercom|facebook|google)[^"]*"[^>]*>/gi, '');
 
-  // ── 2b. Rewrite CDN image URLs to local ──
+  // â”€â”€ 2b. Rewrite CDN image URLs to local â”€â”€
   html = html.replace(/https?:\/\/cdn\.rainbet\.com\//g, '/cdn/');
   html = html.replace(/https?:\/\/assets\.rbgcdn\.com\/[^/]+\/max-w-\d+\//g, '/cdn/');
 
-  // ── 3. Inject local runtime patches ──
+  // â”€â”€ 3. Inject local runtime patches â”€â”€
   const patches = `
 <script id="local-runtime-patches">
 (function() {
@@ -1380,7 +1520,7 @@ function buildHomepageHTML() {
 
   if (window.log) console.log = window.log;
 
-  // ── Intercept XMLHttpRequest ──
+  // â”€â”€ Intercept XMLHttpRequest â”€â”€
   var _xhrOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(method, url) {
     if (typeof url === 'string') {
@@ -1391,7 +1531,7 @@ function buildHomepageHTML() {
     return _xhrOpen.apply(this, args);
   };
 
-  // ── Mock socket.io ──
+  // â”€â”€ Mock socket.io â”€â”€
   function MockSocket(nsp) {
     var s = {
       _h: {}, id: 'mock-' + Math.random().toString(36).substr(2,9),
@@ -1423,7 +1563,7 @@ function buildHomepageHTML() {
   window.io.connect = window.io;
   window.io.protocol = 5;
 
-  // ── Block external WebSocket ──
+  // â”€â”€ Block external WebSocket â”€â”€
   var _OrigWS = window.WebSocket;
   window.WebSocket = function(url, protocols) {
     if (typeof url === 'string' && (url.includes('rainbet.com') || url.includes('intercom') || url.includes('facebook') || url.includes('google'))) {
@@ -1439,14 +1579,14 @@ function buildHomepageHTML() {
   window.WebSocket.prototype = _OrigWS.prototype;
   window.WebSocket.CONNECTING = 0; window.WebSocket.OPEN = 1; window.WebSocket.CLOSING = 2; window.WebSocket.CLOSED = 3;
 
-  // ── Mock Turnstile ──
+  // â”€â”€ Mock Turnstile â”€â”€
   window.turnstile = {
     render: function(el,o){if(o&&o.callback)setTimeout(function(){o.callback('mock-token')},100);return'w'},
     reset:function(){}, remove:function(){}, getResponse:function(){return'mock-token'}, isExpired:function(){return false}
   };
   window.onLoadTurnstile = function(){};
 
-  // ── Intercept fetch ──
+  // â”€â”€ Intercept fetch â”€â”€
   var _fetch = window.fetch;
   window.fetch = function(url, opts) {
     var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
@@ -1483,7 +1623,7 @@ function buildHomepageHTML() {
     return _fetch(url, opts);
   };
 
-  // ── Remove preloader / overlays after load ──
+  // â”€â”€ Remove preloader / overlays after load â”€â”€
   window.addEventListener('load', function() {
     setTimeout(function() {
       document.querySelectorAll('[class*="captcha"],[class*="Captcha"],[class*="turnstile"],[class*="Turnstile"]').forEach(function(el){
@@ -1492,7 +1632,7 @@ function buildHomepageHTML() {
     }, 500);
   });
 
-  // ── Error collector ──
+  // â”€â”€ Error collector â”€â”€
   window.__CLIENT_ERRORS__ = [];
   window.__CLIENT_LOGS__ = [];
   var _origConsoleError = console.error;
@@ -1503,7 +1643,7 @@ function buildHomepageHTML() {
     return _origConsoleError.apply(console, arguments);
   };
 
-  // ── Suppress harmless errors ──
+  // â”€â”€ Suppress harmless errors â”€â”€
   var blockList = ['intercom','gtm','fbevents','google','turnstile','cloudflare','socket.io','anj-seal','facebook'];
   window.addEventListener('error', function(e) {
     var msg = e.message || '';
@@ -1528,7 +1668,7 @@ function buildHomepageHTML() {
     }
   }, 3000);
 
-  console.log('%c RAINBET HOMEPAGE — LOCAL MODE ', 'background:#6c5ce7;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
+  console.log('%c RAINBET HOMEPAGE â€” LOCAL MODE ', 'background:#6c5ce7;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
   console.log('%c Balance: $' + window.__LOCAL_BALANCE__.toFixed(2), 'color:#00b894;font-size:14px');
 
 })();
@@ -1554,7 +1694,7 @@ function buildPlinkoHTML() {
   // Re-read if balance changed or not cached
   let html = fs.readFileSync(path.join(CAPTURE_DIR, 'plinko.html'), 'utf8');
 
-  // â”€â”€ 1. Patch __NEXT_DATA__ â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ 1. Patch __NEXT_DATA__ Ã¢â€â‚¬Ã¢â€â‚¬
   const ndTag = 'id="__NEXT_DATA__"';
   const ndStart = html.indexOf(ndTag);
   if (ndStart >= 0) {
@@ -1587,7 +1727,7 @@ function buildPlinkoHTML() {
     '</style>';
   html = html.replace(/<head>/i, '<head>' + earlyCSS);
 
-  // â”€â”€ 2. Remove third-party/tracking scripts â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ 2. Remove third-party/tracking scripts Ã¢â€â‚¬Ã¢â€â‚¬
   // Remove inline GTM
   html = html.replace(/<script[^>]*id="gtm-head"[^>]*>[\s\S]*?<\/script>/gi, '');
   // Remove loading of GTM, Facebook, Intercom, Google scripts
@@ -1609,34 +1749,34 @@ function buildPlinkoHTML() {
   html = html.replace(/<script[^>]*src="https?:\/\/[^"]*\.(cloudflare|intercom|facebook|google)[^"]*"[^>]*><\/script>/gi, '');
   html = html.replace(/<script[^>]*src="https?:\/\/[^"]*\.(cloudflare|intercom|facebook|google)[^"]*"[^>]*>/gi, '');
 
-  // â”€â”€ 2b. Rewrite CDN image URLs to local â”€â”€
-  // cdn.rainbet.com/currencies/XXX.svg â†’ /cdn/currencies/XXX.svg
+  // Ã¢â€â‚¬Ã¢â€â‚¬ 2b. Rewrite CDN image URLs to local Ã¢â€â‚¬Ã¢â€â‚¬
+  // cdn.rainbet.com/currencies/XXX.svg Ã¢â€ â€™ /cdn/currencies/XXX.svg
   html = html.replace(/https?:\/\/cdn\.rainbet\.com\//g, '/cdn/');
-  // assets.rbgcdn.com/HASH/max-w-NN/TYPE â†’ /cdn/TYPE
+  // assets.rbgcdn.com/HASH/max-w-NN/TYPE Ã¢â€ â€™ /cdn/TYPE
   html = html.replace(/https?:\/\/assets\.rbgcdn\.com\/[^/]+\/max-w-\d+\//g, '/cdn/');
 
-  // â”€â”€ 3. Inject local runtime patches â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ 3. Inject local runtime patches Ã¢â€â‚¬Ã¢â€â‚¬
   const patches = `
 <script id="local-runtime-patches">
 (function() {
   'use strict';
 
-  // â”€â”€ Balance tracking â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Balance tracking Ã¢â€â‚¬Ã¢â€â‚¬
   window.__LOCAL_BALANCE__ = ${playerBalance};
   window.__LOCAL_API__ = window.location.origin;
 
-  // â”€â”€ Force online status â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Force online status Ã¢â€â‚¬Ã¢â€â‚¬
   Object.defineProperty(navigator, 'onLine', { get: function() { return true; }, configurable: true });
 
-  // â”€â”€ Hide offline notification banner via CSS â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Hide offline notification banner via CSS Ã¢â€â‚¬Ã¢â€â‚¬
   var offlineStyle = document.createElement('style');
   offlineStyle.textContent = '[class*="InternetConnection"], [class*="offline"], [class*="internet-connection"] { display: none !important; }';
   document.head.appendChild(offlineStyle);
 
-  // â”€â”€ Restore console â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Restore console Ã¢â€â‚¬Ã¢â€â‚¬
   if (window.log) console.log = window.log;
 
-  // â”€â”€ Intercept XMLHttpRequest to redirect API calls to local server â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Intercept XMLHttpRequest to redirect API calls to local server Ã¢â€â‚¬Ã¢â€â‚¬
   // The game framework uses axios (which uses XHR) to call originals.rainbet.com
   var _xhrOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(method, url) {
@@ -1649,7 +1789,7 @@ function buildPlinkoHTML() {
     return _xhrOpen.apply(this, args);
   };
 
-  // â”€â”€ Mock socket.io â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Mock socket.io Ã¢â€â‚¬Ã¢â€â‚¬
   function MockSocket(nsp) {
     var s = {
       _h: {}, id: 'mock-' + Math.random().toString(36).substr(2,9),
@@ -1697,14 +1837,14 @@ function buildPlinkoHTML() {
   window.WebSocket.prototype = _OrigWS.prototype;
   window.WebSocket.CONNECTING = 0; window.WebSocket.OPEN = 1; window.WebSocket.CLOSING = 2; window.WebSocket.CLOSED = 3;
 
-  // â”€â”€ Mock Turnstile â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Mock Turnstile Ã¢â€â‚¬Ã¢â€â‚¬
   window.turnstile = {
     render: function(el,o){if(o&&o.callback)setTimeout(function(){o.callback('mock-token')},100);return'w'},
     reset:function(){}, remove:function(){}, getResponse:function(){return'mock-token'}, isExpired:function(){return false}
   };
   window.onLoadTurnstile = function(){};
 
-  // â”€â”€ Intercept fetch — redirect API calls to local server â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Intercept fetch â€” redirect API calls to local server Ã¢â€â‚¬Ã¢â€â‚¬
   var _fetch = window.fetch;
   window.fetch = function(url, opts) {
     var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
@@ -1747,7 +1887,7 @@ function buildPlinkoHTML() {
     return _fetch(url, opts);
   };
 
-  // â”€â”€ Balance display updater â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Balance display updater Ã¢â€â‚¬Ã¢â€â‚¬
   function updateBalanceDisplay(bal) {
     // Try to find and update the balance element
     var els = document.querySelectorAll('[class*="balance"], [class*="Balance"]');
@@ -1758,7 +1898,7 @@ function buildPlinkoHTML() {
     });
   }
 
-  // â”€â”€ Remove preloader / overlays after load â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Remove preloader / overlays after load Ã¢â€â‚¬Ã¢â€â‚¬
   window.addEventListener('load', function() {
     setTimeout(function() {
       // Hide any captcha/turnstile overlays
@@ -1768,7 +1908,7 @@ function buildPlinkoHTML() {
     }, 500);
   });
 
-  // â”€â”€ Error collector for diagnostics â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Error collector for diagnostics Ã¢â€â‚¬Ã¢â€â‚¬
   window.__CLIENT_ERRORS__ = [];
   window.__CLIENT_LOGS__ = [];
   var _origConsoleError = console.error;
@@ -1786,7 +1926,7 @@ function buildPlinkoHTML() {
     return _origConsoleWarn.apply(console, arguments);
   };
 
-  // â”€â”€ Suppress harmless errors â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Suppress harmless errors Ã¢â€â‚¬Ã¢â€â‚¬
   var blockList = ['intercom','gtm','fbevents','google','turnstile','cloudflare','socket.io','anj-seal','facebook'];
   window.addEventListener('error', function(e) {
     var msg = e.message || '';
@@ -1799,7 +1939,7 @@ function buildPlinkoHTML() {
     window.__CLIENT_ERRORS__.push('REJECTION: ' + msg.substring(0, 300));
   });
 
-  // â”€â”€ Report errors to server â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Report errors to server Ã¢â€â‚¬Ã¢â€â‚¬
   setInterval(function() {
     if (window.__CLIENT_ERRORS__.length > 0) {
       var errors = window.__CLIENT_ERRORS__.splice(0);
@@ -1812,7 +1952,7 @@ function buildPlinkoHTML() {
     }
   }, 3000);
 
-  console.log('%c RAINBET PLINKO — LOCAL MODE ', 'background:#6c5ce7;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
+  console.log('%c RAINBET PLINKO â€” LOCAL MODE ', 'background:#6c5ce7;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
   console.log('%c Balance: $' + window.__LOCAL_BALANCE__.toFixed(2), 'color:#00b894;font-size:14px');
 
 })();
@@ -1822,6 +1962,125 @@ function buildPlinkoHTML() {
 
   // Inject universal navigation script
   html = html.replace('</head>', function() { return buildNavScript('plinko') + '</head>'; });
+
+  // -- Inject plinko click-to-target feature --
+  const clickToTarget = `<script id="plinko-click-target">
+(function() {
+  'use strict';
+  window.__PLINKO_TARGET_BUCKET__ = null;
+
+  // --- Click-to-target: click a bucket to make the next ball land there ---
+  function setupBucketClicks() {
+    var buckets = document.querySelectorAll('[id^="bucket-"]');
+    if (!buckets.length) return false;
+    buckets.forEach(function(bucket) {
+      bucket.style.cursor = 'pointer';
+      bucket.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var idx = parseInt(bucket.id.replace('bucket-', ''));
+        if (isNaN(idx)) return;
+        // Toggle: click same bucket to deselect
+        if (window.__PLINKO_TARGET_BUCKET__ === idx) {
+          window.__PLINKO_TARGET_BUCKET__ = null;
+          clearBucketHighlights();
+          return;
+        }
+        window.__PLINKO_TARGET_BUCKET__ = idx;
+        highlightBucket(idx);
+      });
+    });
+    return true;
+  }
+
+  function highlightBucket(idx) {
+    clearBucketHighlights();
+    var el = document.getElementById('bucket-' + idx);
+    if (!el) return;
+    el.style.outline = '2px solid #FFD700';
+    el.style.outlineOffset = '-2px';
+    el.style.boxShadow = '0 0 12px 3px rgba(255,215,0,0.6)';
+    el.style.transform = 'scale(1.1)';
+    el.style.transition = 'transform 0.15s ease, box-shadow 0.15s ease';
+    el.style.zIndex = '10';
+    el.style.position = 'relative';
+    // Show indicator
+    var ind = document.getElementById('target-indicator');
+    if (!ind) {
+      ind = document.createElement('div');
+      ind.id = 'target-indicator';
+      ind.style.cssText = 'position:fixed;top:12px;right:12px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:8px 16px;border-radius:8px;font-weight:700;font-size:14px;z-index:99999;box-shadow:0 2px 12px rgba(255,165,0,0.4);font-family:-apple-system,BlinkMacSystemFont,sans-serif;pointer-events:auto;cursor:pointer;';
+      ind.addEventListener('click', function() {
+        window.__PLINKO_TARGET_BUCKET__ = null;
+        clearBucketHighlights();
+      });
+      document.body.appendChild(ind);
+    }
+    var mult = el.getAttribute('data-multiplier') || '?';
+    ind.textContent = 'TARGET: ' + mult + 'x (tap to cancel)';
+    ind.style.display = 'block';
+  }
+
+  function clearBucketHighlights() {
+    document.querySelectorAll('[id^="bucket-"]').forEach(function(b) {
+      b.style.outline = '';
+      b.style.outlineOffset = '';
+      b.style.boxShadow = '';
+      b.style.transform = '';
+      b.style.zIndex = '';
+    });
+    var ind = document.getElementById('target-indicator');
+    if (ind) ind.style.display = 'none';
+  }
+
+  // --- Inject targetBucket into drop-ball API calls ---
+  var _plinkFetch = window.fetch;
+  window.fetch = function(url, opts) {
+    var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
+    if ((u.includes('/plinko/drop-ball') || u.includes('/plinko/free-drop-ball')) && opts && opts.body && window.__PLINKO_TARGET_BUCKET__ !== null) {
+      try {
+        var body = JSON.parse(opts.body);
+        body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
+        opts = Object.assign({}, opts, { body: JSON.stringify(body) });
+        // Clear target after use (one-shot per click)
+        // Keep target active - user can click again to cancel
+      } catch(e) {}
+    }
+    return _plinkFetch.apply(this, arguments);
+  };
+
+  // Intercept XHR too (axios uses XHR)
+  var _xhrSend = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function(data) {
+    if (this.__plinkoUrl && (this.__plinkoUrl.includes('/plinko/drop-ball') || this.__plinkoUrl.includes('/plinko/free-drop-ball')) && window.__PLINKO_TARGET_BUCKET__ !== null && data) {
+      try {
+        var body = JSON.parse(data);
+        body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
+        data = JSON.stringify(body);
+      } catch(e) {}
+    }
+    return _xhrSend.call(this, data);
+  };
+  var _xhrOpen2 = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, url) {
+    this.__plinkoUrl = url;
+    return _xhrOpen2.apply(this, arguments);
+  };
+
+  // Wait for DOM to have buckets, then set up clicks
+  var attempts = 0;
+  var setupTimer = setInterval(function() {
+    if (setupBucketClicks() || ++attempts > 100) clearInterval(setupTimer);
+  }, 300);
+
+  // Also observe DOM mutations for dynamic bucket creation
+  if (window.MutationObserver) {
+    var obs = new MutationObserver(function() { setupBucketClicks(); });
+    var watchTarget = document.getElementById('__next') || document.body;
+    if (watchTarget) obs.observe(watchTarget, { childList: true, subtree: true });
+  }
+})();
+<\\/script>`;
+  html = html.replace('</head>', function() { return clickToTarget + '</head>'; });
 
   // -- Cache-bust JS chunk URLs to prevent stale browser cache --
   var cacheBuster = '?v=' + Date.now();
@@ -1858,7 +2117,7 @@ async function handleRequest(req, res) {
   const url = new URL(req.url, _currentOrigin);
   let pathname = decodeURIComponent(url.pathname);
 
-  // Normalize: strip /casino/originals prefix so /casino/originals/v1/... â†’ /v1/...
+  // Normalize: strip /casino/originals prefix so /casino/originals/v1/... Ã¢â€ â€™ /v1/...
   pathname = pathname.replace(/^\/casino\/originals/, '');
 
   // Auto-save state after any POST request (balance may have changed)
@@ -1870,7 +2129,7 @@ async function handleRequest(req, res) {
   if (!pathname.includes('.map') && !pathname.includes('favicon') && !pathname.includes('/cdn/'))
     log(`${req.method} ${pathname}`);
 
-  // ── AstroPay success redirect page ──
+  // â”€â”€ AstroPay success redirect page â”€â”€
   if (pathname === '/astropay-success') {
     const amt = url.searchParams.get('amount') || '0';
     const referer = req.headers.referer || _currentOrigin + '/casino';
@@ -1905,7 +2164,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ API Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   // Plinko drop-ball
   if ((pathname === '/api/plinko/drop-ball' || pathname === '/api/v1/original-games/plinko/drop-ball') && req.method === 'POST') {
@@ -1916,7 +2175,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         res.writeHead(result.status || 400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: result.error }));
       } else {
-        // Game expects response.data.result — axios unwraps to response.data
+        // Game expects response.data.result â€” axios unwraps to response.data
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ result: result.result }));
       }
@@ -1956,7 +2215,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // (v1/auth/me is handled below with full user profile + wallet data)
 
-  // Ping — must return 204 for HEAD (the app checks status===204 to determine online)
+  // Ping â€” must return 204 for HEAD (the app checks status===204 to determine online)
   if (pathname === '/api/ping' || pathname === '/ping') {
     if (req.method === 'HEAD') {
       res.writeHead(204);
@@ -1968,7 +2227,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Chicken Cross: active-session ──
+  // â”€â”€ Chicken Cross: active-session â”€â”€
   if (pathname === '/api/v1/original-games/chicken-cross/active-session') {
     if (ccActiveSession && !ccActiveSession.gameOver) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -1980,7 +2239,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Chicken Cross: play (start new game) ──
+  // â”€â”€ Chicken Cross: play (start new game) â”€â”€
   if (pathname === '/api/v1/original-games/chicken-cross/play' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
@@ -2018,7 +2277,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Chicken Cross: autoplay ──
+  // â”€â”€ Chicken Cross: autoplay â”€â”€
   if (pathname === '/api/v1/original-games/chicken-cross/autoplay' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
@@ -2071,7 +2330,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Chicken Cross: action (cross a lane) ──
+  // â”€â”€ Chicken Cross: action (cross a lane) â”€â”€
   {
     const actionMatch = pathname.match(/^\/api\/v1\/original-games\/chicken-cross\/([a-f0-9-]+)\/action$/);
     if (actionMatch && req.method === 'POST') {
@@ -2117,7 +2376,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     }
   }
 
-  // ── Chicken Cross: cashout ──
+  // â”€â”€ Chicken Cross: cashout â”€â”€
   {
     const cashoutMatch = pathname.match(/^\/api\/v1\/original-games\/chicken-cross\/([a-f0-9-]+)\/cashout$/);
     if (cashoutMatch && req.method === 'POST') {
@@ -2151,18 +2410,18 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // (v1/crypto is handled below with full currency list)
 
-  // ── Blackjack: active-session ──
+  // â”€â”€ Blackjack: active-session â”€â”€
   if (pathname === '/api/v1/original-games/blackjack/active-session') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     if (bjActiveSession) {
-      res.end(JSON.stringify({ gameState: bjMakeGameState(bjActiveSession) }));
+      res.end(JSON.stringify({ gameState: bjMakeGameState(bjActiveSession), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
     } else {
       res.end(JSON.stringify({}));
     }
     return;
   }
 
-  // ── Blackjack: play (start new game) ──
+  // â”€â”€ Blackjack: play (start new game) â”€â”€
   if (pathname === '/api/v1/original-games/blackjack/play' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
@@ -2185,12 +2444,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       const session = bjStartGame(betAmount, body.currency || 'USD');
       log(`BJ DEAL: bet=${betAmount} status=${session.status} balance=${playerBalance.toFixed(2)}`);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ gameState: bjMakeGameState(session) }));
+      res.end(JSON.stringify({ gameState: bjMakeGameState(session), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
     } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     return;
   }
 
-  // ── Blackjack: freeplay ──
+  // â”€â”€ Blackjack: freeplay â”€â”€
   if (pathname === '/api/v1/original-games/blackjack/freeplay' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
@@ -2201,18 +2460,18 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       }
       const session = bjStartGame(10, 'USD');
       session.isFreeplay = true;
-      // Don't deduct from balance for freeplays — re-add the amount
+      // Don't deduct from balance for freeplays â€” re-add the amount
       playerBalance = Math.round((playerBalance + 10) * 100) / 100;
       log(`BJ FREEPLAY: status=${session.status} balance=${playerBalance.toFixed(2)}`);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       const state = bjMakeGameState(session);
       state.is_freeplay = true;
-      res.end(JSON.stringify({ gameState: state }));
+      res.end(JSON.stringify({ gameState: state, wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
     } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     return;
   }
 
-  // ── Blackjack: action (hit/stand/double/split/insurance) ──
+  // â”€â”€ Blackjack: action (hit/stand/double/split/insurance) â”€â”€
   {
     const bjActionMatch = pathname.match(/^\/api\/v1\/original-games\/blackjack\/([a-f0-9-]+)\/([a-f0-9-]+)\/action$/);
     if (bjActionMatch && req.method === 'POST') {
@@ -2229,15 +2488,15 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         bjDoAction(sessionRef, actionObj);
         log(`BJ ACTION: ${actionName} status=${sessionRef.status} balance=${playerBalance.toFixed(2)}`);
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ gameState: bjMakeGameState(sessionRef) }));
+        res.end(JSON.stringify({ gameState: bjMakeGameState(sessionRef), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
       } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
       return;
     }
   }
 
-  // ═══════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MINES API ENDPOINTS
-  // ═══════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   // Mines: active session check
   if ((pathname === '/v1/games/mines/active-session' || pathname === '/api/v1/original-games/mines-game/active-session') && req.method === 'GET') {
@@ -2448,8 +2707,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // â”€â”€ Balance endpoints (game calls these via SWR after each bet) â”€â”€
-  // /v1/user/balance/primary/USD â†’ { amount: N }
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Balance endpoints (game calls these via SWR after each bet) Ã¢â€â‚¬Ã¢â€â‚¬
+  // /v1/user/balance/primary/USD Ã¢â€ â€™ { amount: N }
   if (pathname.match(/^\/(?:api\/)?v1\/user\/balance\/(primary|promotional|vault)\/\w+$/)) {
     const type = pathname.match(/(primary|promotional|vault)/)[1];
     const amount = type === 'primary' ? playerBalance : type === 'vault' ? vaultBalance : promotionalBalance;
@@ -2458,7 +2717,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // /v1/user/wallet â†’ full wallet shape
+  // /v1/user/wallet Ã¢â€ â€™ full wallet shape
   if (pathname === '/v1/user/wallet' || pathname === '/api/v1/user/wallet') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -2497,6 +2756,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       if (body.balance !== undefined) playerBalance = parseFloat(body.balance) || 10000;
       if (body.vault !== undefined) vaultBalance = parseFloat(body.vault) || 0;
       if (body.promotional !== undefined) promotionalBalance = parseFloat(body.promotional) || 0;
+      invalidatePageCaches();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ amount: playerBalance, balance: playerBalance, vault: vaultBalance, promotional: promotionalBalance }));
     } catch(e) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
@@ -2537,23 +2797,23 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       USD: { rate: 1, display: { isDefault: true, prepend: '$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/usd.svg', decimals: 2, status: 'active' } },
-      EUR: { rate: 0.8504, display: { prepend: '€', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/eur.svg', decimals: 2, status: 'active' } },
-      GBP: { rate: 0.7436, display: { prepend: '£', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/gbp.svg', decimals: 2, status: 'active' } },
+      EUR: { rate: 0.8504, display: { prepend: 'â‚¬', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/eur.svg', decimals: 2, status: 'active' } },
+      GBP: { rate: 0.7436, display: { prepend: 'Â£', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/gbp.svg', decimals: 2, status: 'active' } },
       CAD: { rate: 1.3693, display: { prepend: 'C$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/cad.svg', decimals: 2, status: 'active' } },
       AUD: { rate: 1.4174, display: { prepend: 'A$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/aud.svg', decimals: 2, status: 'active' } },
       BRL: { rate: 5.2131, display: { prepend: 'R$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/brl.svg', decimals: 2, status: 'active' } },
-      JPY: { rate: 155.572, display: { prepend: '¥', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/jpy.svg', decimals: 0, status: 'active' } },
-      CNY: { rate: 6.9088, display: { prepend: '¥', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/cny.svg', decimals: 2, status: 'active' } },
+      JPY: { rate: 155.572, display: { prepend: 'Â¥', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/jpy.svg', decimals: 0, status: 'active' } },
+      CNY: { rate: 6.9088, display: { prepend: 'Â¥', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/cny.svg', decimals: 2, status: 'active' } },
       MXN: { rate: 17.2553, display: { prepend: 'MX$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/mxn.svg', decimals: 2, status: 'active' } },
       CHF: { rate: 0.7754, display: { prepend: 'CHF', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/chf.svg', decimals: 2, status: 'active' } },
-      TRY: { rate: 43.8157, display: { prepend: '₺', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/try.svg', decimals: 2, status: 'active' } },
+      TRY: { rate: 43.8157, display: { prepend: 'â‚º', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/try.svg', decimals: 2, status: 'active' } },
       ARS: { rate: 1390.49, display: { prepend: 'AR$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/ars.svg', decimals: 2, status: 'active' } },
       SEK: { rate: 9.0644, display: { prepend: 'kr', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/sek.svg', decimals: 2, status: 'active' } },
       DKK: { rate: 6.3533, display: { prepend: 'kr.', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/dkk.svg', decimals: 2, status: 'active' } },
       SGD: { rate: 1.2693, display: { prepend: 'S$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/sgd.svg', decimals: 2, status: 'active' } },
       HKD: { rate: 7.8148, display: { prepend: 'HK$', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/hkd.svg', decimals: 2, status: 'active' } },
-      RUB: { rate: 76.8704, display: { prepend: '₽', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/rub.svg', decimals: 2, status: 'active' } },
-      PHP: { rate: 58.1965, display: { prepend: '₱', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/php.svg', decimals: 2, status: 'active' } }
+      RUB: { rate: 76.8704, display: { prepend: 'â‚½', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/rub.svg', decimals: 2, status: 'active' } },
+      PHP: { rate: 58.1965, display: { prepend: 'â‚±', append: null, icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/php.svg', decimals: 2, status: 'active' } }
     }));
     return;
   }
@@ -2648,7 +2908,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Crypto deposit addresses ──
+  // â”€â”€ Crypto deposit addresses â”€â”€
   if ((pathname === '/v1/crypto/deposit-addresses' || pathname === '/api/v1/crypto/deposit-addresses') && req.method === 'POST') {
     const body = await parseBody(req);
     const currency = (body.currency || 'BTC').toUpperCase();
@@ -2683,7 +2943,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Crypto withdraw ──
+  // â”€â”€ Crypto withdraw â”€â”€
   if ((pathname === '/v1/crypto/withdraw' || pathname === '/api/v1/crypto/withdraw') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -2700,12 +2960,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     const txId = crypto.randomUUID();
     transactionHistory.unshift({ id: txId, type: 'crypto_withdraw', amount, currency, network, address, status: 'completed', timestamp: new Date().toISOString() });
     log('CRYPTO WITHDRAW: -$' + amount + ' to ' + address + ' (' + currency + '/' + network + ') balance: $' + playerBalance);
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, transaction_id: txId, amount, currency, network, address, balance: playerBalance, status: 'completed' }));
     return;
   }
 
-  // ── Currency swap ──
+  // â”€â”€ Currency swap â”€â”€
   if ((pathname === '/v1/swap' || pathname === '/api/v1/swap' || pathname === '/v1/user/currency/swap' || pathname === '/api/v1/user/currency/swap') && req.method === 'POST') {
     const body = await parseBody(req);
     const from = (body.from || body.from_currency || 'BTC').toUpperCase();
@@ -2725,7 +2986,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Mesh (third-party wallet connect) ──
+  // â”€â”€ Mesh (third-party wallet connect) â”€â”€
   if (pathname === '/v1/mesh/access' || pathname === '/api/v1/mesh/access') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ catalogLink: null, integrationId: null }));
@@ -2747,7 +3008,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Catalog / transfers (Mesh broker connect) ──
+  // â”€â”€ Catalog / transfers (Mesh broker connect) â”€â”€
   if (pathname.startsWith('/api/v1/catalog/')) {
     const body = req.method === 'POST' ? await parseBody(req) : {};
     if (pathname.includes('/transfers/quote')) {
@@ -2765,6 +3026,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       playerBalance = parseFloat((playerBalance + amount).toFixed(2));
       totalDeposited = parseFloat((totalDeposited + amount).toFixed(2));
       transactionHistory.unshift({ id: crypto.randomUUID(), type: 'deposit', amount, currency: 'USD', method: 'catalog_transfer', status: 'completed', timestamp: new Date().toISOString() });
+      invalidatePageCaches();
       log('CATALOG DEPOSIT: +$' + amount + ' (balance: $' + playerBalance + ')');
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, status: 'completed', balance: playerBalance }));
@@ -2811,7 +3073,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Payment methods (AstroPay) ──
+  // â”€â”€ Payment methods (AstroPay) â”€â”€
   if ((pathname === '/v1/payment-methods' || pathname === '/api/v1/payment-methods') && (req.method === 'GET' || req.method === 'POST')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -2832,7 +3094,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── AstroPay deposit ──
+  // â”€â”€ AstroPay deposit â”€â”€
   if ((pathname === '/v1/astropay/deposit' || pathname === '/api/v1/astropay/deposit') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -2841,7 +3103,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       res.end(JSON.stringify({ error: 'er_invalid_amount' }));
       return;
     }
-    // Credit balance immediately (local mode — no real AstroPay redirect)
+    // Credit balance immediately (local mode â€” no real AstroPay redirect)
     playerBalance = parseFloat((playerBalance + amount).toFixed(2));
     totalDeposited = parseFloat((totalDeposited + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'astropay_deposit', amount, currency: body.currency || 'USD', status: 'completed', timestamp: new Date().toISOString() });
@@ -2854,7 +3116,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── AstroPay withdrawal ──
+  // â”€â”€ AstroPay withdrawal â”€â”€
   if ((pathname === '/v1/astropay/withdrawal' || pathname === '/api/v1/astropay/withdrawal') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -2867,12 +3129,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     totalWithdrawn = parseFloat((totalWithdrawn + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'astropay_withdraw', amount, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log('ASTROPAY WITHDRAW: -$' + amount + ' (balance: $' + playerBalance + ')');
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, balance: playerBalance }));
     return;
   }
 
-  // ── User settings ──
+  // â”€â”€ User settings â”€â”€
   if (pathname === '/v1/user/settings' || pathname === '/api/v1/user/settings') {
     if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2894,7 +3157,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── User recent games ──
+  // â”€â”€ User recent games â”€â”€
   if (pathname === '/v1/user/recent-games' || pathname === '/api/v1/user/recent-games') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify([
@@ -2906,7 +3169,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── User transaction history (paginated) ──
+  // â”€â”€ User transaction history (paginated) â”€â”€
   if (pathname === '/v1/user/transaction-history' || pathname === '/v1/user/transaction-history/' || pathname === '/api/v1/user/transaction-history' || pathname === '/api/v1/user/transaction-history/') {
     const qType = url.searchParams.get('type');
     const page = parseInt(url.searchParams.get('page')) || 1;
@@ -2920,7 +3183,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── User bet history (paginated) ──
+  // â”€â”€ User bet history (paginated) â”€â”€
   if (pathname === '/v1/user/bet-history' || pathname.startsWith('/v1/user/bet-history/') || pathname === '/api/v1/user/bet-history' || pathname.startsWith('/api/v1/user/bet-history/')) {
     if (pathname.includes('/casino/games')) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2955,7 +3218,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Raffles ──
+  // â”€â”€ Raffles â”€â”€
   if (pathname === '/v1/raffles/active' || pathname === '/api/v1/raffles/active') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify([]));
@@ -2987,7 +3250,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Public content / translations / languages ──
+  // â”€â”€ Public content / translations / languages â”€â”€
   if (pathname === '/v1/public/content' || pathname === '/api/v1/public/content') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ pages: {}, banners: [], announcements: [] }));
@@ -3014,7 +3277,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Games random ──
+  // â”€â”€ Games random â”€â”€
   if (pathname === '/v1/games/random' || pathname === '/api/v1/games/random') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify([
@@ -3026,7 +3289,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Calendar / events ──
+  // â”€â”€ Calendar / events â”€â”€
   if (pathname.startsWith('/v1/calendar') || pathname.startsWith('/api/v1/calendar')) {
     if (req.method === 'POST') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -3038,42 +3301,42 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // ── Email validation ──
+  // â”€â”€ Email validation â”€â”€
   if (pathname.startsWith('/v1/email') || pathname.startsWith('/api/v1/email')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, verified: true }));
     return;
   }
 
-  // ── Sportsbook initiate ──
+  // â”€â”€ Sportsbook initiate â”€â”€
   if (pathname === '/v1/sportsbook/initiate' || pathname === '/api/v1/sportsbook/initiate') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ url: null, token: null }));
     return;
   }
 
-  // ── Hardware wallet ──
+  // â”€â”€ Hardware wallet â”€â”€
   if (pathname.startsWith('/api/v1/hardware-wallets') || pathname.startsWith('/v1/hardware-wallets')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ otp: 'mock-otp-' + Date.now(), success: true }));
     return;
   }
 
-  // ── Connected accounts / MFA ──
+  // â”€â”€ Connected accounts / MFA â”€â”€
   if (pathname.startsWith('/api/v1/connectedAccountDetail') || pathname.startsWith('/v1/connectedAccountDetail')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ mfa_enabled: false, status: 'not_bound', success: true }));
     return;
   }
 
-  // ── Change locale ──
+  // â”€â”€ Change locale â”€â”€
   if (pathname === '/api/change-locale') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, locale: 'en' }));
     return;
   }
 
-  // ── Auth endpoints ──
+  // â”€â”€ Auth endpoints â”€â”€
   if (pathname === '/v1/auth/me' || pathname === '/api/v1/auth/me') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -3115,7 +3378,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
 
 
-  // â”€â”€ Vault deposit/withdraw â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Vault deposit/withdraw Ã¢â€â‚¬Ã¢â€â‚¬
   if ((pathname === '/v1/vault/deposit' || pathname === '/api/v1/vault/deposit') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -3128,6 +3391,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     vaultBalance = parseFloat((vaultBalance + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'vault_deposit', amount, currency: 'USD', timestamp: new Date().toISOString() });
     log(`VAULT DEPOSIT: $${amount} (balance: $${playerBalance}, vault: $${vaultBalance})`);
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, balance: playerBalance, vault: vaultBalance }));
     return;
@@ -3145,12 +3409,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     playerBalance = parseFloat((playerBalance + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'vault_withdraw', amount, currency: 'USD', timestamp: new Date().toISOString() });
     log(`VAULT WITHDRAW: $${amount} (balance: $${playerBalance}, vault: $${vaultBalance})`);
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, balance: playerBalance, vault: vaultBalance }));
     return;
   }
 
-  // â”€â”€ Custom deposit (add money) â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Custom deposit (add money) Ã¢â€â‚¬Ã¢â€â‚¬
   if ((pathname === '/api/deposit' || pathname === '/v1/deposit') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -3163,12 +3428,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     totalDeposited = parseFloat((totalDeposited + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'deposit', amount, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log(`DEPOSIT: +$${amount} (balance: $${playerBalance})`);
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, amount: playerBalance, balance: playerBalance }));
     return;
   }
 
-  // â”€â”€ Custom withdraw (remove money — goes to nothing) â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Custom withdraw (remove money â€” goes to nothing) Ã¢â€â‚¬Ã¢â€â‚¬
   if ((pathname === '/api/withdraw' || pathname === '/v1/withdraw') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -3181,6 +3447,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     totalWithdrawn = parseFloat((totalWithdrawn + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'withdraw', amount, currency: 'USD', status: 'completed', address: '0x0000...void', timestamp: new Date().toISOString() });
     log(`WITHDRAW: -$${amount} (balance: $${playerBalance})`);
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, amount: playerBalance, balance: playerBalance }));
     return;
@@ -3197,6 +3464,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     promotionalBalance = parseFloat((promotionalBalance + reward).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'promo_code', code, amount: reward, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log('PROMO CODE "' + code + '" REDEEMED: +' + reward + ' (balance: ' + playerBalance + ')');
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, promotion: { code, reward, status: 'active', type: 'wager-locked-1' }, balance: playerBalance, promotional: promotionalBalance }));
     return;
@@ -3223,6 +3491,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     promotionalBalance = parseFloat((promotionalBalance + reward).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'affiliate_code', code, amount: reward, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log('AFFILIATE CODE "' + code + '" REDEEMED: +' + reward + ' (balance: ' + playerBalance + ')');
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, reward, balance: playerBalance, promotional: promotionalBalance }));
     return;
@@ -3237,6 +3506,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     promotionalBalance = parseFloat((promotionalBalance + reward).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'bonus_code', code, amount: reward, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log('BONUS CODE "' + code + '" REDEEMED: +' + reward + ' (balance: ' + playerBalance + ')');
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, reward, balance: playerBalance, promotional: promotionalBalance }));
     return;
@@ -3252,12 +3522,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     promotionalBalance = parseFloat((promotionalBalance + reward).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'bonus_code', code, amount: reward, currency: 'USD', status: 'completed', timestamp: new Date().toISOString() });
     log('CODE "' + code + '" REDEEMED (catch-all): +' + reward + ' (balance: ' + playerBalance + ')');
+    invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, reward, balance: playerBalance, promotional: promotionalBalance }));
     return;
   }
 
-  // â”€â”€ Transaction history â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Transaction history Ã¢â€â‚¬Ã¢â€â‚¬
   if (pathname === '/api/transactions') {
     const qType = url.searchParams.get('type');
     const page = parseInt(url.searchParams.get('page')) || 1;
@@ -3377,7 +3648,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // Game history (POST with body) — game expects a plain array
+  // Game history (POST with body) â€” game expects a plain array
   if (!isStaticAsset && pathname.includes('/game-history')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     const historyItems = betHistory.slice(0, 20).map(b => ({
@@ -3402,14 +3673,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // Slots/providers — game expects { providers: [] }
+  // Slots/providers â€” game expects { providers: [] }
   if (!isStaticAsset && pathname.includes('/slots/providers')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ providers: [] }));
     return;
   }
 
-  // Slots/details — game expects object with game info
+  // Slots/details â€” game expects object with game info
   if (!isStaticAsset && pathname.includes('/slots/details')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -3446,7 +3717,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // Catch-all for any Rainbet API paths — return empty object
+  // Catch-all for any Rainbet API paths â€” return empty object
   if (pathname.startsWith('/api/v1/') || pathname.startsWith('/api/') || pathname.startsWith('/v1/')) {
     log(`[API-CATCHALL] ${req.method} ${pathname}`);
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -3455,11 +3726,29 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
 
 
-  // ── Chicken Cross page ──
+  // â”€â”€ Chicken Cross page â”€â”€
   if (pathname === '/casino/originals/chicken-cross' || pathname === '/en/casino/originals/chicken-cross' || pathname === '/chicken-cross') {
     try {
-      if (!_ccCache) {
+      const bk = getBalanceKey();
+      if (!_ccCache || _ccBK !== bk) {
         let ccHtml = fs.readFileSync(CC_HTML_FILE, 'utf8');
+
+        // Patch __NEXT_DATA__ with current balance
+        const ccNdTag = 'id="__NEXT_DATA__"';
+        const ccNdStart = ccHtml.indexOf(ccNdTag);
+        if (ccNdStart >= 0) {
+          const ccJsonStart = ccHtml.indexOf('>', ccNdStart) + 1;
+          const ccJsonEnd = ccHtml.indexOf('</script>', ccJsonStart);
+          try {
+            const ccNd = JSON.parse(ccHtml.substring(ccJsonStart, ccJsonEnd));
+            if (ccNd.props && ccNd.props.pageProps) {
+              ccNd.props.pageProps.wallet = { active: { currency: 'USD', primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance } };
+              ccNd.props.pageProps.balances = { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance };
+            }
+            ccHtml = ccHtml.substring(0, ccJsonStart) + JSON.stringify(ccNd) + ccHtml.substring(ccJsonEnd);
+          } catch(e) { log('[CC] __NEXT_DATA__ patch error: ' + e.message); }
+        }
+
         // Inject early CSS to hide preloader/spinner before any JS runs
         const ccEarlyCSS = '<style id="cc-kill-preloader">' +
           'section.fixed[class*="z-[9999]"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}' +
@@ -3475,13 +3764,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         ccHtml = ccHtml.replace('</head>', function() { return buildNavScript('chicken-cross') + '</head>'; });
         _ccCache = ccHtml;
         _ccCacheGz = zlib.gzipSync(ccHtml);
+        _ccBK = bk;
       }
       sendHTML(req, res, _ccCache, _ccCacheGz);
     } catch(e) { res.writeHead(500, {'Content-Type':'text/plain'}); res.end('Error: ' + e.stack); }
     return;
   }
 
-  // ── Mines page ──
+  // â”€â”€ Mines page â”€â”€
   if (pathname === '/casino/originals/mines-game' || pathname === '/en/casino/originals/mines-game' || pathname === '/mines' || pathname === '/mines-game') {
     try {
       let minesHtml = fs.readFileSync(MINES_HTML_FILE, 'utf8');
@@ -3771,11 +4061,11 @@ console.log('[Mines] Local patches loaded');
     return;
   }
 
-  // ── Blackjack page ──
+  // â”€â”€ Blackjack page â”€â”€
   if (pathname === '/casino/originals/blackjack' || pathname === '/en/casino/originals/blackjack' || pathname === '/blackjack') {
     try {
       const bk = getBalanceKey();
-      if (!_bjCache || _lastBalanceKey !== bk) {
+      if (!_bjCache || _bjBK !== bk) {
       let bjHtml = fs.readFileSync(BJ_HTML_FILE, 'utf8');
       // Patch wallet/balance data in __NEXT_DATA__
       const ndTag = 'id="__NEXT_DATA__"';
@@ -3828,7 +4118,7 @@ console.log('[Mines] Local patches loaded');
   // Force online
   Object.defineProperty(navigator, 'onLine', { get: function() { return true; }, configurable: true });
 
-  // XHR interceptor — redirect rainbet.com API calls to localhost
+  // XHR interceptor â€” redirect rainbet.com API calls to localhost
   var _xhrOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(method, url) {
     if (typeof url === 'string') {
@@ -3856,7 +4146,27 @@ console.log('[Mines] Local patches loaded');
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
     }
-    return _fetch.apply(window, arguments).catch(function(err) {
+    return _fetch.apply(window, arguments).then(function(resp) {
+      // Clone response to read body for balance sync without consuming it
+      if (u.includes('/v1/') || u.includes('/api/')) {
+        var clone = resp.clone();
+        clone.json().then(function(data) {
+          // Sync balance from wallet endpoint
+          if (data && data.active && data.active.primary !== undefined) {
+            window.__LOCAL_BALANCE__ = data.active.primary;
+          }
+          // Sync balance from game responses that include wallet
+          if (data && data.wallet && data.wallet.active && data.wallet.active.primary !== undefined) {
+            window.__LOCAL_BALANCE__ = data.wallet.active.primary;
+          }
+          // Sync from gameState.wallet
+          if (data && data.gameState && data.gameState.wallet && data.gameState.wallet.active) {
+            window.__LOCAL_BALANCE__ = data.gameState.wallet.active.primary;
+          }
+        }).catch(function(){});
+      }
+      return resp;
+    }).catch(function(err) {
       if (u.includes('google') || u.includes('facebook') || u.includes('intercom') || u.includes('sentry')) {
         return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
@@ -3942,7 +4252,7 @@ console.log('[Mines] Local patches loaded');
   } else { removePreloader(); }
   setTimeout(removePreloader, 2000);
 
-  console.log('%c RAINBET BLACKJACK — LOCAL MODE ', 'background:#e17055;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
+  console.log('%c RAINBET BLACKJACK â€” LOCAL MODE ', 'background:#e17055;color:white;font-size:16px;padding:4px 12px;border-radius:4px');
 })();
 </script>`;
       bjHtml = bjHtml.replace(/<head>/i, '<head>' + bjPatchScript);
@@ -3952,14 +4262,14 @@ console.log('[Mines] Local patches loaded');
 
       _bjCache = bjHtml;
       _bjCacheGz = zlib.gzipSync(bjHtml);
-      _lastBalanceKey = bk;
+      _bjBK = bk;
       }
       sendHTML(req, res, _bjCache, _bjCacheGz);
     } catch(e) { res.writeHead(500, {'Content-Type':'text/plain'}); res.end('Error: ' + e.stack); }
     return;
   }
 
-  // ── Chicken Cross static assets ──
+  // â”€â”€ Chicken Cross static assets â”€â”€
   if (pathname.startsWith('/chicken-cross_files/')) {
     let fp = path.join(CC_BASE_DIR, pathname);
     // If decoded path doesn't match (e.g. %5B decoded to [), try raw URL path
@@ -3974,7 +4284,7 @@ console.log('[Mines] Local patches loaded');
     }
   }
 
-  // ── Blackjack static assets ──
+  // â”€â”€ Blackjack static assets â”€â”€
   if (pathname.startsWith('/blackjack_files/')) {
     let fp = path.join(BJ_BASE_DIR, pathname);
     if (!fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
@@ -4005,7 +4315,7 @@ console.log('[Mines] Local patches loaded');
     }
   }
 
-  // ── Mines static assets ──
+  // â”€â”€ Mines static assets â”€â”€
   if (pathname.startsWith('/mines_files/')) {
     let fp = path.join(MINES_BASE_DIR, pathname.replace('/mines_files/', 'mines_files/'));
     if (!fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
@@ -4065,15 +4375,15 @@ console.log('[Mines] Local patches loaded');
     }
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ MAIN PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MAIN PAGE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   // ---- HOMEPAGE ----
   if (pathname === '/' || pathname === '' || pathname === '/casino' || pathname === '/casino/originals' || pathname === '/home') {
     try {
       const bk = getBalanceKey();
-      if (!_homepageCache || _lastBalanceKey !== bk) {
+      if (!_homepageCache || _homepageBK !== bk) {
         _homepageCache = buildHomepageHTML();
         _homepageCacheGz = zlib.gzipSync(_homepageCache);
-        _lastBalanceKey = bk;
+        _homepageBK = bk;
       }
       sendHTML(req, res, _homepageCache, _homepageCacheGz);
     } catch(e) { res.writeHead(500, {'Content-Type':'text/plain'}); res.end('Error: ' + e.stack); }
@@ -4084,22 +4394,22 @@ console.log('[Mines] Local patches loaded');
   if (pathname === '/casino/originals/plinko' || pathname === '/plinko') {
     try {
       const bk = getBalanceKey();
-      if (!_plinkoCache || _lastBalanceKey !== bk) {
+      if (!_plinkoCache || _plinkoBK !== bk) {
         _plinkoCache = buildPlinkoHTML();
         _plinkoCacheGz = zlib.gzipSync(_plinkoCache);
-        _lastBalanceKey = bk;
+        _plinkoBK = bk;
       }
       sendHTML(req, res, _plinkoCache, _plinkoCacheGz);
     } catch(e) { res.writeHead(500, {'Content-Type':'text/plain'}); res.end('Error: ' + e.stack); }
     return;
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ NEXT.JS STATIC ASSETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ NEXT.JS STATIC ASSETS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   // JS chunks: /_next/static/chunks/...
   if (pathname.startsWith('/_next/static/chunks/')) {
     let chunkPath = pathname.replace('/_next/static/chunks/', '');
-    // Strip pages/ prefix: pages/casino/originals/[game]-hash.js â†’ [game]-hash.js
+    // Strip pages/ prefix: pages/casino/originals/[game]-hash.js Ã¢â€ â€™ [game]-hash.js
     chunkPath = chunkPath.replace(/^pages\/(?:casino\/originals\/)?/, '');
 
     const filePath = resolveFile(chunkPath);
@@ -4188,14 +4498,24 @@ console.log('[Mines] Local patches loaded');
     res.writeHead(200, { 'Content-Type': 'image/png' }); res.end(PIXEL); return;
   }
 
-  // /_next/data (Next.js client-side navigation data)
+  // /_next/data (Next.js client-side navigation data) — redirect game routes to full page
   if (pathname.startsWith('/_next/data/')) {
+    // Extract target path: /_next/data/BUILD_ID/casino/originals/plinko.json → /casino/originals/plinko
+    const dataPath = pathname.replace(/^\/_next\/data\/[^/]+/, '').replace(/\.json$/, '');
+    const normData = dataPath.replace(/^\/en\//, '/');
+    const gameDataRoutes = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/blackjack':1,'/casino/originals/mines-game':1,'/casino':1,'/':1};
+    if (gameDataRoutes[normData]) {
+      const redirectTo = normData === '/' ? '/casino' : normData;
+      res.writeHead(302, { 'Location': redirectTo });
+      res.end();
+      return;
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ pageProps: {}, __N_SSP: true }));
     return;
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CDN ASSETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CDN ASSETS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   // /cdn/currencies/XXX.svg, /cdn/icons/XXX.svg, /cdn/rewards/ranks/XXX.svg, /cdn/games/XXX.png
   if (pathname.startsWith('/cdn/')) {
     const fileName = path.basename(pathname);
@@ -4210,7 +4530,7 @@ console.log('[Mines] Local patches loaded');
     res.writeHead(200, {'Content-Type':'image/png'}); res.end(PIXEL); return;
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PLINKO SPRITE ANIMATIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PLINKO SPRITE ANIMATIONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   // Uses url-map.json for per-frame lookup (suffix varies by frame number)
   if (pathname.includes('/games/')) {
     const spriteLocalFile = SPRITE_URL_MAP[pathname];
@@ -4233,7 +4553,7 @@ console.log('[Mines] Local patches loaded');
     res.writeHead(200, {'Content-Type':'image/png'}); res.end(PIXEL); return;
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AUDIO FILES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ AUDIO FILES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   if (pathname.startsWith('/audios/') || pathname.includes('/sounds/')) {
     const audioDir = path.join(PLINKO_DIR, '..', 'audios');
     const audioFile = path.join(audioDir, path.basename(pathname));
@@ -4241,7 +4561,7 @@ console.log('[Mines] Local patches loaded');
     res.writeHead(204); res.end(); return;
   }
 
-  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ MISC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MISC Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   if (pathname === '/favicon.ico') { res.writeHead(204); res.end(); return; }
 
   // socket.io polling fallback
@@ -4295,12 +4615,13 @@ log('Pre-warming page caches...');
 try {
   _homepageCache = buildHomepageHTML();
   _homepageCacheGz = zlib.gzipSync(_homepageCache);
-  _lastBalanceKey = getBalanceKey();
+  _homepageBK = getBalanceKey();
   log('  Homepage cached (' + Math.round(_homepageCache.length/1024) + 'KB raw, ' + Math.round(_homepageCacheGz.length/1024) + 'KB gzip)');
 } catch(e) { log('  Homepage cache failed: ' + e.message); }
 try {
   _plinkoCache = buildPlinkoHTML();
   _plinkoCacheGz = zlib.gzipSync(_plinkoCache);
+  _plinkoBK = getBalanceKey();
   log('  Plinko cached (' + Math.round(_plinkoCache.length/1024) + 'KB raw, ' + Math.round(_plinkoCacheGz.length/1024) + 'KB gzip)');
 } catch(e) { log('  Plinko cache failed: ' + e.message); }
 log('');
@@ -4308,23 +4629,38 @@ log('');
 if (require.main === module) {
 const server = http.createServer(handleRequest);
 server.listen(PORT, () => {
-  log('â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—');
-  log('â•‘       RAINBET PLINKO — LOCAL SERVER          â•‘');
-  log('â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£');
-  log(`â•‘  URL: http://localhost:${PORT}                  â•‘`);
-  log(`â•‘  Balance: $${playerBalance.toFixed(2).padEnd(32)}â•‘`);
-  log('â•‘                                              â•‘');
-  log('â•‘  Game API:                                   â•‘');
-  log('â•‘    POST /api/plinko/drop-ball   — Play       â•‘');
-  log('â•‘    GET  /api/balance            — Balance    â•‘');
-  log('â•‘    GET  /api/stats              — Stats      â•‘');
-  log('â•‘    POST /api/set-balance        — Set $      â•‘');
-  log('â•‘                                              â•‘');
-  log('â•‘  Wallet: Rainbet native (built-in)            â•‘');
-  log('â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  log('\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557');
+  log('\u2551       RAINBET PLINKO \u2014 LOCAL SERVER          \u2551');
+  log('\u2560\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2563');
+  log(`\u2551  URL: http://localhost:${PORT}                  \u2551`);
+  log(`\u2551  Balance: $${playerBalance.toFixed(2).padEnd(32)}\u2551`);
+  log('\u2551                                              \u2551');
+  log('\u2551  Game API:                                   \u2551');
+  log('\u2551    POST /api/plinko/drop-ball   \u2014 Play       \u2551');
+  log('\u2551    GET  /api/balance            \u2014 Balance    \u2551');
+  log('\u2551    GET  /api/stats              \u2014 Stats      \u2551');
+  log('\u2551    POST /api/set-balance        \u2014 Set $      \u2551');
+  log('\u2551                                              \u2551');
+  log('\u2551  Wallet: Rainbet native (built-in)            \u2551');
+  log('\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d');
 });
 
-// Save state on clean shutdown
-process.on('SIGINT', () => { saveState(); setTimeout(() => process.exit(0), 600); });
-process.on('SIGTERM', () => { saveState(); setTimeout(() => process.exit(0), 600); });
+// Save state on clean shutdown (force immediate write, bypass debounce)
+function saveStateSync() {
+  if (IS_VERCEL) return;
+  if (_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = null;
+  try {
+    const state = {
+      playerBalance, vaultBalance, promotionalBalance,
+      totalBets, totalWagered, totalProfit, totalDeposited, totalWithdrawn,
+      betHistory: betHistory.slice(0, 100),
+      transactionHistory: transactionHistory.slice(0, 100),
+    };
+    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+    log('State saved on shutdown: $' + playerBalance.toFixed(2));
+  } catch(e) { log('Failed to save state on shutdown: ' + e.message); }
+}
+process.on('SIGINT', () => { saveStateSync(); process.exit(0); });
+process.on('SIGTERM', () => { saveStateSync(); process.exit(0); });
 } // end if (require.main === module)
