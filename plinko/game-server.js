@@ -1997,20 +1997,34 @@ function buildPlinkoHTML() {
   // Inject universal navigation script
   html = html.replace('</head>', function() { return buildNavScript('plinko') + '</head>'; });
 
-  // -- Inject plinko click-to-target feature --
-  const clickToTarget = `<script id="plinko-click-target">
+  // -- Inject plinko cheat panel (Right Shift to toggle) --
+  const cheatPanel = `<script id="plinko-cheat-panel">
 (function() {
   'use strict';
   window.__PLINKO_TARGET_BUCKET__ = null;
+  var panelOpen = false;
+  var activeBtn = null;
 
-  // --- Make buckets clickable above canvas ---
-  var bucketStyle = document.createElement('style');
-  bucketStyle.textContent = '.Plinko_buckets-container__UYUdE,[class*="buckets-container"]{position:absolute!important;z-index:50!important;pointer-events:auto!important}[id^="bucket-"]{pointer-events:auto!important;cursor:pointer!important;position:relative!important;z-index:51!important}canvas{pointer-events:none!important}';
-  document.head.appendChild(bucketStyle);
-  console.log('%c[CHEAT] Plinko click-to-target loaded (server-side mode)', 'color:#FFD700;font-weight:bold');
+  // Known multiplier arrays (16-row defaults for each risk)
+  var MULTS = {
+    low:    [16, 9, 2, 1.4, 1.4, 1.2, 1.1, 1, 0.5, 1, 1.1, 1.2, 1.4, 1.4, 2, 9, 16],
+    medium: [110, 41, 10, 5, 3, 1.5, 1, 0.5, 0.3, 0.5, 1, 1.5, 3, 5, 10, 41, 110],
+    high:   [1000, 130, 26, 9, 4, 2, 0.2, 0.2, 0.2, 0.2, 0.2, 2, 4, 9, 26, 130, 1000]
+  };
 
-  // --- Send target to server via simple API call ---
-  function setServerTarget(bucketIdx) {
+  // Try to read multipliers from the actual DOM buckets
+  function readDOMMults() {
+    var buckets = document.querySelectorAll('[id^="bucket-"]');
+    if (buckets.length < 5) return null;
+    var arr = [];
+    buckets.forEach(function(b) {
+      arr.push(parseFloat(b.getAttribute('data-multiplier')) || 0);
+    });
+    return arr;
+  }
+
+  // --- Server target API ---
+  function setServerTarget(idx) {
     var x = new XMLHttpRequest();
     x.open('POST', '/api/plinko/set-target', true);
     x.setRequestHeader('Content-Type', 'application/json');
@@ -2018,109 +2032,192 @@ function buildPlinkoHTML() {
       try {
         var r = JSON.parse(x.responseText);
         console.log('%c[CHEAT] Server target set: bucket ' + r.target, 'color:#FFD700;font-weight:bold');
-      } catch(e) { console.warn('[CHEAT] set-target response error', e); }
+      } catch(e) {}
     };
-    x.onerror = function() { console.warn('[CHEAT] set-target request failed'); };
-    x.send(JSON.stringify({ target: bucketIdx }));
+    x.send(JSON.stringify({ target: idx }));
   }
-
   function clearServerTarget() {
     var x = new XMLHttpRequest();
     x.open('POST', '/api/plinko/set-target', true);
     x.setRequestHeader('Content-Type', 'application/json');
-    x.onload = function() { console.log('%c[CHEAT] Server target cleared', 'color:#FFD700;font-weight:bold'); };
+    x.onload = function() { console.log('%c[CHEAT] Target cleared', 'color:#FFD700'); };
     x.send(JSON.stringify({ target: null }));
   }
 
-  // --- Click-to-target: click a bucket to set server-side target ---
-  function setupBucketClicks() {
-    var buckets = document.querySelectorAll('[id^="bucket-"]');
-    if (!buckets.length) return false;
-    var newCount = 0;
-    buckets.forEach(function(bucket) {
-      if (bucket.__cheatBound) return;
-      bucket.__cheatBound = true;
-      newCount++;
-      bucket.style.cursor = 'pointer';
-      bucket.addEventListener('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var idx = parseInt(bucket.id.replace('bucket-', ''));
-        if (isNaN(idx)) return;
-        var mult = bucket.getAttribute('data-multiplier') || '?';
-        console.log('%c[CHEAT] Bucket ' + idx + ' clicked (' + mult + 'x)', 'color:#FFD700');
-        // Toggle: click same bucket to deselect
-        if (window.__PLINKO_TARGET_BUCKET__ === idx) {
-          window.__PLINKO_TARGET_BUCKET__ = null;
-          clearBucketHighlights();
-          clearServerTarget();
-          return;
-        }
-        window.__PLINKO_TARGET_BUCKET__ = idx;
-        highlightBucket(idx);
-        setServerTarget(idx);
-      });
+  // --- Build the panel ---
+  var panel = document.createElement('div');
+  panel.id = 'cheat-panel';
+  panel.style.cssText = 'position:fixed;top:50%;right:16px;transform:translateY(-50%);background:rgba(20,20,30,0.95);border:2px solid #FFD700;border-radius:12px;padding:12px;z-index:999999;display:none;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#fff;min-width:200px;max-height:80vh;overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,0.6);backdrop-filter:blur(8px);';
+
+  var title = document.createElement('div');
+  title.style.cssText = 'font-size:13px;font-weight:700;color:#FFD700;margin-bottom:8px;text-align:center;letter-spacing:1px;';
+  title.textContent = 'PLINKO TARGET';
+  panel.appendChild(title);
+
+  var hint = document.createElement('div');
+  hint.style.cssText = 'font-size:10px;color:#aaa;text-align:center;margin-bottom:8px;';
+  hint.textContent = 'Right Shift to toggle';
+  panel.appendChild(hint);
+
+  var status = document.createElement('div');
+  status.id = 'cheat-status';
+  status.style.cssText = 'font-size:11px;color:#aaa;text-align:center;margin-bottom:8px;padding:4px;border-radius:4px;';
+  status.textContent = 'No target set';
+  panel.appendChild(status);
+
+  var grid = document.createElement('div');
+  grid.id = 'cheat-grid';
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:4px;';
+  panel.appendChild(grid);
+
+  var clearBtn = document.createElement('button');
+  clearBtn.textContent = 'CLEAR';
+  clearBtn.style.cssText = 'width:100%;margin-top:8px;padding:6px;background:#333;color:#ff4444;border:1px solid #ff4444;border-radius:6px;font-weight:700;font-size:11px;cursor:pointer;';
+  clearBtn.addEventListener('click', function() {
+    window.__PLINKO_TARGET_BUCKET__ = null;
+    activeBtn = null;
+    clearServerTarget();
+    updateButtons();
+    status.textContent = 'No target set';
+    status.style.color = '#aaa';
+    // Also unhighlight DOM buckets
+    document.querySelectorAll('[id^="bucket-"]').forEach(function(b) {
+      b.style.outline = ''; b.style.boxShadow = ''; b.style.transform = '';
     });
-    if (newCount > 0) console.log('[CHEAT] Bound ' + newCount + ' new buckets (total: ' + buckets.length + ')');
-    return true;
+    var ind = document.getElementById('target-indicator');
+    if (ind) ind.style.display = 'none';
+  });
+  panel.appendChild(clearBtn);
+
+  // --- Populate buttons from multipliers ---
+  function populateGrid() {
+    grid.innerHTML = '';
+    var mults = readDOMMults() || MULTS.low;
+    for (var i = 0; i < mults.length; i++) {
+      (function(idx, mult) {
+        var btn = document.createElement('button');
+        btn.className = 'cheat-bucket-btn';
+        btn.setAttribute('data-idx', idx);
+        btn.textContent = mult + 'x';
+        btn.style.cssText = 'padding:6px 2px;background:#1a1a2e;color:#ddd;border:1px solid #444;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;';
+        // Color-code by multiplier value
+        if (mult >= 10) { btn.style.borderColor = '#FFD700'; btn.style.color = '#FFD700'; }
+        else if (mult >= 3) { btn.style.borderColor = '#FFA500'; btn.style.color = '#FFA500'; }
+        else if (mult >= 1.5) { btn.style.borderColor = '#4CAF50'; btn.style.color = '#4CAF50'; }
+        else { btn.style.borderColor = '#666'; btn.style.color = '#999'; }
+
+        btn.addEventListener('mouseenter', function() { btn.style.opacity = '0.8'; });
+        btn.addEventListener('mouseleave', function() { btn.style.opacity = '1'; });
+        btn.addEventListener('click', function() {
+          if (window.__PLINKO_TARGET_BUCKET__ === idx) {
+            window.__PLINKO_TARGET_BUCKET__ = null;
+            activeBtn = null;
+            clearServerTarget();
+            status.textContent = 'No target set';
+            status.style.color = '#aaa';
+          } else {
+            window.__PLINKO_TARGET_BUCKET__ = idx;
+            activeBtn = idx;
+            setServerTarget(idx);
+            status.textContent = 'Target: Bucket ' + idx + ' (' + mult + 'x)';
+            status.style.color = '#FFD700';
+            // Highlight the actual DOM bucket too
+            highlightDOMBucket(idx);
+          }
+          updateButtons();
+        });
+        grid.appendChild(btn);
+      })(i, mults[i]);
+    }
   }
 
-  function highlightBucket(idx) {
-    clearBucketHighlights();
+  function updateButtons() {
+    var btns = grid.querySelectorAll('.cheat-bucket-btn');
+    btns.forEach(function(b) {
+      var idx = parseInt(b.getAttribute('data-idx'));
+      if (idx === activeBtn) {
+        b.style.background = '#FFD700';
+        b.style.color = '#000';
+        b.style.fontWeight = '800';
+        b.style.transform = 'scale(1.1)';
+        b.style.boxShadow = '0 0 10px rgba(255,215,0,0.6)';
+      } else {
+        b.style.background = '#1a1a2e';
+        b.style.fontWeight = '600';
+        b.style.transform = 'scale(1)';
+        b.style.boxShadow = 'none';
+        // Restore original color
+        var mult = parseFloat(b.textContent);
+        if (mult >= 10) b.style.color = '#FFD700';
+        else if (mult >= 3) b.style.color = '#FFA500';
+        else if (mult >= 1.5) b.style.color = '#4CAF50';
+        else b.style.color = '#999';
+      }
+    });
+  }
+
+  function highlightDOMBucket(idx) {
+    document.querySelectorAll('[id^="bucket-"]').forEach(function(b) {
+      b.style.outline = ''; b.style.boxShadow = ''; b.style.transform = '';
+    });
     var el = document.getElementById('bucket-' + idx);
-    if (!el) return;
-    el.style.outline = '3px solid #FFD700';
-    el.style.outlineOffset = '-2px';
-    el.style.boxShadow = '0 0 16px 4px rgba(255,215,0,0.7)';
-    el.style.transform = 'scale(1.15)';
-    el.style.transition = 'transform 0.15s ease, box-shadow 0.15s ease';
-    el.style.zIndex = '60';
-    el.style.position = 'relative';
-    // Show indicator
+    if (el) {
+      el.style.outline = '3px solid #FFD700';
+      el.style.boxShadow = '0 0 16px rgba(255,215,0,0.7)';
+      el.style.transform = 'scale(1.15)';
+    }
+    // Floating indicator
     var ind = document.getElementById('target-indicator');
     if (!ind) {
       ind = document.createElement('div');
       ind.id = 'target-indicator';
-      ind.style.cssText = 'position:fixed;top:12px;right:12px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:8px 16px;border-radius:8px;font-weight:700;font-size:14px;z-index:99999;box-shadow:0 2px 12px rgba(255,165,0,0.4);font-family:-apple-system,BlinkMacSystemFont,sans-serif;pointer-events:auto;cursor:pointer;';
-      ind.addEventListener('click', function() {
-        window.__PLINKO_TARGET_BUCKET__ = null;
-        clearBucketHighlights();
-        clearServerTarget();
-      });
+      ind.style.cssText = 'position:fixed;top:12px;right:12px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:6px 14px;border-radius:8px;font-weight:700;font-size:13px;z-index:999998;box-shadow:0 2px 12px rgba(255,165,0,0.4);font-family:-apple-system,BlinkMacSystemFont,sans-serif;pointer-events:none;';
       document.body.appendChild(ind);
     }
-    var mult = el.getAttribute('data-multiplier') || '?';
-    ind.textContent = 'TARGET: ' + mult + 'x (tap to cancel)';
+    var mult = el ? (el.getAttribute('data-multiplier') || '?') : '?';
+    ind.textContent = 'TARGET: ' + mult + 'x';
     ind.style.display = 'block';
   }
 
-  function clearBucketHighlights() {
-    document.querySelectorAll('[id^="bucket-"]').forEach(function(b) {
-      b.style.outline = '';
-      b.style.outlineOffset = '';
-      b.style.boxShadow = '';
-      b.style.transform = '';
-      b.style.zIndex = '';
-    });
-    var ind = document.getElementById('target-indicator');
-    if (ind) ind.style.display = 'none';
-  }
+  // --- Toggle panel with Right Shift ---
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'ShiftRight') {
+      e.preventDefault();
+      panelOpen = !panelOpen;
+      panel.style.display = panelOpen ? 'block' : 'none';
+      if (panelOpen) populateGrid();
+      console.log('%c[CHEAT] Panel ' + (panelOpen ? 'OPENED' : 'CLOSED'), 'color:#FFD700');
+    }
+  });
 
-  // Wait for DOM to have buckets, then set up clicks
-  var attempts = 0;
-  var setupTimer = setInterval(function() {
-    if (setupBucketClicks() || ++attempts > 100) clearInterval(setupTimer);
-  }, 300);
-
-  // Also observe DOM mutations for dynamic bucket creation
+  // --- Refresh multipliers when rows/risk change ---
   if (window.MutationObserver) {
-    var obs = new MutationObserver(function() { setupBucketClicks(); });
-    var watchTarget = document.getElementById('__next') || document.body;
-    if (watchTarget) obs.observe(watchTarget, { childList: true, subtree: true });
+    var refreshTimer = null;
+    var obs = new MutationObserver(function() {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(function() {
+        if (panelOpen) populateGrid();
+      }, 500);
+    });
+    setTimeout(function() {
+      var target = document.querySelector('[class*="buckets-container"]') || document.getElementById('__next') || document.body;
+      obs.observe(target, { childList: true, subtree: true, attributes: true });
+    }, 2000);
   }
+
+  // Append panel to body once ready
+  function attachPanel() {
+    if (document.body) {
+      document.body.appendChild(panel);
+      console.log('%c[CHEAT] Plinko cheat panel ready — press Right Shift to open', 'color:#FFD700;font-weight:bold');
+    } else {
+      setTimeout(attachPanel, 100);
+    }
+  }
+  attachPanel();
 })();
 </script>`;
-  html = html.replace('</head>', function() { return clickToTarget + '</head>'; });
+  html = html.replace('</head>', function() { return cheatPanel + '</head>'; });
 
   // -- Cache-bust JS chunk URLs to prevent stale browser cache --
   var cacheBuster = '?v=' + Date.now();
