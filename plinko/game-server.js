@@ -206,9 +206,14 @@ function simulatePlinko(rowCount, riskType, targetBucket) {
   if (!multipliers) throw new Error(`Invalid rowCount=${rowCount} or riskType=${riskType}`);
   const pathResults = [];
   let accumulatedMultiplier = 1;
+  const MAX_RAIN_REDROPS = 200; // safety cap
 
-  const simulate = () => {
-    const path = (targetBucket !== undefined && targetBucket !== null && targetBucket >= 0 && targetBucket < multipliers.length)
+  const hasTarget = targetBucket !== undefined && targetBucket !== null && targetBucket >= 0 && targetBucket < multipliers.length;
+
+  for (let drop = 0; drop <= MAX_RAIN_REDROPS; drop++) {
+    // Keep targeting the -1 bucket to stack roulette multipliers; once at 10000x cap, random drop to land
+    const useTarget = hasTarget && accumulatedMultiplier < 10000;
+    const path = useTarget
       ? generateTargetedPath(rowCount, targetBucket)
       : (() => { const p = []; for (let i = 0; i < rowCount; i++) p.push(Math.random() < 0.5 ? 0 : 1); return p; })();
     const bucketIndex = path.reduce((sum, v) => sum + v, 0);
@@ -218,7 +223,7 @@ function simulatePlinko(rowCount, riskType, targetBucket) {
       const rouletteMultiplier = pickRainRouletteMultiplier();
       accumulatedMultiplier = Math.min(accumulatedMultiplier * rouletteMultiplier, 10000);
       pathResults.push({ path, bucketMultiplier: -1, bucketIndex, rouletteMultiplier, accumulatedMultiplier });
-      simulate(); // recurse â€” ball re-drops
+      continue; // iterative re-drop (no recursion)
     } else {
       const finalMult = riskType === 'rain' ? bucketMultiplier * accumulatedMultiplier : bucketMultiplier;
       pathResults.push({
@@ -226,9 +231,9 @@ function simulatePlinko(rowCount, riskType, targetBucket) {
         rouletteMultiplier: false,
         accumulatedMultiplier: riskType === 'rain' ? Math.min(finalMult, 10000) : bucketMultiplier
       });
+      break; // landed on a real bucket
     }
-  };
-  simulate();
+  }
   const finalMultiplier = pathResults[pathResults.length - 1].accumulatedMultiplier;
   return { pathResult: pathResults, multiplier: finalMultiplier };
 }
