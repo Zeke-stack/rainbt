@@ -1629,6 +1629,12 @@ function buildHomepageHTML() {
     }
 
     if (u.includes('/_next/data/')) {
+      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
+      var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
+      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
+      if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
@@ -1902,6 +1908,12 @@ function buildPlinkoHTML() {
 
     // _next/data (Next.js client navigation)
     if (u.includes('/_next/data/')) {
+      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
+      var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
+      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
+      if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
@@ -4160,6 +4172,12 @@ window.WebSocket.CONNECTING = 0; window.WebSocket.OPEN = 1; window.WebSocket.CLO
     }
     // _next/data (Next.js client navigation)
     if (u.includes('/_next/data/')) {
+      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
+      var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
+      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
+      if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
@@ -4308,6 +4326,12 @@ console.log('[Mines] Local patches loaded');
       }), { status: 200, headers: {'content-type':'application/json'} }));
     }
     if (u.includes('/_next/data/')) {
+      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
+      var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
+      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
+      if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
@@ -4543,7 +4567,7 @@ console.log('[Mines] Local patches loaded');
 
   // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MAIN PAGE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   // ---- HOMEPAGE ----
-  if (pathname === '/' || pathname === '' || pathname === '/casino' || pathname === '/casino/originals' || pathname === '/home') {
+  if (pathname === '/' || pathname === '' || pathname === '/casino' || pathname === '/casino/originals' || pathname === '/home' || pathname === '/en/casino' || pathname === '/en/casino/originals') {
     try {
       const bk = getBalanceKey();
       if (!_homepageCache || _homepageBK !== bk) {
@@ -4557,7 +4581,7 @@ console.log('[Mines] Local patches loaded');
   }
 
   // ---- PLINKO PAGE ----
-  if (pathname === '/casino/originals/plinko' || pathname === '/plinko') {
+  if (pathname === '/casino/originals/plinko' || pathname === '/plinko' || pathname === '/en/casino/originals/plinko') {
     try {
       const bk = getBalanceKey();
       if (!_plinkoCache || _plinkoBK !== bk) {
@@ -4671,9 +4695,9 @@ console.log('[Mines] Local patches loaded');
     const normData = dataPath.replace(/^\/en\//, '/');
     const gameDataRoutes = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/blackjack':1,'/casino/originals/mines-game':1,'/casino':1,'/':1};
     if (gameDataRoutes[normData]) {
-      const redirectTo = normData === '/' ? '/casino' : normData;
-      res.writeHead(302, { 'Location': redirectTo });
-      res.end();
+      // Return valid JSON so Next.js doesn't 404 — client-side interceptors handle the actual navigation
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ pageProps: {}, __N_SSP: true }));
       return;
     }
     res.writeHead(200, { 'Content-Type': 'application/json' });
