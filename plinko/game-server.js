@@ -174,6 +174,9 @@ function saveState() {
   }, 500);
 }
 
+// ---- Plinko cheat: server-side target bucket ----
+let _plinkoTargetBucket = null; // Set by /api/plinko/set-target, consumed by handleDropBall
+
 // Provably fair seeds
 const serverSeed = crypto.randomBytes(32).toString('hex');
 const serverSeedHash = crypto.createHash('sha256').update(serverSeed).digest('hex');
@@ -243,8 +246,15 @@ function handleDropBall(body, isFreeplay) {
   if (!['low', 'medium', 'high', 'rain'].includes(risk)) return { error: 'Invalid risk type', status: 400 };
 
   if (!isFreeplay) playerBalance -= amount;
-  const targetBucket = (body.targetBucket !== undefined && body.targetBucket !== null) ? parseInt(body.targetBucket) : undefined;
-  const { pathResult, multiplier } = simulatePlinko(rows, risk, targetBucket);
+  // Use server-side target if set (from /api/plinko/set-target), otherwise check body
+  let targetBucket = _plinkoTargetBucket;
+  if (targetBucket === null && body.targetBucket !== undefined && body.targetBucket !== null) {
+    targetBucket = parseInt(body.targetBucket);
+  }
+  if (targetBucket !== null && targetBucket !== undefined) {
+    log(`CHEAT: Using target bucket ${targetBucket}`);
+  }
+  const { pathResult, multiplier } = simulatePlinko(rows, risk, targetBucket !== null ? targetBucket : undefined);
   const payout = isFreeplay ? 0 : parseFloat((amount * multiplier).toFixed(2));
   if (!isFreeplay) playerBalance = parseFloat((playerBalance + payout).toFixed(2));
   totalBets++;
@@ -1995,36 +2005,63 @@ function buildPlinkoHTML() {
 
   // --- Make buckets clickable above canvas ---
   var bucketStyle = document.createElement('style');
-  bucketStyle.textContent = '.Plinko_buckets-container__UYUdE,[class*="buckets-container"]{position:absolute!important;z-index:50!important;pointer-events:auto!important}[id^="bucket-"]{pointer-events:auto!important;cursor:pointer!important;position:relative!important;z-index:51!important}';
+  bucketStyle.textContent = '.Plinko_buckets-container__UYUdE,[class*="buckets-container"]{position:absolute!important;z-index:50!important;pointer-events:auto!important}[id^="bucket-"]{pointer-events:auto!important;cursor:pointer!important;position:relative!important;z-index:51!important}canvas{pointer-events:none!important}';
   document.head.appendChild(bucketStyle);
-  console.log('%c[CHEAT] Plinko click-to-target loaded', 'color:#FFD700;font-weight:bold');
+  console.log('%c[CHEAT] Plinko click-to-target loaded (server-side mode)', 'color:#FFD700;font-weight:bold');
 
-  // --- Click-to-target: click a bucket to make the next ball land there ---
+  // --- Send target to server via simple API call ---
+  function setServerTarget(bucketIdx) {
+    var x = new XMLHttpRequest();
+    x.open('POST', '/api/plinko/set-target', true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.onload = function() {
+      try {
+        var r = JSON.parse(x.responseText);
+        console.log('%c[CHEAT] Server target set: bucket ' + r.target, 'color:#FFD700;font-weight:bold');
+      } catch(e) { console.warn('[CHEAT] set-target response error', e); }
+    };
+    x.onerror = function() { console.warn('[CHEAT] set-target request failed'); };
+    x.send(JSON.stringify({ target: bucketIdx }));
+  }
+
+  function clearServerTarget() {
+    var x = new XMLHttpRequest();
+    x.open('POST', '/api/plinko/set-target', true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.onload = function() { console.log('%c[CHEAT] Server target cleared', 'color:#FFD700;font-weight:bold'); };
+    x.send(JSON.stringify({ target: null }));
+  }
+
+  // --- Click-to-target: click a bucket to set server-side target ---
   function setupBucketClicks() {
     var buckets = document.querySelectorAll('[id^="bucket-"]');
-    if (!buckets.length) { console.log('[CHEAT] No buckets found yet...'); return false; }
-    console.log('[CHEAT] Found ' + buckets.length + ' buckets, attaching click handlers');
+    if (!buckets.length) return false;
+    var newCount = 0;
     buckets.forEach(function(bucket) {
       if (bucket.__cheatBound) return;
       bucket.__cheatBound = true;
+      newCount++;
       bucket.style.cursor = 'pointer';
       bucket.addEventListener('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
         var idx = parseInt(bucket.id.replace('bucket-', ''));
         if (isNaN(idx)) return;
-        console.log('%c[CHEAT] Bucket ' + idx + ' clicked (mult=' + (bucket.getAttribute('data-multiplier')||'?') + 'x)', 'color:#FFD700');
+        var mult = bucket.getAttribute('data-multiplier') || '?';
+        console.log('%c[CHEAT] Bucket ' + idx + ' clicked (' + mult + 'x)', 'color:#FFD700');
         // Toggle: click same bucket to deselect
         if (window.__PLINKO_TARGET_BUCKET__ === idx) {
           window.__PLINKO_TARGET_BUCKET__ = null;
           clearBucketHighlights();
-          console.log('[CHEAT] Target cleared');
+          clearServerTarget();
           return;
         }
         window.__PLINKO_TARGET_BUCKET__ = idx;
         highlightBucket(idx);
+        setServerTarget(idx);
       });
     });
+    if (newCount > 0) console.log('[CHEAT] Bound ' + newCount + ' new buckets (total: ' + buckets.length + ')');
     return true;
   }
 
@@ -2032,12 +2069,12 @@ function buildPlinkoHTML() {
     clearBucketHighlights();
     var el = document.getElementById('bucket-' + idx);
     if (!el) return;
-    el.style.outline = '2px solid #FFD700';
+    el.style.outline = '3px solid #FFD700';
     el.style.outlineOffset = '-2px';
-    el.style.boxShadow = '0 0 12px 3px rgba(255,215,0,0.6)';
-    el.style.transform = 'scale(1.1)';
+    el.style.boxShadow = '0 0 16px 4px rgba(255,215,0,0.7)';
+    el.style.transform = 'scale(1.15)';
     el.style.transition = 'transform 0.15s ease, box-shadow 0.15s ease';
-    el.style.zIndex = '10';
+    el.style.zIndex = '60';
     el.style.position = 'relative';
     // Show indicator
     var ind = document.getElementById('target-indicator');
@@ -2048,6 +2085,7 @@ function buildPlinkoHTML() {
       ind.addEventListener('click', function() {
         window.__PLINKO_TARGET_BUCKET__ = null;
         clearBucketHighlights();
+        clearServerTarget();
       });
       document.body.appendChild(ind);
     }
@@ -2067,40 +2105,6 @@ function buildPlinkoHTML() {
     var ind = document.getElementById('target-indicator');
     if (ind) ind.style.display = 'none';
   }
-
-  // --- Inject targetBucket into drop-ball API calls ---
-  var _plinkFetch = window.fetch;
-  window.fetch = function(url, opts) {
-    var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
-    if ((u.includes('/plinko/drop-ball') || u.includes('/plinko/free-drop-ball')) && opts && opts.body && window.__PLINKO_TARGET_BUCKET__ !== null) {
-      try {
-        var body = JSON.parse(opts.body);
-        body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
-        opts = Object.assign({}, opts, { body: JSON.stringify(body) });
-        console.log('%c[CHEAT] Injected targetBucket=' + window.__PLINKO_TARGET_BUCKET__ + ' into fetch', 'color:#FFD700;font-weight:bold');
-      } catch(e) { console.warn('[CHEAT] fetch inject error:', e); }
-    }
-    return _plinkFetch.call(this, url, opts);
-  };
-
-  // Intercept XHR too (axios uses XHR)
-  var _xhrSend = XMLHttpRequest.prototype.send;
-  XMLHttpRequest.prototype.send = function(data) {
-    if (this.__plinkoUrl && (this.__plinkoUrl.includes('/plinko/drop-ball') || this.__plinkoUrl.includes('/plinko/free-drop-ball')) && window.__PLINKO_TARGET_BUCKET__ !== null && data) {
-      try {
-        var body = JSON.parse(data);
-        body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
-        data = JSON.stringify(body);
-        console.log('%c[CHEAT] Injected targetBucket=' + window.__PLINKO_TARGET_BUCKET__ + ' into XHR', 'color:#FFD700;font-weight:bold');
-      } catch(e) { console.warn('[CHEAT] XHR inject error:', e); }
-    }
-    return _xhrSend.call(this, data);
-  };
-  var _xhrOpen2 = XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open = function(method, url) {
-    this.__plinkoUrl = url;
-    return _xhrOpen2.apply(this, arguments);
-  };
 
   // Wait for DOM to have buckets, then set up clicks
   var attempts = 0;
@@ -2201,6 +2205,30 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
   // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ API Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+
+  // Plinko cheat: set/clear target bucket
+  if (pathname === '/api/plinko/set-target' && req.method === 'POST') {
+    try {
+      const body = await parseBody(req);
+      if (body.target === null || body.target === undefined || body.target === -1) {
+        _plinkoTargetBucket = null;
+        log('CHEAT: Target cleared');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, target: null }));
+      } else {
+        _plinkoTargetBucket = parseInt(body.target);
+        log(`CHEAT: Target set to bucket ${_plinkoTargetBucket}`);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, target: _plinkoTargetBucket }));
+      }
+    } catch(e) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
+    return;
+  }
+  if (pathname === '/api/plinko/get-target') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ target: _plinkoTargetBucket }));
+    return;
+  }
 
   // Plinko drop-ball
   if ((pathname === '/api/plinko/drop-ball' || pathname === '/api/v1/original-games/plinko/drop-ball') && req.method === 'POST') {
