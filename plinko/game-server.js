@@ -1993,20 +1993,32 @@ function buildPlinkoHTML() {
   'use strict';
   window.__PLINKO_TARGET_BUCKET__ = null;
 
+  // --- Make buckets clickable above canvas ---
+  var bucketStyle = document.createElement('style');
+  bucketStyle.textContent = '.Plinko_buckets-container__UYUdE,[class*="buckets-container"]{position:absolute!important;z-index:50!important;pointer-events:auto!important}[id^="bucket-"]{pointer-events:auto!important;cursor:pointer!important;position:relative!important;z-index:51!important}';
+  document.head.appendChild(bucketStyle);
+  console.log('%c[CHEAT] Plinko click-to-target loaded', 'color:#FFD700;font-weight:bold');
+
   // --- Click-to-target: click a bucket to make the next ball land there ---
   function setupBucketClicks() {
     var buckets = document.querySelectorAll('[id^="bucket-"]');
-    if (!buckets.length) return false;
+    if (!buckets.length) { console.log('[CHEAT] No buckets found yet...'); return false; }
+    console.log('[CHEAT] Found ' + buckets.length + ' buckets, attaching click handlers');
     buckets.forEach(function(bucket) {
+      if (bucket.__cheatBound) return;
+      bucket.__cheatBound = true;
       bucket.style.cursor = 'pointer';
       bucket.addEventListener('click', function(e) {
         e.stopPropagation();
+        e.preventDefault();
         var idx = parseInt(bucket.id.replace('bucket-', ''));
         if (isNaN(idx)) return;
+        console.log('%c[CHEAT] Bucket ' + idx + ' clicked (mult=' + (bucket.getAttribute('data-multiplier')||'?') + 'x)', 'color:#FFD700');
         // Toggle: click same bucket to deselect
         if (window.__PLINKO_TARGET_BUCKET__ === idx) {
           window.__PLINKO_TARGET_BUCKET__ = null;
           clearBucketHighlights();
+          console.log('[CHEAT] Target cleared');
           return;
         }
         window.__PLINKO_TARGET_BUCKET__ = idx;
@@ -2065,11 +2077,10 @@ function buildPlinkoHTML() {
         var body = JSON.parse(opts.body);
         body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
         opts = Object.assign({}, opts, { body: JSON.stringify(body) });
-        // Clear target after use (one-shot per click)
-        // Keep target active - user can click again to cancel
-      } catch(e) {}
+        console.log('%c[CHEAT] Injected targetBucket=' + window.__PLINKO_TARGET_BUCKET__ + ' into fetch', 'color:#FFD700;font-weight:bold');
+      } catch(e) { console.warn('[CHEAT] fetch inject error:', e); }
     }
-    return _plinkFetch.apply(this, arguments);
+    return _plinkFetch.call(this, url, opts);
   };
 
   // Intercept XHR too (axios uses XHR)
@@ -2080,7 +2091,8 @@ function buildPlinkoHTML() {
         var body = JSON.parse(data);
         body.targetBucket = window.__PLINKO_TARGET_BUCKET__;
         data = JSON.stringify(body);
-      } catch(e) {}
+        console.log('%c[CHEAT] Injected targetBucket=' + window.__PLINKO_TARGET_BUCKET__ + ' into XHR', 'color:#FFD700;font-weight:bold');
+      } catch(e) { console.warn('[CHEAT] XHR inject error:', e); }
     }
     return _xhrSend.call(this, data);
   };
