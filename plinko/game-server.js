@@ -517,6 +517,18 @@ function buildNavScript(currentGame) {
 (function() {
   var CURRENT_GAME = ${JSON.stringify(currentGame)};
   var CURRENT_PATH = ${JSON.stringify(currentPath)};
+
+  // --- Debug logging to localStorage (survives page navigations) ---
+  function __navLog(type, msg) {
+    try {
+      var logs = JSON.parse(localStorage.getItem('__navDebugLog') || '[]');
+      logs.push({ t: Date.now(), ts: new Date().toLocaleTimeString(), type: type, msg: msg, page: CURRENT_GAME, path: location.pathname });
+      if (logs.length > 200) logs = logs.slice(-200);
+      localStorage.setItem('__navDebugLog', JSON.stringify(logs));
+    } catch(e) {}
+  }
+  __navLog('load', 'Page loaded: ' + location.href + ' | game=' + CURRENT_GAME);
+
   var GAME_ROUTES = {
     '/casino/originals/plinko': true,
     '/en/casino/originals/plinko': true,
@@ -541,6 +553,7 @@ function buildNavScript(currentGame) {
     // Prevent duplicate navigations
     if (window.__NAV_IN_PROGRESS__) return;
     window.__NAV_IN_PROGRESS__ = true;
+    __navLog('nav', 'navigateTo: ' + path + ' (from ' + location.pathname + ')');
     window.location.href = path;
     // Fallback: if location.href didn't navigate (same URL after pushState), force reload
     setTimeout(function() {
@@ -568,6 +581,7 @@ function buildNavScript(currentGame) {
     localPath = localPath.split('?')[0].split('#')[0];
     // Normalise /en/ prefix
     var normPath = localPath.replace(/^\\/en\\//, '/');
+    __navLog('click', 'Link clicked: href=' + href + ' norm=' + normPath + ' isGame=' + !!GAME_SLUGS[normPath] + ' isHome=' + !!HOME_ROUTES[normPath]);
     // Intercept home/casino links
     if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
       e.preventDefault();
@@ -624,6 +638,7 @@ function buildNavScript(currentGame) {
     var path = String(url);
     try { path = new URL(path, location.origin).pathname; } catch(e) {}
     var norm = path.replace(/^\\/en\\//, '/');
+    __navLog('pushState', 'checkNavChange: url=' + url + ' norm=' + norm + ' isGame=' + !!GAME_ROUTES[norm] + ' isHome=' + !!HOME_ROUTES[norm]);
     if (GAME_ROUTES[norm] && norm !== CURRENT_PATH) {
       navigateTo(norm);
       return true;
@@ -707,6 +722,7 @@ function buildNavScript(currentGame) {
     if (u.includes('/_next/data/')) {
       var dataPath = u.replace(/.*\\/_next\\/data\\/[^/]+/, '').replace(/\\.json.*$/, '');
       var normData = dataPath.replace(/^\\/en\\//, '/');
+      __navLog('fetch', '_next/data fetch: ' + u + ' -> normData=' + normData + ' isGame=' + !!GAME_ROUTES[normData] + ' isHome=' + !!HOME_ROUTES[normData]);
       if (GAME_ROUTES[normData] && normData !== CURRENT_PATH) { navigateTo(normData); return new Promise(function(){}); }
       if (HOME_ROUTES[normData] && !IS_HOMEPAGE) { navigateTo('/casino'); return new Promise(function(){}); }
     }
@@ -805,6 +821,7 @@ function buildNavScript(currentGame) {
           // Check it's actually a full-page 404, not just a random text node
           var h1 = node.querySelector ? node.querySelector('h1, h2') : null;
           if (h1 && (h1.textContent.indexOf('Not Found') !== -1 || h1.textContent.indexOf('404') !== -1)) {
+            __navLog('404-detect', '404 page detected in DOM! h1=' + h1.textContent + ' url=' + location.href);
             console.log('[NAV] 404 page detected, reloading...');
             _notFoundObserver.disconnect();
             window.location.reload();
@@ -820,6 +837,15 @@ function buildNavScript(currentGame) {
       childList: true, subtree: true
     });
   }, 2000);
+
+  // ---- 4. Log errors for debugging ----
+  window.addEventListener('error', function(e) {
+    __navLog('error', (e.message || 'unknown') + ' @ ' + (e.filename || '?') + ':' + (e.lineno || '?'));
+  });
+  window.addEventListener('unhandledrejection', function(e) {
+    var msg = e.reason ? (e.reason.message || String(e.reason)) : 'unknown';
+    __navLog('reject', msg.substring(0, 200));
+  });
 
 })();
 </script>`;
@@ -2429,7 +2455,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // (v1/auth/me is handled below with full user profile + wallet data)
 
-  // Ping â€” must return 204 for HEAD (the app checks status===204 to determine online)
+
+  // Ping
   if (pathname === '/api/ping' || pathname === '/ping') {
     if (req.method === 'HEAD') {
       res.writeHead(204);
@@ -4602,6 +4629,89 @@ console.log('[Mines] Local patches loaded');
   }
 
   // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MAIN PAGE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+  // ---- DEBUG PAGE ----
+  if (pathname === '/debug') {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nav Debug</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0d0f1a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,monospace;font-size:13px;padding:10px;padding-bottom:80px}
+  h2{color:#85c7ff;margin-bottom:6px;font-size:18px}
+  .sub{color:#888;font-size:12px;margin-bottom:12px}
+  #log{background:#151829;border:1px solid #333;border-radius:8px;padding:8px;max-height:65vh;overflow-y:auto;font-size:12px}
+  .entry{border-bottom:1px solid #1e2040;padding:3px 0;line-height:1.4}
+  .ts{color:#555;font-size:11px}
+  .t-load{color:#80ff80} .t-nav{color:#f0c040} .t-click{color:#ff9040}
+  .t-fetch{color:#40c0f0} .t-pushState{color:#c080ff} .t-404-detect{color:#ff3030;font-weight:bold}
+  .t-error{color:#ff6060} .t-reject{color:#ff8080} .t-info{color:#80ff80}
+  .pg{color:#666;font-size:11px}
+  .bar{position:fixed;bottom:0;left:0;right:0;background:#1a1d2e;border-top:1px solid #333;padding:8px;display:flex;flex-wrap:wrap;gap:5px;z-index:999}
+  .bar a{background:#1e2038;color:#85c7ff;padding:8px 12px;border-radius:6px;text-decoration:none;border:1px solid #333;font-size:13px;white-space:nowrap}
+  .bar a:active{background:#2e3058}
+  .btn{background:#2a2d45;color:#fff;border:1px solid #555;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:13px}
+  .btn:active{background:#3a3d55}
+  .btn.red{background:#5a2020;border-color:#833}
+  .status{background:#1a2a1a;border:1px solid #2a4a2a;border-radius:6px;padding:8px;margin-bottom:10px;font-size:12px}
+  .status b{color:#85c7ff}
+</style>
+</head><body>
+<h2>Nav Debug Panel</h2>
+<p class="sub">Navigate to any game, then come back here. All navigation events are logged across page loads via localStorage.</p>
+<div class="status" id="status"></div>
+<div style="margin-bottom:8px;display:flex;gap:5px;flex-wrap:wrap">
+  <button class="btn" onclick="refreshLog()">Refresh</button>
+  <button class="btn" onclick="copyLog()">Copy Log</button>
+  <button class="btn red" onclick="clearLog()">Clear Log</button>
+</div>
+<div id="log"></div>
+<div class="bar">
+  <a href="/casino">Home</a>
+  <a href="/casino/originals/plinko">Plinko</a>
+  <a href="/casino/originals/chicken-cross">Chicken</a>
+  <a href="/casino/originals/blackjack">Blackjack</a>
+  <a href="/casino/originals/mines-game">Mines</a>
+</div>
+<script>
+var logEl=document.getElementById('log');
+var statusEl=document.getElementById('status');
+var TYPE_COLORS={'load':'t-load','nav':'t-nav','click':'t-click','fetch':'t-fetch','pushState':'t-pushState','404-detect':'t-404-detect','error':'t-error','reject':'t-reject','info':'t-info'};
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+function refreshLog(){
+  var logs=[];
+  try{logs=JSON.parse(localStorage.getItem('__navDebugLog')||'[]')}catch(e){}
+  statusEl.innerHTML='<b>Entries:</b> '+logs.length+' | <b>UA:</b> '+navigator.userAgent.substring(0,80);
+  logEl.innerHTML='';
+  if(!logs.length){logEl.innerHTML='<div class="entry" style="color:#666">No logs yet. Open a game page and navigate around, then come back.</div>';return}
+  for(var i=0;i<logs.length;i++){
+    var e=logs[i];
+    var cls=TYPE_COLORS[e.type]||'t-info';
+    var d=document.createElement('div');
+    d.className='entry';
+    d.innerHTML='<span class="ts">'+esc(e.ts||'?')+'</span> <span class="'+cls+'">['+esc(e.type)+']</span> '+esc(e.msg||'')+' <span class="pg">('+esc(e.page||'?')+' @ '+esc(e.path||'?')+')</span>';
+    logEl.appendChild(d);
+  }
+  logEl.scrollTop=logEl.scrollHeight;
+}
+function copyLog(){
+  var logs=[];try{logs=JSON.parse(localStorage.getItem('__navDebugLog')||'[]')}catch(e){}
+  var text=logs.map(function(e){return e.ts+' ['+e.type+'] '+e.msg+' ('+e.page+' @ '+e.path+')'}).join('\\n');
+  text='UA: '+navigator.userAgent+'\\n\\n'+text;
+  navigator.clipboard.writeText(text).then(function(){alert('Copied '+logs.length+' entries!')}).catch(function(){
+    var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('Copied!')
+  });
+}
+function clearLog(){localStorage.removeItem('__navDebugLog');refreshLog()}
+refreshLog();
+setInterval(refreshLog,2000);
+</script>
+</body></html>`);
+    return;
+  }
+
   // ---- HOMEPAGE ----
   if (pathname === '/' || pathname === '' || pathname === '/casino' || pathname === '/casino/originals' || pathname === '/home' || pathname === '/en/casino' || pathname === '/en/casino/originals') {
     try {
