@@ -3712,6 +3712,21 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
 
   // Ã¢â€â‚¬Ã¢â€â‚¬ Vault deposit/withdraw Ã¢â€â‚¬Ã¢â€â‚¬
+
+  // -- Next-auth session endpoints (used by Next.js frontend) --
+  if (pathname === '/api/auth/session' || pathname.includes('/next-auth/session')) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      user: { name: 'DemoPlayer', email: 'demo@local.dev', image: null },
+      expires: '2099-12-31T23:59:59.999Z'
+    }));
+    return;
+  }
+  if (pathname.startsWith('/api/auth/') || pathname.includes('/next-auth/')) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ user: { name: 'DemoPlayer' }, expires: '2099-12-31T23:59:59.999Z' }));
+    return;
+  }
   if ((pathname === '/v1/vault/deposit' || pathname === '/api/v1/vault/deposit') && req.method === 'POST') {
     const body = await parseBody(req);
     const amount = parseFloat(body.amount) || 0;
@@ -4054,12 +4069,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (pathname.startsWith('/api/v1/') || pathname.startsWith('/api/') || pathname.startsWith('/v1/')) {
     log(`[API-CATCHALL] ${req.method} ${pathname}`);
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify([]));
+    res.end(JSON.stringify({}));
     return;
   }
 
 
-  // â”€â”€ Chicken Cross page â”€â”€
+  // -- Chicken Cross page -- â”€â”€
   if (pathname === '/casino/originals/chicken-cross' || pathname === '/en/casino/originals/chicken-cross' || pathname === '/chicken-cross') {
     try {
       const bk = getBalanceKey();
