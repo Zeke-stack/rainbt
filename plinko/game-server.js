@@ -669,48 +669,36 @@ function buildNavScript(currentGame) {
       navigateTo(localPath.replace(/^\\/en\\//, '/'));
       return false;
     }
-    // Catch-all: any /casino/... link not in known routes → homepage (prevents Next.js 404 on mobile)
-    if ((normPath.startsWith('/casino/') || localPath.startsWith('/casino/')) && !GAME_ROUTES[normPath] && !HOME_ROUTES[normPath]) {
+    // Catch-all: any internal link not in our known routes -> force server page load
+    // Server handles routing: game pages get their HTML, unknown routes get 302 -> /casino
+    if (localPath.startsWith('/') && !GAME_ROUTES[normPath] && !HOME_ROUTES[normPath] &&
+        normPath !== CURRENT_PATH && normPath.indexOf('.') === -1) {
       e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      __navLog('catch-all', 'Click: unknown casino route ' + normPath + ' -> /casino');
-      navigateTo('/casino');
+      __navLog('catch-all', 'Click: unknown route ' + normPath);
+      navigateTo(normPath || localPath);
       return false;
     }
   }
   document.addEventListener('click', handleNavClick, true);
-  // touchend fires before click on mobile â€” intercept early
+  // touchend fires before click on mobile -- always intercept internal links to prevent Next.js 404
   document.addEventListener('touchend', function(e) {
     var a = e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
     var href = a.getAttribute('href');
     if (!href) return;
+    // Let modal links pass through to React
     if (href.indexOf('modal=wallet') !== -1 || href.indexOf('modal=auth') !== -1) return;
-    var localPath = href.replace(/^https?:\\/\\/[a-z0-9.-]*rainbet\\.com/, '');
+    // Only intercept internal links (relative or same-origin rainbet.com)
+    var localPath = href.replace(/^https?:\/\/[a-z0-9.-]*rainbet\.com/, '');
     localPath = localPath.split('?')[0].split('#')[0];
-    var normPath = localPath.replace(/^\\/en\\//, '/');
-    // PWA MODE: intercept ALL internal links
-    if (IS_PWA && localPath.startsWith('/')) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      navigateTo(normPath || localPath);
-      return;
-    }
-    if ((GAME_ROUTES[normPath] || GAME_SLUGS[normPath]) && normPath !== CURRENT_PATH) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      navigateTo(normPath);
-    } else if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      navigateTo('/casino');
-    } else if ((normPath.startsWith('/casino/') || localPath.startsWith('/casino/')) && !GAME_ROUTES[normPath] && !HOME_ROUTES[normPath]) {
-      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      __navLog('catch-all', 'Touch: unknown casino route ' + normPath + ' -> /casino');
-      navigateTo('/casino');
-    }
+    var normPath = localPath.replace(/^\/en\//, '/');
+    if (!localPath.startsWith('/')) return; // skip truly external links
+    // Always force a full server-side page load -- prevents Next.js client router from rendering 404
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    __navLog('touch', 'Internal link tap: ' + normPath);
+    navigateTo(normPath || localPath);
   }, true);
 
   // â”€â”€ 1b. Intercept history.pushState/replaceState so Next.js client-side nav triggers reload â”€â”€
