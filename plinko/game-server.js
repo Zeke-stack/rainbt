@@ -1765,10 +1765,12 @@ function buildHomepageHTML() {
     }
 
     if (u.includes('/_next/data/')) {
-      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _ndIdx = u.indexOf('/_next/data/');
+      var _dp = '';
+      if (_ndIdx !== -1) { var _slashPos = u.indexOf('/', _ndIdx + 12); if (_slashPos !== -1) { var _jsonPos = u.indexOf('.json', _slashPos); _dp = _jsonPos !== -1 ? u.substring(_slashPos, _jsonPos) : u.substring(_slashPos); var _qPos = _dp.indexOf('?'); if (_qPos !== -1) _dp = _dp.substring(0, _qPos); if (_dp.substring(0,4) === '/en/') _dp = _dp.substring(3); } }
       var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
       var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
-      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      var _cp = window.location.pathname; if (_cp.substring(0,4) === '/en/') _cp = _cp.substring(3);
       if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
       if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
@@ -2044,10 +2046,12 @@ function buildPlinkoHTML() {
 
     // _next/data (Next.js client navigation)
     if (u.includes('/_next/data/')) {
-      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _ndIdx = u.indexOf('/_next/data/');
+      var _dp = '';
+      if (_ndIdx !== -1) { var _slashPos = u.indexOf('/', _ndIdx + 12); if (_slashPos !== -1) { var _jsonPos = u.indexOf('.json', _slashPos); _dp = _jsonPos !== -1 ? u.substring(_slashPos, _jsonPos) : u.substring(_slashPos); var _qPos = _dp.indexOf('?'); if (_qPos !== -1) _dp = _dp.substring(0, _qPos); if (_dp.substring(0,4) === '/en/') _dp = _dp.substring(3); } }
       var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
       var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
-      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      var _cp = window.location.pathname; if (_cp.substring(0,4) === '/en/') _cp = _cp.substring(3);
       if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
       if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
@@ -4356,10 +4360,12 @@ window.WebSocket.CONNECTING = 0; window.WebSocket.OPEN = 1; window.WebSocket.CLO
     }
     // _next/data (Next.js client navigation)
     if (u.includes('/_next/data/')) {
-      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _ndIdx = u.indexOf('/_next/data/');
+      var _dp = '';
+      if (_ndIdx !== -1) { var _slashPos = u.indexOf('/', _ndIdx + 12); if (_slashPos !== -1) { var _jsonPos = u.indexOf('.json', _slashPos); _dp = _jsonPos !== -1 ? u.substring(_slashPos, _jsonPos) : u.substring(_slashPos); var _qPos = _dp.indexOf('?'); if (_qPos !== -1) _dp = _dp.substring(0, _qPos); if (_dp.substring(0,4) === '/en/') _dp = _dp.substring(3); } }
       var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
       var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
-      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      var _cp = window.location.pathname; if (_cp.substring(0,4) === '/en/') _cp = _cp.substring(3);
       if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
       if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
@@ -4510,10 +4516,12 @@ console.log('[Mines] Local patches loaded');
       }), { status: 200, headers: {'content-type':'application/json'} }));
     }
     if (u.includes('/_next/data/')) {
-      var _dp = u.replace(/.*\/_next\/data\/[^\/]+/, '').replace(/\.json.*$/, '').replace(/^\/en\//, '/');
+      var _ndIdx = u.indexOf('/_next/data/');
+      var _dp = '';
+      if (_ndIdx !== -1) { var _slashPos = u.indexOf('/', _ndIdx + 12); if (_slashPos !== -1) { var _jsonPos = u.indexOf('.json', _slashPos); _dp = _jsonPos !== -1 ? u.substring(_slashPos, _jsonPos) : u.substring(_slashPos); var _qPos = _dp.indexOf('?'); if (_qPos !== -1) _dp = _dp.substring(0, _qPos); if (_dp.substring(0,4) === '/en/') _dp = _dp.substring(3); } }
       var _gr = {'/casino/originals/plinko':1,'/casino/originals/chicken-cross':1,'/casino/originals/mines-game':1,'/casino/originals/blackjack':1};
       var _hr = {'/':1,'/casino':1,'/casino/originals':1,'/home':1};
-      var _cp = window.location.pathname.replace(/^\/en\//, '/');
+      var _cp = window.location.pathname; if (_cp.substring(0,4) === '/en/') _cp = _cp.substring(3);
       if (_gr[_dp] && _dp !== _cp) { window.location.href = _dp; return new Promise(function(){}); }
       if (_hr[_dp] && !_hr[_cp]) { window.location.href = '/casino'; return new Promise(function(){}); }
       return Promise.resolve(new Response(JSON.stringify({
