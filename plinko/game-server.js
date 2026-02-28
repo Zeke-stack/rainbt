@@ -671,6 +671,13 @@ function buildNavScript(currentGame) {
       navigateTo(localPath.replace(/^\\/en\\//, '/'));
       return false;
     }
+    // Catch-all: any /casino/... link not in known routes → homepage (prevents Next.js 404 on mobile)
+    if ((normPath.startsWith('/casino/') || localPath.startsWith('/casino/')) && !GAME_ROUTES[normPath] && !HOME_ROUTES[normPath]) {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      __navLog('catch-all', 'Click: unknown casino route ' + normPath + ' -> /casino');
+      navigateTo('/casino');
+      return false;
+    }
   }
   document.addEventListener('click', handleNavClick, true);
   // touchend fires before click on mobile â€” intercept early
@@ -701,6 +708,10 @@ function buildNavScript(currentGame) {
       e.stopPropagation();
       e.stopImmediatePropagation();
       navigateTo('/casino');
+    } else if ((normPath.startsWith('/casino/') || localPath.startsWith('/casino/')) && !GAME_ROUTES[normPath] && !HOME_ROUTES[normPath]) {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      __navLog('catch-all', 'Touch: unknown casino route ' + normPath + ' -> /casino');
+      navigateTo('/casino');
     }
   }, true);
 
@@ -718,6 +729,13 @@ function buildNavScript(currentGame) {
       return true;
     }
     if (HOME_ROUTES[norm] && !IS_HOMEPAGE) {
+      navigateTo('/casino');
+      return true;
+    }
+    // Catch-all: any /casino/... route not in our map → redirect to homepage
+    // Prevents Next.js 404 component showing for unsupported routes (sports, promotions, etc)
+    if (norm.startsWith('/casino') && !GAME_ROUTES[norm] && !HOME_ROUTES[norm]) {
+      __navLog('block-unknown', 'Blocked unknown route: ' + norm + ' -> /casino');
       navigateTo('/casino');
       return true;
     }
@@ -5115,7 +5133,14 @@ setInterval(refreshLog,2000);
   const filePath = resolveFile(fileName);
   if (filePath) { res.writeHead(200, {'Content-Type': getMime(filePath), 'Cache-Control': STATIC_CACHE_HEADER}); res.end(cachedReadFile(filePath)); return; }
 
-  // 404
+  // If it looks like a page route (no file extension), redirect to /casino rather than bare 404
+  if (!pathname.includes('.') || pathname.endsWith('/')) {
+    log(`[REDIRECT] Unknown page: ${pathname} -> /casino`);
+    res.writeHead(302, { 'Location': '/casino' });
+    res.end();
+    return;
+  }
+  // Asset 404
   if (!pathname.includes('.map') && !pathname.includes('favicon'))
     log(`[404] ${pathname}`);
   res.writeHead(404, {'Content-Type':'text/plain'}); res.end('Not found: ' + pathname);
