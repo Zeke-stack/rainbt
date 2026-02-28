@@ -518,16 +518,67 @@ function buildNavScript(currentGame) {
   var CURRENT_GAME = ${JSON.stringify(currentGame)};
   var CURRENT_PATH = ${JSON.stringify(currentPath)};
 
+  // Detect Safari standalone mode (PWA / Add to Home Screen)
+  var IS_PWA = (window.navigator.standalone === true) || (window.matchMedia('(display-mode: standalone)').matches);
+
   // --- Debug logging to localStorage (survives page navigations) ---
   function __navLog(type, msg) {
     try {
       var logs = JSON.parse(localStorage.getItem('__navDebugLog') || '[]');
-      logs.push({ t: Date.now(), ts: new Date().toLocaleTimeString(), type: type, msg: msg, page: CURRENT_GAME, path: location.pathname });
+      logs.push({ t: Date.now(), ts: new Date().toLocaleTimeString(), type: type, msg: msg, page: CURRENT_GAME, path: location.pathname, pwa: IS_PWA });
       if (logs.length > 200) logs = logs.slice(-200);
       localStorage.setItem('__navDebugLog', JSON.stringify(logs));
     } catch(e) {}
   }
   __navLog('load', 'Page loaded: ' + location.href + ' | game=' + CURRENT_GAME);
+
+  // --- Balance sync with localStorage (for Vercel where server-side storage is ephemeral) ---
+  var BALANCE_KEY = '__rainbet_balance';
+  function saveBalanceToStorage(bal) {
+    try { localStorage.setItem(BALANCE_KEY, JSON.stringify({ balance: bal, ts: Date.now() })); } catch(e) {}
+  }
+  function getStoredBalance() {
+    try {
+      var d = JSON.parse(localStorage.getItem(BALANCE_KEY) || '{}');
+      if (d.balance && d.ts && (Date.now() - d.ts) < 86400000) return d.balance; // Valid for 24h
+    } catch(e) {}
+    return null;
+  }
+  // Sync on page load
+  (function syncBalance() {
+    var stored = getStoredBalance();
+    fetch('/api/sync-balance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ balance: stored || 0 })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (data.balance) {
+        saveBalanceToStorage(data.balance);
+        window.__SYNCED_BALANCE__ = data.balance;
+        __navLog('sync', 'Balance synced: $' + data.balance);
+      }
+    }).catch(function() {});
+  })();
+  // Global function for game engines to call after balance changes
+  window.__saveBalance = function(bal) { saveBalanceToStorage(bal); };
+  // Intercept fetch to capture balance from API responses
+  var _origFetchForBalance = window.fetch;
+  window.fetch = function(url, opts) {
+    return _origFetchForBalance.apply(this, arguments).then(function(resp) {
+      var u = typeof url === 'string' ? url : (url && url.url ? url.url : '');
+      // Clone to read body without consuming
+      if (u.includes('/api/') || u.includes('/v1/')) {
+        resp.clone().json().then(function(data) {
+          var bal = null;
+          if (data && typeof data.balance === 'number') bal = data.balance;
+          else if (data && data.wallet && data.wallet.active && typeof data.wallet.active.primary === 'number') bal = data.wallet.active.primary;
+          else if (data && data.gameState && data.gameState.wallet && typeof data.gameState.wallet.active.primary === 'number') bal = data.gameState.wallet.active.primary;
+          if (bal !== null && bal > 0) saveBalanceToStorage(bal);
+        }).catch(function() {});
+      }
+      return resp;
+    });
+  };
 
   var GAME_ROUTES = {
     '/casino/originals/plinko': true,
@@ -553,8 +604,13 @@ function buildNavScript(currentGame) {
     // Prevent duplicate navigations
     if (window.__NAV_IN_PROGRESS__) return;
     window.__NAV_IN_PROGRESS__ = true;
-    __navLog('nav', 'navigateTo: ' + path + ' (from ' + location.pathname + ')');
-    window.location.href = path;
+    __navLog('nav', 'navigateTo: ' + path + ' (from ' + location.pathname + ') pwa=' + IS_PWA);
+    // For Safari PWA, use location.replace to avoid weird back button issues
+    if (IS_PWA) {
+      window.location.replace(path);
+    } else {
+      window.location.href = path;
+    }
     // Fallback: if location.href didn't navigate (same URL after pushState), force reload
     setTimeout(function() {
       var norm = location.pathname.replace(/^\\/en\\//, '/');
@@ -581,7 +637,17 @@ function buildNavScript(currentGame) {
     localPath = localPath.split('?')[0].split('#')[0];
     // Normalise /en/ prefix
     var normPath = localPath.replace(/^\\/en\\//, '/');
-    __navLog('click', 'Link clicked: href=' + href + ' norm=' + normPath + ' isGame=' + !!GAME_SLUGS[normPath] + ' isHome=' + !!HOME_ROUTES[normPath]);
+    __navLog('click', 'Link clicked: href=' + href + ' norm=' + normPath + ' isGame=' + !!GAME_SLUGS[normPath] + ' isHome=' + !!HOME_ROUTES[normPath] + ' pwa=' + IS_PWA);
+
+    // PWA MODE: intercept ALL internal links to prevent Next.js client-side nav
+    if (IS_PWA && localPath.startsWith('/') && !href.startsWith('http')) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      navigateTo(normPath || localPath);
+      return false;
+    }
+
     // Intercept home/casino links
     if ((HOME_ROUTES[normPath] || HOME_ROUTES[localPath]) && !IS_HOMEPAGE) {
       e.preventDefault();
@@ -617,6 +683,14 @@ function buildNavScript(currentGame) {
     var localPath = href.replace(/^https?:\\/\\/[a-z0-9.-]*rainbet\\.com/, '');
     localPath = localPath.split('?')[0].split('#')[0];
     var normPath = localPath.replace(/^\\/en\\//, '/');
+    // PWA MODE: intercept ALL internal links
+    if (IS_PWA && localPath.startsWith('/')) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      navigateTo(normPath || localPath);
+      return;
+    }
     if ((GAME_ROUTES[normPath] || GAME_SLUGS[normPath]) && normPath !== CURRENT_PATH) {
       e.preventDefault();
       e.stopPropagation();
@@ -2998,8 +3072,26 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       if (body.vault !== undefined) vaultBalance = parseFloat(body.vault) || 0;
       if (body.promotional !== undefined) promotionalBalance = parseFloat(body.promotional) || 0;
       invalidatePageCaches();
+      saveState();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ amount: playerBalance, balance: playerBalance, vault: vaultBalance, promotional: promotionalBalance }));
+    } catch(e) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
+    return;
+  }
+
+  // Sync balance with client localStorage (for Vercel where fs is read-only)
+  if (pathname === '/api/sync-balance' && req.method === 'POST') {
+    try {
+      const body = await parseBody(req);
+      const clientBalance = parseFloat(body.balance);
+      // If server is at default (10000) and client has a saved balance, use client's
+      if (!isNaN(clientBalance) && clientBalance > 0 && Math.abs(playerBalance - 10000) < 0.01) {
+        playerBalance = clientBalance;
+        log('[SYNC] Restored balance from client: $' + playerBalance.toFixed(2));
+        invalidatePageCaches();
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ balance: playerBalance, vault: vaultBalance, promotional: promotionalBalance }));
     } catch(e) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     return;
   }
