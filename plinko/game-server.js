@@ -601,17 +601,15 @@ function buildNavScript(currentGame) {
 
   // â”€â”€ Navigate helper (force full page load) â”€â”€
   function navigateTo(path) {
-    // Prevent duplicate navigations
     if (window.__NAV_IN_PROGRESS__) return;
     window.__NAV_IN_PROGRESS__ = true;
     __navLog('nav', 'navigateTo: ' + path + ' (from ' + location.pathname + ') pwa=' + IS_PWA);
-    // For Safari PWA, use location.replace to avoid weird back button issues
+    // For Safari PWA, use location.replace
     if (IS_PWA) {
       window.location.replace(path);
     } else {
       window.location.href = path;
     }
-    // Fallback: if location.href didn't navigate (same URL after pushState), force reload
     setTimeout(function() {
       var norm = location.pathname.replace(/^\\/en\\//, '/');
       if (norm === path || norm === path.replace(/^\\/en\\//, '/')) {
@@ -1616,6 +1614,111 @@ function bjDoAction(session, actionObj) {
 }
 
 // ---- BUILD HOMEPAGE HTML ----
+
+// ============================================================
+// SHELL PAGE — iframe shell that hosts all games simultaneously
+// Navigation is handled purely by the shell; games postMessage
+// 'rb-nav' events instead of doing full page navigations.
+// ============================================================
+let _shellCache = {};
+function buildShellHTML(activeGame) {
+  if (_shellCache[activeGame]) return _shellCache[activeGame];
+  const GAMES = [
+    { id: 'plinko',        path: '/casino/originals/plinko',       src: '/casino/originals/plinko?iframe=1' },
+    { id: 'chicken-cross', path: '/casino/originals/chicken-cross', src: '/casino/originals/chicken-cross?iframe=1' },
+    { id: 'blackjack',     path: '/casino/originals/blackjack',     src: '/casino/originals/blackjack?iframe=1' },
+    { id: 'mines-game',    path: '/casino/originals/mines-game',    src: '/casino/originals/mines-game?iframe=1' },
+    { id: 'home',          path: '/casino',                         src: '/?iframe=1' },
+  ];
+  const activeId = (activeGame === 'homepage') ? 'home' : (activeGame || 'plinko');
+  const iframes = GAMES.map(g => {
+    const isActive = g.id === activeId;
+    const attrs = isActive ? ('src="' + g.src + '"') : ('data-src="' + g.src + '"');
+    return '<iframe id="f-' + g.id + '" class="rb-frame' + (isActive ? ' active' : '') + '" ' + attrs + ' allow="autoplay *; fullscreen *; clipboard-write *" allowfullscreen></iframe>';
+  }).join('\n  ');
+  const p2i = JSON.stringify(Object.fromEntries(GAMES.map(g => [g.path, g.id])));
+  const i2p = JSON.stringify(Object.fromEntries(GAMES.map(g => [g.id, g.path])));
+  const allIds = JSON.stringify(GAMES.map(g => g.id));
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d0f1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Rainbet</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d0f1a}
+.rb-frame{position:fixed;top:0;left:0;width:100%;height:100%;border:none;opacity:0;pointer-events:none;z-index:0}
+.rb-frame.active{opacity:1;pointer-events:auto;z-index:1}
+#rb-loader{position:fixed;inset:0;background:#0d0f1a;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s .5s}
+#rb-loader.done{opacity:0;pointer-events:none}
+.rb-spinner{width:40px;height:40px;border:3px solid #1e2040;border-top-color:#85c7ff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+  ${iframes}
+  <div id="rb-loader"><div class="rb-spinner"></div></div>
+<script>
+(function(){
+  var P2I = ${p2i};
+  var I2P = ${i2p};
+  var ALL = ${allIds};
+  var activeId = ${JSON.stringify(activeId)};
+  var loaded = {};
+  loaded[activeId] = true;
+
+  function show(id, pushHist) {
+    if (!I2P[id]) return;
+    var frame = document.getElementById('f-'+id);
+    if (!frame) return;
+    // Lazy-load: set src on first activation
+    if (!loaded[id]) { frame.src = frame.getAttribute('data-src'); loaded[id] = true; }
+    document.querySelectorAll('.rb-frame').forEach(function(f){ f.classList.remove('active'); });
+    frame.classList.add('active');
+    activeId = id;
+    var newPath = I2P[id];
+    if (pushHist !== false && location.pathname !== newPath)
+      history.pushState({ rbId: id }, '', newPath);
+  }
+
+  // Hide spinner once active frame fires its load event (or fallback after 7s)
+  var af = document.getElementById('f-'+activeId);
+  function hideLoader() { document.getElementById('rb-loader').classList.add('done'); }
+  if (af) { af.addEventListener('load', function h(){ hideLoader(); af.removeEventListener('load',h); }); }
+  setTimeout(hideLoader, 7000);
+
+  // Receive navigation requests from inner game iframes
+  window.addEventListener('message', function(e) {
+    if (!e.data || e.data.type !== 'rb-nav') return;
+    var path = String(e.data.path || '').replace(/^\/en\//, '/').split('?')[0].split('#')[0];
+    var id = P2I[path];
+    if (id) show(id, true);
+  });
+
+  // Back/forward button
+  window.addEventListener('popstate', function(e) {
+    var id = (e.state && e.state.rbId) || P2I[location.pathname.replace(/^\/en\//,'/')] || 'plinko';
+    show(id, false);
+  });
+
+  // Pre-load remaining frames ~4 seconds after initial load (background)
+  setTimeout(function(){
+    ALL.forEach(function(id){
+      if (loaded[id]) return;
+      var fr = document.getElementById('f-'+id);
+      if (fr) { fr.src = fr.getAttribute('data-src'); loaded[id] = true; }
+    });
+  }, 4000);
+})();
+<\/script>
+</body></html>`;
+  _shellCache[activeGame] = html;
+  return html;
+}
+
 function buildHomepageHTML() {
   let html = fs.readFileSync(HOMEPAGE_HTML_FILE, 'utf8');
 
