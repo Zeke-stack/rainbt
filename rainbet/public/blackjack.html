@@ -95,9 +95,8 @@ window.fetch = function(url, opts) {
       urlStr.includes('accounts.google.com') || urlStr.includes('connect.facebook') ||
       urlStr.includes('intercom') || urlStr.includes('widget.intercom') ||
       urlStr.includes('fbevents') || urlStr.includes('googletagmanager')) {
-    // Let auth/user endpoints and game API endpoints pass through — bjPatchScript rewrites rainbet.com URLs to local
-    if (urlStr.includes('auth/me') || urlStr.includes('/v1/user') || urlStr.includes('/v1/auth') ||
-        urlStr.includes('/v1/original-games/') || urlStr.includes('/api/v1/original-games/')) {
+    // Let auth/user endpoints pass through — bjPatchScript rewrites rainbet.com URLs to local
+    if (urlStr.includes('auth/me') || urlStr.includes('/v1/user') || urlStr.includes('/v1/auth')) {
       return origFetch.apply(this, arguments);
     }
     // Return empty array for list endpoints, empty object for others
@@ -137,9 +136,8 @@ window.fetch = function(url, opts) {
       // Smart response: return arrays for list-like endpoints, proper data for known endpoints
       var stubResponse = '{}';
       var patchUrl = self._patchUrl || '';
-      // Let auth/user and game API endpoints pass through — bjPatchScript has already rewritten URL to local
-      if (patchUrl.includes('auth/me') || patchUrl.includes('/v1/user') || patchUrl.includes('/v1/auth') ||
-          patchUrl.includes('/v1/original-games/') || patchUrl.includes('/api/v1/original-games/')) {
+      // Let auth/user endpoints pass through — bjPatchScript has already rewritten URL to local
+      if (patchUrl.includes('auth/me') || patchUrl.includes('/v1/user') || patchUrl.includes('/v1/auth')) {
         return origSend.apply(this, arguments);
       }
       if (patchUrl.includes('v1/crypto') || patchUrl.includes('/crypto')) {
