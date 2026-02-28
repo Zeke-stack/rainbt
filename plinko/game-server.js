@@ -4278,33 +4278,47 @@ window.addEventListener('error', function(e) {
   }
 });
 
-// Stub socket.io
+// Stub socket.io with proper event emission
 if (!window.io) {
-  window.io = function() {
-    return {
-      on: function() { return this; },
-      emit: function() { return this; },
-      connect: function() { return this; },
-      disconnect: function() {},
-      off: function() { return this; },
-      connected: true,
-      id: 'local-mines-stub'
+  function _minesSocket(nsp) {
+    var _h = {}, s = { _h: _h, id: 'local-mines-' + Math.random().toString(36).substr(2,9), connected: true, disconnected: false, nsp: nsp || '/',
+      on: function(e,f){(_h[e]=_h[e]||[]).push(f);return s},
+      off: function(){return s}, once: function(e,f){return s.on(e,f)},
+      emit: function(e){var a=Array.prototype.slice.call(arguments,1);(_h[e]||[]).forEach(function(f){try{f.apply(null,a)}catch(x){}});return s},
+      removeListener: function(){return s}, removeAllListeners: function(){_h={};return s},
+      connect: function(){s.connected=true;return s}, disconnect: function(){s.connected=false;return s},
+      close: function(){return s.disconnect()}, open: function(){return s.connect()},
+      volatile: null, compress: function(){return s}, timeout: function(){return s}
     };
-  };
+    s.volatile = s;
+    setTimeout(function(){ s.emit('connect'); }, 60);
+    return s;
+  }
+  window.io = function(){ return _minesSocket('/'); };
   window.io.connect = window.io;
-  window.io.Manager = function() { return window.io(); };
-  window.io.Socket = function() { return window.io(); };
+  window.io.Manager = function(){ return Object.create(_minesSocket('/')); };
+  window.io.Socket = _minesSocket;
   window.io.protocol = 5;
 }
 
-// Block external WebSocket connections
+// Block external WebSocket connections (return OPEN stub so games don't show 'offline')
 var _OrigWS = window.WebSocket;
 window.WebSocket = function(url, protocols) {
   if (typeof url === 'string' && (url.includes('rainbet.com') || url.includes('intercom') || url.includes('facebook') || url.includes('google'))) {
-    return { readyState: 3, CONNECTING:0, OPEN:1, CLOSING:2, CLOSED:3,
-      send:function(){}, close:function(){}, addEventListener:function(){}, removeEventListener:function(){},
-      onopen:null, onclose:null, onmessage:null, onerror:null, url:url, protocol:'', extensions:'', bufferedAmount:0, binaryType:'blob'
+    var _wsh = {};
+    var _ws = { readyState: 1, CONNECTING:0, OPEN:1, CLOSING:2, CLOSED:3,
+      send: function(){}, close: function(){ _ws.readyState = 3; },
+      addEventListener: function(t,f){ (_wsh[t]=_wsh[t]||[]).push(f); },
+      removeEventListener: function(){},
+      dispatchEvent: function(){},
+      onopen: null, onclose: null, onmessage: null, onerror: null,
+      url: url, protocol: '', extensions: '', bufferedAmount: 0, binaryType: 'blob'
     };
+    setTimeout(function(){
+      if (_ws.onopen) _ws.onopen({type:'open'});
+      (_wsh['open']||[]).forEach(function(f){try{f({type:'open'})}catch(e){}});
+    }, 80);
+    return _ws;
   }
   if (protocols !== undefined) return new _OrigWS(url, protocols);
   return new _OrigWS(url);
@@ -4506,7 +4520,7 @@ console.log('[Mines] Local patches loaded');
         pageProps: {}, __N_SSP: true
       }), { status: 200, headers: {'content-type':'application/json'} }));
     }
-    return _fetch.apply(window, arguments).then(function(resp) {
+    return _fetch.call(window, url, opts).then(function(resp) {
       // Clone response to read body for balance sync without consuming it
       if (u.includes('/v1/') || u.includes('/api/')) {
         var clone = resp.clone();
@@ -4555,13 +4569,22 @@ console.log('[Mines] Local patches loaded');
   window.io.connect = window.io;
   window.io.protocol = 5;
 
-  // Block external WebSocket connections
+  // Block external WebSocket connections (return OPEN stub so app doesn't show offline/network error)
   var _OrigWS = window.WebSocket;
   window.WebSocket = function(url, protocols) {
     if (typeof url === 'string' && (url.includes('rainbet.com') || url.includes('intercom') || url.includes('facebook') || url.includes('google'))) {
-      return { readyState: 3, CONNECTING:0, OPEN:1, CLOSING:2, CLOSED:3,
-        send:function(){}, close:function(){}, addEventListener:function(){}, removeEventListener:function(){},
-        onopen:null, onclose:null, onmessage:null, onerror:null, url:url, protocol:'', extensions:'', bufferedAmount:0, binaryType:'blob' };
+      var _bwsh = {};
+      var _bws = { readyState: 1, CONNECTING:0, OPEN:1, CLOSING:2, CLOSED:3,
+        send:function(){}, close:function(){_bws.readyState=3;},
+        addEventListener:function(t,f){(_bwsh[t]=_bwsh[t]||[]).push(f);},
+        removeEventListener:function(){}, dispatchEvent:function(){},
+        onopen:null, onclose:null, onmessage:null, onerror:null,
+        url:url, protocol:'', extensions:'', bufferedAmount:0, binaryType:'blob' };
+      setTimeout(function(){
+        if (_bws.onopen) _bws.onopen({type:'open'});
+        (_bwsh['open']||[]).forEach(function(f){try{f({type:'open'})}catch(e){}});
+      }, 80);
+      return _bws;
     }
     if (protocols !== undefined) return new _OrigWS(url, protocols);
     return new _OrigWS(url);
