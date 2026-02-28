@@ -363,6 +363,22 @@ function sendHTML(req, res, html, gzCache) {
   }
 }
 
+// Inject <link rel="preload" as="script"> for every local <script src=...> tag.
+// Browsers download preloaded resources in parallel with HTML parsing,
+// so JS chunks start loading immediately instead of waiting for the parser
+// to reach the <script> tags at the bottom of the body.
+function injectPreloadHints(html) {
+  const srcs = [];
+  const re = /<script[^>]*\ssrc="(\/[^"]+\.js[^"]*)"/gi;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    if (!srcs.includes(m[1])) srcs.push(m[1]);
+  }
+  if (!srcs.length) return html;
+  const hints = srcs.map(s => `<link rel="preload" as="script" href="${s}">`).join('');
+  return html.replace(/<head>/i, '<head>' + hints);
+}
+
 // ============================================================
 // FILE-LOOKUP INDEX (URL path -> local file)
 // Build once on startup so we don't scan directories on every request
@@ -2507,6 +2523,9 @@ function buildPlinkoHTML() {
   var swKill = '<script>if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(w){w.unregister()})});<\/script>';
   html = html.replace('</head>', swKill + '</head>');
 
+  // Add preload hints for JS chunks
+  html = injectPreloadHints(html);
+
   return html;
 }
 
@@ -4235,6 +4254,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         ccHtml = ccHtml.replace(/<head>/i, '<head>' + ccEarlyCSS);
         // Inject universal navigation script
         ccHtml = ccHtml.replace('</head>', function() { return buildNavScript('chicken-cross') + '</head>'; });
+        ccHtml = injectPreloadHints(ccHtml);
         _ccCache = ccHtml;
         _ccCacheGz = zlib.gzipSync(ccHtml);
         _ccBK = bk;
@@ -4542,6 +4562,7 @@ console.log('[Mines] Local patches loaded');
 
       // Insert patch script right after <head> + early CSS
       minesHtml = minesHtml.replace('</head>', function() { return minesPatchScript + buildNavScript('mines-game') + '</head>'; });
+      minesHtml = injectPreloadHints(minesHtml);
 
       const ae = req.headers['accept-encoding'] || '';
       if (ae.includes('gzip')) {
@@ -4771,7 +4792,7 @@ console.log('[Mines] Local patches loaded');
 
       // Inject universal navigation script
       bjHtml = bjHtml.replace('</head>', function() { return buildNavScript('blackjack') + '</head>'; });
-
+      bjHtml = injectPreloadHints(bjHtml);
       _bjCache = bjHtml;
       _bjCacheGz = zlib.gzipSync(bjHtml);
       _bjBK = bk;
@@ -5293,6 +5314,19 @@ server.listen(PORT, () => {
   log('\u2551                                              \u2551');
   log('\u2551  Wallet: Rainbet native (built-in)            \u2551');
   log('\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d');
+
+  // Warm up BJ and CC caches via self-requests (they build inline in handleRequest)
+  const warmPaths = ['/casino/originals/blackjack', '/casino/originals/chicken-cross', '/casino/originals/mines-game'];
+  warmPaths.forEach(function(p) {
+    setTimeout(function() {
+      http.get('http://localhost:' + PORT + p, { headers: { 'accept-encoding': 'gzip' } }, function(res) {
+        res.resume(); // discard body, just warm the cache
+        log('  Cache warmed: ' + p + ' (' + res.statusCode + ')');
+      }).on('error', function(err) {
+        log('  Cache warmup failed: ' + p + ' - ' + err.message);
+      });
+    }, 200);
+  });
 });
 
 // Save state on clean shutdown (force immediate write, bypass debounce)
