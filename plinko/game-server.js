@@ -2566,6 +2566,7 @@ async function handleRequest(req, res) {
   // Wrap res.writeHead to set cookies via setHeader (reliable across Node versions)
   const _origWriteHead = res.writeHead.bind(res);
   res.writeHead = function(statusCode, headers) {
+    const _h = Object.assign({}, headers || {});
     const _cookies = [
       'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=Lax',
     ];
@@ -2577,13 +2578,13 @@ async function handleRequest(req, res) {
         const _sesJson = encodeURIComponent(JSON.stringify(_sesClone));
         _cookies.push('rb_session=' + _sesJson + '; Path=/; Max-Age=86400; SameSite=Lax');
       } catch(e) { log(`SESSION COOKIE WRITE ERROR: ${e.message}`); }
-    } else {
-      // Clear session cookie when game is over
-      _cookies.push('rb_session=; Path=/; Max-Age=0; SameSite=Lax');
     }
-    // setHeader before writeHead — writeHead merges; Set-Cookie not in caller headers so no conflict
-    res.setHeader('Set-Cookie', _cookies);
-    return _origWriteHead(statusCode, headers);
+    // NOTE: never actively clear rb_session — other Vercel instances don't have bjActiveSession
+    // in memory, so they must not wipe a cookie that a /play response just set.
+    // Stale session cookies are harmless: the action handler ignores mismatched IDs,
+    // and /play always force-resets bjActiveSession=null before starting a new game.
+    _h['Set-Cookie'] = _cookies;
+    return _origWriteHead(statusCode, _h);
   };
   // -- end cookie persistence --
 
