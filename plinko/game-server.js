@@ -2563,7 +2563,7 @@ async function handleRequest(req, res) {
   }
   // Restore BJ active session from cookie if not already in memory
   if (!bjActiveSession) {
-    const _sesMatch = _rbCookieHdr.match(/rb_session=([^;]+)/);
+    const _sesMatch = _rbCookieHdr.match(/rb_session=([^;\s]+)/);
     if (_sesMatch) {
       try {
         const _decoded = decodeURIComponent(_sesMatch[1]);
@@ -2574,14 +2574,14 @@ async function handleRequest(req, res) {
             _parsed.deck = _parsed.deck.match(/.{2}/g) || [];
           }
           bjActiveSession = _parsed;
+          log(`COOKIE RESTORE: session ${_parsed.gameHistoryId.slice(0,8)} status=${_parsed.status}`);
         }
-      } catch(e) { /* corrupt cookie — ignore */ }
+      } catch(e) { log(`COOKIE RESTORE ERROR: ${e.message}`); }
     }
   }
-  // Wrap res.writeHead to set cookies on every response
+  // Wrap res.writeHead to set cookies via setHeader (reliable across Node versions)
   const _origWriteHead = res.writeHead.bind(res);
   res.writeHead = function(statusCode, headers) {
-    const _h = Object.assign({}, headers || {});
     const _cookies = [
       'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=Lax',
     ];
@@ -2592,13 +2592,14 @@ async function handleRequest(req, res) {
         _sesClone.deck = Array.isArray(_sesClone.deck) ? _sesClone.deck.join('') : '';
         const _sesJson = encodeURIComponent(JSON.stringify(_sesClone));
         _cookies.push('rb_session=' + _sesJson + '; Path=/; Max-Age=86400; SameSite=Lax');
-      } catch(e) {}
+      } catch(e) { log(`SESSION COOKIE WRITE ERROR: ${e.message}`); }
     } else {
       // Clear session cookie when game is over
       _cookies.push('rb_session=; Path=/; Max-Age=0; SameSite=Lax');
     }
-    _h['Set-Cookie'] = _cookies;
-    return _origWriteHead(statusCode, _h);
+    // setHeader before writeHead — writeHead merges; Set-Cookie not in caller headers so no conflict
+    res.setHeader('Set-Cookie', _cookies);
+    return _origWriteHead(statusCode, headers);
   };
   // -- end cookie persistence --
 
@@ -2985,8 +2986,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       try {
         const body = await parseBody(req);
         if (!bjActiveSession || bjActiveSession.gameHistoryId !== bjActionMatch[1]) {
+          const _bjReason = !bjActiveSession
+            ? (_rbCookieHdr.includes('rb_session') ? 'cookie_parse_failed' : 'no_cookie')
+            : 'id_mismatch_' + bjActiveSession.gameHistoryId.slice(0,8);
+          log(`BJ ACTION 400: reason=${_bjReason} expected=${bjActionMatch[1].slice(0,8)} cookie=${_rbCookieHdr.includes('rb_session') ? 'present' : 'absent'}`);
           res.writeHead(400, {'Content-Type':'application/json'});
-          res.end(JSON.stringify({ error: 'er_no_active_game' }));
+          res.end(JSON.stringify({ error: 'er_no_active_game', debug: _bjReason }));
           return;
         }
         const actionObj = body.action_name || {};
