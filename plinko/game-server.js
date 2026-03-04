@@ -2561,24 +2561,8 @@ async function handleRequest(req, res) {
     const _cookieBal = parseFloat(_rbBalMatch[1]);
     if (!isNaN(_cookieBal) && _cookieBal >= 0) playerBalance = _cookieBal;
   }
-  // Restore BJ active session from cookie if not already in memory
-  if (!bjActiveSession) {
-    const _sesMatch = _rbCookieHdr.match(/rb_session=([^;\s]+)/);
-    if (_sesMatch) {
-      try {
-        const _decoded = decodeURIComponent(_sesMatch[1]);
-        const _parsed = JSON.parse(_decoded);
-        if (_parsed && _parsed.gameHistoryId && _parsed.status && _parsed.status !== 'finished') {
-          // deck was serialized as flat string "2hAcKs..." to save cookie space — restore to array
-          if (typeof _parsed.deck === 'string') {
-            _parsed.deck = _parsed.deck.match(/.{2}/g) || [];
-          }
-          bjActiveSession = _parsed;
-          log(`COOKIE RESTORE: session ${_parsed.gameHistoryId.slice(0,8)} status=${_parsed.status}`);
-        }
-      } catch(e) { log(`COOKIE RESTORE ERROR: ${e.message}`); }
-    }
-  }
+  // NOTE: BJ session is restored lazily inside the /action handler only (not here),
+  // so stale rb_session cookies never block new /play requests.
   // Wrap res.writeHead to set cookies via setHeader (reliable across Node versions)
   const _origWriteHead = res.writeHead.bind(res);
   res.writeHead = function(statusCode, headers) {
@@ -2944,11 +2928,9 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         res.end(JSON.stringify({ error: 'Insufficient balance' }));
         return;
       }
-      if (bjActiveSession) {
-        res.writeHead(400, {'Content-Type':'application/json'});
-        res.end(JSON.stringify({ error: 'er_active_game_exists' }));
-        return;
-      }
+      // Force-clear any stale in-memory session before starting a new game.
+      // (On Vercel each instance is independent; stale cookies must never block new games.)
+      bjActiveSession = null;
       const session = bjStartGame(betAmount, body.currency || 'USD');
       log(`BJ DEAL: bet=${betAmount} status=${session.status} balance=${playerBalance.toFixed(2)}`);
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2985,11 +2967,26 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     if (bjActionMatch && req.method === 'POST') {
       try {
         const body = await parseBody(req);
-        if (!bjActiveSession || bjActiveSession.gameHistoryId !== bjActionMatch[1]) {
+        const _expectedId = bjActionMatch[1];
+        // Restore BJ session from cookie if not in-memory or if in-memory ID doesn't match
+        if (!bjActiveSession || bjActiveSession.gameHistoryId !== _expectedId) {
+          const _sesMatch = _rbCookieHdr.match(/rb_session=([^;\s]+)/);
+          if (_sesMatch) {
+            try {
+              const _parsed = JSON.parse(decodeURIComponent(_sesMatch[1]));
+              if (_parsed && _parsed.gameHistoryId === _expectedId && _parsed.status !== 'finished') {
+                if (typeof _parsed.deck === 'string') _parsed.deck = _parsed.deck.match(/.{2}/g) || [];
+                bjActiveSession = _parsed;
+                log(`SESSION RESTORED from cookie: ${_expectedId.slice(0,8)} status=${_parsed.status}`);
+              }
+            } catch(e) { log(`SESSION RESTORE ERROR: ${e.message}`); }
+          }
+        }
+        if (!bjActiveSession || bjActiveSession.gameHistoryId !== _expectedId) {
           const _bjReason = !bjActiveSession
-            ? (_rbCookieHdr.includes('rb_session') ? 'cookie_parse_failed' : 'no_cookie')
-            : 'id_mismatch_' + bjActiveSession.gameHistoryId.slice(0,8);
-          log(`BJ ACTION 400: reason=${_bjReason} expected=${bjActionMatch[1].slice(0,8)} cookie=${_rbCookieHdr.includes('rb_session') ? 'present' : 'absent'}`);
+            ? (_rbCookieHdr.includes('rb_session') ? 'cookie_id_mismatch' : 'no_cookie')
+            : 'id_mismatch_' + bjActiveSession.gameHistoryId.slice(0, 8);
+          log(`BJ ACTION 400: reason=${_bjReason} expected=${_expectedId.slice(0,8)}`);
           res.writeHead(400, {'Content-Type':'application/json'});
           res.end(JSON.stringify({ error: 'er_no_active_game', debug: _bjReason }));
           return;
