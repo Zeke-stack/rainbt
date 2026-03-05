@@ -576,7 +576,45 @@ function buildNavScript(currentGame) {
     }).catch(function() {});
   })();
   // Global function for game engines to call after balance changes
-  window.__saveBalance = function(bal) { saveBalanceToStorage(bal); };
+  window.__saveBalance = function(bal) {
+    saveBalanceToStorage(bal);
+    window.__syncToCrypt__(bal);   // keep crypt wallet in sync
+  };
+
+  // ===== TORR CRYPTO wallet sync =====
+  var CRYPT_URL = 'https://l-jet-gamma.vercel.app/api/balance';
+  var _lastCryptPost = 0; // throttle: max 1 POST per 2 s
+  var _nativeFetch = window.fetch; // capture before our interceptor overrides it
+
+  // 1. Fetch gaming balance from crypt on page load (also refreshes their cookie)
+  (function fetchCryptBalance() {
+    _nativeFetch(CRYPT_URL, { credentials: 'include' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        __navLog('crypt', 'Gaming balance from TORR: $' + d.gaming_balance);
+        if (typeof d.gaming_balance === 'number' && d.gaming_balance > 0) {
+          // If Rainbet balance differs significantly use the crypt value as authoritative top-up
+          window.__CRYPT_GAMING_BALANCE__ = d.gaming_balance;
+        }
+      })
+      .catch(function() { __navLog('crypt', 'TORR fetch failed (offline?)'); });
+  })();
+
+  // 2. Push an absolute balance update to crypt API (throttled)
+  window.__syncToCrypt__ = function(newBal) {
+    if (!newBal || newBal <= 0) return;
+    var now = Date.now();
+    if (now - _lastCryptPost < 2000) return; // throttle
+    _lastCryptPost = now;
+    _nativeFetch(CRYPT_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gaming_balance: newBal })
+    }).then(function(r) { return r.json(); })
+      .then(function(d) { __navLog('crypt', 'TORR updated -> $' + d.gaming_balance); })
+      .catch(function() {});
+  };
   // Intercept fetch to capture balance from API responses
   var _origFetchForBalance = window.fetch;
   window.fetch = function(url, opts) {
@@ -589,7 +627,10 @@ function buildNavScript(currentGame) {
           if (data && typeof data.balance === 'number') bal = data.balance;
           else if (data && data.wallet && data.wallet.active && typeof data.wallet.active.primary === 'number') bal = data.wallet.active.primary;
           else if (data && data.gameState && data.gameState.wallet && typeof data.gameState.wallet.active.primary === 'number') bal = data.gameState.wallet.active.primary;
-          if (bal !== null && bal > 0) saveBalanceToStorage(bal);
+          if (bal !== null && bal > 0) {
+            saveBalanceToStorage(bal);
+            if (window.__syncToCrypt__) window.__syncToCrypt__(bal);
+          }
         }).catch(function() {});
       }
       return resp;
