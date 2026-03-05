@@ -2609,7 +2609,7 @@ async function handleRequest(req, res) {
   res.writeHead = function(statusCode, headers) {
     const _h = Object.assign({}, headers || {});
     const _cookies = [
-      'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=Lax',
+      'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
     ];
     if (bjActiveSession && bjActiveSession.status !== 'finished') {
       try {
@@ -2617,7 +2617,7 @@ async function handleRequest(req, res) {
         const _sesClone = Object.assign({}, bjActiveSession);
         _sesClone.deck = Array.isArray(_sesClone.deck) ? _sesClone.deck.join('') : '';
         const _sesJson = encodeURIComponent(JSON.stringify(_sesClone));
-        _cookies.push('rb_session=' + _sesJson + '; Path=/; Max-Age=86400; SameSite=Lax');
+        _cookies.push('rb_session=' + _sesJson + '; Path=/; Max-Age=86400; SameSite=None; Secure');
       } catch(e) { log(`SESSION COOKIE WRITE ERROR: ${e.message}`); }
     }
     // NOTE: never actively clear rb_session — other Vercel instances don't have bjActiveSession
@@ -3313,6 +3313,44 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       res.end(JSON.stringify({ amount: playerBalance, balance: playerBalance, vault: vaultBalance, promotional: promotionalBalance }));
     } catch(e) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     return;
+  }
+
+  // ── Crypt banking app: cross-origin balance API ──
+  const _CRYPT_ORIGIN = 'https://l-jet-gamma.vercel.app';
+  const _reqOrigin = req.headers['origin'] || '';
+  const _cryptCors = {
+    'Access-Control-Allow-Origin': _CRYPT_ORIGIN,
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+  if (pathname === '/api/rb-balance') {
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, _cryptCors);
+      res.end();
+      return;
+    }
+    if (req.method === 'GET') {
+      res.writeHead(200, Object.assign({ 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }, _cryptCors));
+      res.end(JSON.stringify({ balance: playerBalance }));
+      return;
+    }
+    if (req.method === 'POST') {
+      try {
+        const body = await parseBody(req);
+        if (typeof body.balance === 'number' && body.balance >= 0) {
+          playerBalance = Math.round(body.balance * 100) / 100;
+          log(`[CRYPT] Balance set to $${playerBalance.toFixed(2)}`);
+          invalidatePageCaches();
+        }
+        res.writeHead(200, Object.assign({ 'Content-Type': 'application/json' }, _cryptCors));
+        res.end(JSON.stringify({ balance: playerBalance }));
+      } catch(e) {
+        res.writeHead(400, Object.assign({ 'Content-Type': 'application/json' }, _cryptCors));
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
   }
 
   // Sync balance with client localStorage (for Vercel where fs is read-only)
