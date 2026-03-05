@@ -1160,20 +1160,18 @@
                             </svg>
                         </div>
                         <div>
-                            <div class="rainbet-title">Rainbet Gaming</div>
-                            <a href="https://rainbt.vercel.app/casino" target="_blank" class="rainbet-link">rainbt.vercel.app ↗</a>
+                            <div class="rainbet-title">Rainbet</div>
                         </div>
                     </div>
-                    <div class="rainbet-status loading" id="rb-status">Connecting…</div>
                     <div class="rainbet-balance-row">
                         <div>
-                            <div class="rainbet-balance-label">Gaming Balance</div>
+                            <div class="rainbet-balance-label">Rainbet Balance</div>
                             <div class="rainbet-balance-amt">$<span id="rb-balance">—</span></div>
                         </div>
                         <div class="rainbet-balance-lttc" id="rb-balance-lttc"></div>
                     </div>
                     <div class="rainbet-actions">
-                        <button class="rainbet-btn primary" onclick="rbDeposit()">Fund Rainbet</button>
+                        <button class="rainbet-btn primary" onclick="rbDeposit()">Deposit</button>
                         <button class="rainbet-btn" onclick="rbWithdraw()">Withdraw</button>
                     </div>
                 </div>
@@ -2010,7 +2008,7 @@
         setInterval(updateDemoPrice, 1000);
 
         // ===== RAINBET GAMING WALLET INTEGRATION =====
-        var CRYPT_API = '/api/balance';
+        var RB_API = 'https://rainbt.vercel.app/api/rb-balance';
         var rbBalance = null;
 
         function rbUpdateUI(bal) {
@@ -2018,42 +2016,29 @@
             document.getElementById('rb-balance').textContent = bal.toFixed(2);
             var lttcEquiv = (bal / lttcPrice).toFixed(4);
             document.getElementById('rb-balance-lttc').textContent = lttcEquiv + ' LTTC equiv';
-            var el = document.getElementById('rb-status');
-            el.textContent = '● Live';
-            el.className   = 'rainbet-status';
         }
 
         function rbFetchBalance() {
-            var el = document.getElementById('rb-status');
-            el.textContent = 'Connecting…';
-            el.className   = 'rainbet-status loading';
-            fetch(CRYPT_API, { credentials: 'include' })
+            fetch(RB_API, { credentials: 'include' })
                 .then(function(r) { return r.json(); })
-                .then(function(d) { rbUpdateUI(d.gaming_balance); })
-                .catch(function() {
-                    el.textContent = 'Offline';
-                    el.className   = 'rainbet-status error';
-                });
+                .then(function(d) { if (typeof d.balance === 'number') rbUpdateUI(d.balance); })
+                .catch(function() { /* silent - offline or CORS */ });
         }
 
         function rbPostBalance(payload, onSuccess) {
-            fetch(CRYPT_API, {
+            fetch(RB_API, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
             .then(function(r) { return r.json(); })
-            .then(function(d) { rbUpdateUI(d.gaming_balance); if (onSuccess) onSuccess(); })
-            .catch(function() {
-                var el = document.getElementById('rb-status');
-                el.textContent = 'Error updating — retry';
-                el.className   = 'rainbet-status error';
-            });
+            .then(function(d) { if (typeof d.balance === 'number') rbUpdateUI(d.balance); if (onSuccess) onSuccess(); })
+            .catch(function() { /* silent */ });
         }
 
         function rbDeposit() {
-            var input = prompt('Fund Rainbet Gaming Wallet\n\nEnter the amount of LTTC to convert to USD:');
+            var input = prompt('Deposit to Rainbet\n\nEnter the amount of LTTC to convert to USD:');
             if (!input) return;
             var lttcAmt = parseFloat(input);
             if (isNaN(lttcAmt) || lttcAmt <= 0) {
@@ -2065,31 +2050,32 @@
                 return;
             }
             var usd = lttcAmt * lttcPrice;
-            if (!confirm('Convert ' + lttcAmt.toFixed(4) + ' LTTC → $' + usd.toFixed(2) + ' USD to fund Rainbet?')) return;
+            if (!confirm('Convert ' + lttcAmt.toFixed(4) + ' LTTC → $' + usd.toFixed(2) + ' USD to deposit to Rainbet?')) return;
+            var newRbBal = (rbBalance || 0) + usd;
             balance -= lttcAmt;
             updateBalance();
-            addTransaction('gaming-deposit', lttcAmt, 'Rainbet Gaming');
-            rbPostBalance({ delta: usd });
+            addTransaction('gaming-deposit', lttcAmt, 'Rainbet');
+            rbPostBalance({ balance: newRbBal });
         }
 
         function rbWithdraw() {
             if (!rbBalance || rbBalance <= 0) {
-                alert('No Rainbet gaming balance to withdraw.');
+                alert('No Rainbet balance to withdraw.');
                 return;
             }
-            var usd     = rbBalance;
+            var usd      = rbBalance;
             var lttcBack = usd / lttcPrice;
             if (!confirm('Withdraw $' + usd.toFixed(2) + ' from Rainbet\n→ ' + lttcBack.toFixed(4) + ' LTTC added to TORR wallet?')) return;
-            rbPostBalance({ gaming_balance: 0 }, function() {
+            rbPostBalance({ balance: 0 }, function() {
                 balance += lttcBack;
                 updateBalance();
-                addTransaction('gaming-withdraw', lttcBack, 'Rainbet Gaming');
+                addTransaction('gaming-withdraw', lttcBack, 'Rainbet');
             });
         }
 
-        // Fetch once on load, then poll every 30 s
+        // Fetch on load, then poll every 10 s
         rbFetchBalance();
-        setInterval(rbFetchBalance, 30000);
+        setInterval(rbFetchBalance, 10000);
     </script>
 </body>
 </html>
