@@ -529,7 +529,7 @@ function buildNavScript(currentGame) {
   const currentPath = gameRouteMap[currentGame] || '/';
   const isHomepage = currentGame === 'homepage';
 
-  return `<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Rainbet"><meta name="theme-color" content="#0d0f1a"><link rel="manifest" href="/manifest.json"><style id="rb-safe-area">html{background:#0d0f1a;min-height:100%}body{min-height:100vh;min-height:100dvh;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box;overscroll-behavior-y:none}</style><script>(function(){var m=document.querySelector('meta[name="viewport"]');var c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';if(m){m.setAttribute('content',c)}else{m=document.createElement('meta');m.name='viewport';m.content=c;document.head.appendChild(m)}})();<\/script><script id="nav-intercept">
+  return `<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Rainbet"><meta name="theme-color" content="#0d0f1a"><link rel="manifest" href="/manifest.json"><style id="rb-safe-area">html{background:#0d0f1a;min-height:100%}body{min-height:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box;overscroll-behavior:none}html{overscroll-behavior:none}</style><script>(function(){var m=document.querySelector('meta[name="viewport"]');var c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';if(m){m.setAttribute('content',c)}else{m=document.createElement('meta');m.name='viewport';m.content=c;document.head.appendChild(m)}})();<\/script><script id="nav-intercept">
 (function() {
   var CURRENT_GAME = ${JSON.stringify(currentGame)};
   var CURRENT_PATH = ${JSON.stringify(currentPath)};
@@ -658,6 +658,7 @@ function buildNavScript(currentGame) {
 
   // â”€â”€ Navigate helper (force full page load) â”€â”€
   function navigateTo(path) {
+    if (path === '/' || path === '/en' || path === '/en/') path = '/casino';
     if (window.__NAV_IN_PROGRESS__) return;
     window.__NAV_IN_PROGRESS__ = true;
     __navLog('nav', 'navigateTo: ' + path + ' (from ' + location.pathname + ') pwa=' + IS_PWA);

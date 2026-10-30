@@ -7,6 +7,9 @@
       "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,index.html,chicken-cross.html}"
     }
   },
+  "redirects": [
+    { "source": "/", "destination": "/casino", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/:path*", "destination": "/api?__vercel_path=:path*" }
   ]
