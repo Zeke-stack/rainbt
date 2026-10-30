@@ -529,7 +529,7 @@ function buildNavScript(currentGame) {
   const currentPath = gameRouteMap[currentGame] || '/';
   const isHomepage = currentGame === 'homepage';
 
-  return `<script id="nav-intercept">
+  return `<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Rainbet"><meta name="theme-color" content="#0d0f1a"><link rel="manifest" href="/manifest.json"><style id="rb-safe-area">html{background:#0d0f1a;min-height:100%}body{min-height:100vh;min-height:100dvh;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box;overscroll-behavior-y:none}</style><script>(function(){var m=document.querySelector('meta[name="viewport"]');var c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';if(m){m.setAttribute('content',c)}else{m=document.createElement('meta');m.name='viewport';m.content=c;document.head.appendChild(m)}})();<\/script><script id="nav-intercept">
 (function() {
   var CURRENT_GAME = ${JSON.stringify(currentGame)};
   var CURRENT_PATH = ${JSON.stringify(currentPath)};
@@ -735,8 +735,17 @@ function buildNavScript(currentGame) {
     }
   }
   document.addEventListener('click', handleNavClick, true);
-  // touchend fires before click on mobile â€” intercept early
+  // touchend fires before click on mobile — intercept early, but ignore scroll/drag gestures
+  var _tStart = null;
+  document.addEventListener('touchstart', function(e) {
+    var t = e.touches && e.touches[0];
+    _tStart = t ? { x: t.clientX, y: t.clientY, ts: Date.now() } : null;
+  }, { capture: true, passive: true });
   document.addEventListener('touchend', function(e) {
+    var t = e.changedTouches && e.changedTouches[0];
+    var moved = !_tStart || !t || Math.abs(t.clientX - _tStart.x) > 10 || Math.abs(t.clientY - _tStart.y) > 10 || (Date.now() - _tStart.ts) > 600;
+    _tStart = null;
+    if (moved) return;
     var a = e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
     var href = a.getAttribute('href');
@@ -1274,6 +1283,57 @@ function minesCashout(session) {
   transactionHistory.push({ type: 'cashout', game: 'mines', amount: session.payout, balance: playerBalance, timestamp: new Date().toISOString() });
 
   return { board: minesGetFullBoard(session), win: true, multiplier: session.multiplier, payout: session.payout };
+}
+
+// ---- Stateless persistence for serverless (Vercel) ----
+// Each instance has its own memory, so the active mines game is mirrored into an
+// encrypted cookie and restored on whichever instance handles the next request.
+const MINES_STATE_KEY = crypto.createHash('sha256').update(process.env.MINES_SECRET || 'rainbet-local-mines-state-v1').digest();
+
+function minesEncodeState(session) {
+  var payload = JSON.stringify({
+    id: session.id, dp: session.displayBoard, mp: Array.from(session.minePositions),
+    t: session.tiles, m: session.mines, b: session.betAmount, c: session.currency,
+    r: Array.from(session.revealed), rc: session.revealedCellsCount, mu: session.multiplier,
+    st: session.startTime, bal: playerBalance
+  });
+  var iv = crypto.randomBytes(12);
+  var cipher = crypto.createCipheriv('aes-256-gcm', MINES_STATE_KEY, iv);
+  var enc = Buffer.concat([cipher.update(payload, 'utf8'), cipher.final()]);
+  return Buffer.concat([iv, cipher.getAuthTag(), enc]).toString('base64url');
+}
+
+function minesDecodeState(token) {
+  try {
+    var buf = Buffer.from(token, 'base64url');
+    var decipher = crypto.createDecipheriv('aes-256-gcm', MINES_STATE_KEY, buf.subarray(0, 12));
+    decipher.setAuthTag(buf.subarray(12, 28));
+    var d = JSON.parse(Buffer.concat([decipher.update(buf.subarray(28)), decipher.final()]).toString('utf8'));
+    return {
+      session: {
+        id: d.id, displayBoard: d.dp, minePositions: new Set(d.mp), tiles: d.t, mines: d.m,
+        betAmount: d.b, currency: d.c, revealed: new Set(d.r), revealedCellsCount: d.rc,
+        multiplier: d.mu, payout: 0, gameOver: false, cashedOut: false, startTime: d.st
+      },
+      balance: d.bal
+    };
+  } catch (e) { return null; }
+}
+
+function minesRestoreFromCookie(req) {
+  var m = /(?:^|;\s*)mines_state=([^;]+)/.exec(req.headers.cookie || '');
+  if (!m) return;
+  if (m[1] === 'none') { minesActiveSession = null; return; }
+  var st = minesDecodeState(m[1]);
+  if (!st) return;
+  var cur = minesActiveSession;
+  if (cur && !cur.gameOver && cur.id === st.session.id && cur.revealedCellsCount >= st.session.revealedCellsCount) return;
+  minesActiveSession = st.session;
+  if (typeof st.balance === 'number') playerBalance = st.balance;
+}
+
+function minesAttachStateCookie(req, res) {
+  res._minesState = true;
 }
 
 // Index mines asset files
@@ -2624,6 +2684,13 @@ async function handleRequest(req, res) {
     // in memory, so they must not wipe a cookie that a /play response just set.
     // Stale session cookies are harmless: the action handler ignores mismatched IDs,
     // and /play always force-resets bjActiveSession=null before starting a new game.
+    if (res._minesState) {
+      try {
+        const _ms = minesActiveSession && !minesActiveSession.gameOver ? minesEncodeState(minesActiveSession) : 'none';
+        _cookies.push('mines_state=' + _ms + '; Path=/; Max-Age=86400; HttpOnly; SameSite=None; Secure');
+        _h['Cache-Control'] = 'no-store';
+      } catch(e) { log('MINES COOKIE WRITE ERROR: ' + e.message); }
+    }
     _h['Set-Cookie'] = _cookies;
     return _origWriteHead(statusCode, _h);
   };
@@ -2667,8 +2734,11 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS – reflect the request origin so credentialed cross-origin requests work
+  const _reqOrigin = req.headers['origin'] || '';
+  res.setHeader('Access-Control-Allow-Origin', _reqOrigin || '*');
+  if (_reqOrigin) res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -3049,6 +3119,11 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // MINES API ENDPOINTS
   // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
+  if (pathname.indexOf('/v1/games/mines/') === 0 || pathname === '/api/v1/original-games/mines-game/active-session') {
+    minesRestoreFromCookie(req);
+    minesAttachStateCookie(req, res);
+  }
+
   // Mines: active session check
   if ((pathname === '/v1/games/mines/active-session' || pathname === '/api/v1/original-games/mines-game/active-session') && req.method === 'GET') {
     if (minesActiveSession && !minesActiveSession.gameOver) {
@@ -3317,7 +3392,6 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // ── Crypt banking app: cross-origin balance API ──
   const _CRYPT_ORIGIN = 'https://l-jet-gamma.vercel.app';
-  const _reqOrigin = req.headers['origin'] || '';
   const _cryptCors = {
     'Access-Control-Allow-Origin': _CRYPT_ORIGIN,
     'Access-Control-Allow-Credentials': 'true',
@@ -4397,6 +4471,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // â”€â”€ Mines page â”€â”€
   if (pathname === '/casino/originals/mines-game' || pathname === '/en/casino/originals/mines-game' || pathname === '/mines' || pathname === '/mines-game') {
     try {
+      minesRestoreFromCookie(req);
       let minesHtml = fs.readFileSync(MINES_HTML_FILE, 'utf8');
       // Patch __NEXT_DATA__
       const ndTag = 'id="__NEXT_DATA__"';
@@ -5356,6 +5431,11 @@ setInterval(refreshLog,2000);
   }
 
   // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MISC Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+  if (pathname === '/manifest.json') {
+    res.writeHead(200, { 'Content-Type': 'application/manifest+json' });
+    res.end(JSON.stringify({ name: 'Rainbet', short_name: 'Rainbet', start_url: '/casino', scope: '/', display: 'standalone', orientation: 'any', background_color: '#0d0f1a', theme_color: '#0d0f1a' }));
+    return;
+  }
   if (pathname === '/favicon.ico') { res.writeHead(204); res.end(); return; }
 
   // socket.io polling fallback
