@@ -1013,7 +1013,7 @@ function buildNavScript(currentGame) {
 // ============================================================
 const CC_BASE_DIR = path.join(__dirname, '..');
 const CC_ASSETS_DIR = path.join(CC_BASE_DIR, 'chicken-cross_files');
-const CC_HTML_FILE = path.join(CC_BASE_DIR, 'index.html');
+const CC_HTML_FILE = path.join(CC_BASE_DIR, 'cc-page.html');
 
 const CC_DIFFICULTY = {
   easy:   { factor: 1,  maxRounds: 24 },
