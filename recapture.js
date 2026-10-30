@@ -122,6 +122,23 @@ function extractRefs(text, baseUrl, ctx) {
 
 async function fetchMissing(ctx, url) {
   try {
+    if (ctx.fetchPage && new URL(url).hostname.endsWith('rainbet.com')) {
+      const r = await ctx.fetchPage.evaluate(async (u) => {
+        try {
+          const res = await fetch(u, { credentials: 'include' });
+          if (!res.ok) return { status: res.status };
+          const b = new Uint8Array(await res.arrayBuffer());
+          let s = ''; for (let i = 0; i < b.length; i += 32768) s += String.fromCharCode.apply(null, b.subarray(i, i + 32768));
+          return { status: 200, b64: btoa(s), type: res.headers.get('content-type') || '' };
+        } catch (e) { return { status: 'err ' + e.message }; }
+      }, url);
+      if (r.status !== 200) { ctx.failed.set(url, r.status); return null; }
+      const buf = Buffer.from(r.b64, 'base64');
+      // Cloudflare/Next fallbacks can return an HTML page for a missing asset
+      if (/text\/html/i.test(r.type) && !/\.html?(\?|$)/i.test(url)) { ctx.failed.set(url, 'html-fallback'); return null; }
+      save(ctx, url, buf, r.type);
+      return buf;
+    }
     const res = await fetch(url, { headers: { 'User-Agent': UA, Cookie: COOKIE_HEADER, Referer: ORIGIN + '/' }, redirect: 'follow' });
     if (!res.ok) { ctx.failed.set(url, res.status); return null; }
     const buf = Buffer.from(await res.arrayBuffer());
@@ -241,8 +258,11 @@ async function main() {
     for (const p of profiles) await capturePass(browser, ctx, url, p);
     const afterBrowser = ctx.map.size;
     if (ctx.rawHtml) fs.writeFileSync(path.join(dir, 'page.html'), ctx.rawHtml);
+    ctx.fetchPage = await browser.newPage();
+    try { await ctx.fetchPage.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 }); } catch (e) {}
     await crawl(ctx, url);
-
+    await ctx.fetchPage.close().catch(() => {});
+    ctx.fetchPage = null;
     fs.writeFileSync(path.join(dir, 'url-map.json'), JSON.stringify(Object.fromEntries(ctx.map), null, 2));
     if (ctx.failed.size) fs.writeFileSync(path.join(dir, 'failed.json'), JSON.stringify(Object.fromEntries(ctx.failed), null, 2));
     summary[name] = { fromBrowser: afterBrowser, fromCrawl: ctx.map.size - afterBrowser, total: ctx.map.size, failed: ctx.failed.size };
