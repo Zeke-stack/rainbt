@@ -100,3 +100,5 @@ package-lock.json
 
 # Plinko HTML in wrong location (real source is plinko-capture/plinko.html)
 plinko/plinko.html
+
+recapture/
