@@ -4,7 +4,7 @@
     "api/index.js": {
       "maxDuration": 30,
       "memory": 1024,
-      "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,cc-page.html,chicken-cross.html}"
+      "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,new-build/**,cc-page.html,chicken-cross.html}"
     }
   },
   "redirects": [

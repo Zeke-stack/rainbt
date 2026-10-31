@@ -2744,9 +2744,66 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
+  // New-build payment methods (must precede captured-file serving)
+  if ((pathname === '/v2/payment-methods' || pathname === '/api/v2/payment-methods') && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({
+      payment_methods: [{
+        name: 'astropay', order: 1,
+        deposit_display_name: 'AstroPay', withdrawal_display_name: 'AstroPay',
+        providers: [{
+          name: 'astropay', deposit: 'enabled', withdrawal: 'enabled',
+          currencies: ['USD', 'BRL', 'CAD', 'EUR', 'ARS', 'CLP', 'COP', 'MXN', 'UYU'],
+          countries: ['AR', 'CM', 'CL', 'CO', 'CI', 'EC', 'GH', 'KE', 'MX', 'NG', 'TZ', 'UY']
+        }]
+      }],
+      recommended: { deposit: ['astropay'], withdrawal: ['astropay'] }
+    }));
+    return;
+  }
+
   // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ API Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   // Plinko cheat: set/clear target bucket
+  // ── NEW BUILD (proof of concept): assets captured by recapture.js ──
+  const NEW_BUILD_ROOT = path.join(__dirname, '..', 'new-build', 'root');
+  const NEW_PAGES = {
+    '/casino': 'home', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken-cross',
+    '/casino/originals/mines': 'mines', '/casino/originals/mines-game': 'mines', '/casino/originals/blackjack': 'blackjack',
+    '/new/casino': 'home', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken-cross', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
+  };
+  const _rawPath = decodeURIComponent(url.pathname);
+  const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
+  if (_npKey === '/casino/originals/mines') { res.writeHead(302, { Location: '/casino/originals/mines-game' }); res.end(); return; }
+  if (NEW_PAGES[_npKey] && req.method === 'GET' && url.searchParams.get('old') !== '1') {
+    try {
+      let nh = fs.readFileSync(path.join(__dirname, '..', 'new-build', 'pages', NEW_PAGES[_npKey] + '.html'), 'utf8');
+      const selfOrigin = (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host;
+      nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
+      nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
+      nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
+      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\/\/assets\.rbgcdn\.com\/[^\/]+\/raw\/originals\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)}})()</script></head>');
+      nh = nh.replace(/<meta name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}</style>');
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(nh);
+    } catch (e) { res.writeHead(500); res.end('Error: ' + e.stack); }
+    return;
+  }
+  if (pathname.startsWith('/_next/static/') || pathname === '/svg-bundle.f65e4798.js' || pathname.startsWith('/api/translations/') || pathname.startsWith('/Images/') || pathname.startsWith('/audios/')) {
+    let rel = pathname.replace(/^\/+/, '');
+    let np = path.join(NEW_BUILD_ROOT, rel);
+    if (!fs.existsSync(np) && pathname.startsWith('/api/translations/')) {
+      const d = path.dirname(np);
+      if (fs.existsSync(d)) { const f = fs.readdirSync(d).find(n => n.startsWith(path.basename(np))); if (f) np = path.join(d, f); }
+    }
+    if (np.startsWith(NEW_BUILD_ROOT) && fs.existsSync(np) && fs.statSync(np).isFile() && !resolveFile(path.basename(pathname))) {
+      res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np), 'Cache-Control': 'no-cache' });
+      if (np.endsWith('.js') && !pathname.startsWith('/api/')) res.end(fs.readFileSync(np, 'utf8').replace(/https:\/\/(services|api|originals)\.rainbet\.com/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host));
+      else res.end(fs.readFileSync(np));
+      return;
+    }
+  }
+
   if (pathname === '/api/plinko/set-target' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
@@ -2811,7 +2868,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
 
   // Plinko freeplays
-  if (pathname === '/api/v1/original-games/plinko/freeplays') {
+  if (pathname === '/api/v1/original-games/freeplays' || pathname === '/api/v1/original-games/plinko/freeplays') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ game: null, freeplays: [] }));
     return;
@@ -3119,6 +3176,39 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MINES API ENDPOINTS
   // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+  if (pathname === '/v1/public/cache-versions') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end('{"versions":{"games-list":2}}');
+    return;
+  }
+
+  if (pathname === '/v1/feature-flags') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end('["mines-enabled","plinko-enabled","chicken-cross-enabled","blackjack-enabled"]');
+    return;
+  }
+
+  // New-build (app router) Mines API → adapt onto the existing mines engine
+  const _minesNew = pathname.match(/^\/(?:api\/)?v1\/original-games\/mines\/(active-session|play|autoplay|[\w-]+\/action|[\w-]+\/cashout)$/);
+  if (_minesNew) {
+    const k = _minesNew[1];
+    if (k === 'active-session') pathname = '/v1/games/mines/active-session';
+    else if (k === 'play') pathname = '/v1/games/mines/new-game';
+    else if (k === 'autoplay') pathname = '/v1/games/mines/new-game-auto';
+    else if (k.endsWith('/action')) pathname = '/v1/games/mines/reveal';
+    else { pathname = '/v1/games/mines/cashout'; req.method = 'GET'; }
+    const _origEnd = res.end.bind(res);
+    res.end = function (chunk, ...rest) {
+      if (typeof chunk === 'string' && chunk.charAt(0) === '{') {
+        try {
+          const o = JSON.parse(chunk);
+          if (!o.error && !o.betId && minesActiveSession && !minesActiveSession.gameOver) { o.betId = minesActiveSession.id; chunk = JSON.stringify(o); }
+        } catch (e) {}
+      }
+      return _origEnd(chunk, ...rest);
+    };
+  }
 
   if (pathname.indexOf('/v1/games/mines/') === 0 || pathname === '/api/v1/original-games/mines-game/active-session') {
     minesRestoreFromCookie(req);
@@ -3950,6 +4040,11 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
   if (pathname === '/v1/public/active-races' || pathname === '/api/v1/public/active-races') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
+    if ((req.headers.referer || '').indexOf('old=1') < 0) {
+      const mk = (t, d) => ({ ending_at: new Date(Date.now() + d * 3600e3).toISOString(), total_rewards: t, user_position: null, user_position_label: null, user_reward: null, balance_type: '0', calculation_type: 'points' });
+      res.end(JSON.stringify({ daily: mk(25020, 12), weekly: mk(100046, 72), monthly: mk(1000124, 300) }));
+      return;
+    }
     res.end(JSON.stringify([]));
     return;
   }
