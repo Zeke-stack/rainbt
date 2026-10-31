@@ -20,6 +20,7 @@ const CHROME = [
 
 const TARGETS = {
   home: '/',
+  casino: '/casino',
   plinko: '/casino/originals/plinko',
   'chicken-cross': '/casino/originals/chicken-cross',
   mines: '/casino/originals/mines-game',

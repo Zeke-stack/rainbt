@@ -2744,6 +2744,32 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
+  // Captured real games/providers lists. Games are filtered from a merged pool by grouping/excludedGrouping.
+  if (req.method === 'GET' && (pathname === '/v1/public/games/list' || pathname === '/v1/public/providers/list')) {
+    const isGames = pathname.includes('games');
+    const dir = path.join(__dirname, '..', 'new-build', 'svc', 'v1', 'public', isGames ? 'games' : 'providers');
+    try {
+      const files = fs.readdirSync(dir).sort();
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      if (!isGames) { res.end(fs.readFileSync(path.join(dir, files[0]), 'utf8')); return; }
+      const pool = new Map();
+      for (const n of files) {
+        for (const g of JSON.parse(fs.readFileSync(path.join(dir, n), 'utf8')).games || []) {
+          if (!pool.has(g.id)) pool.set(g.id, Object.assign({}, g, { region_blocked: false }));
+        }
+      }
+      const sp = url.searchParams;
+      const inc = (sp.get('grouping') || '').split(',').filter(Boolean);
+      const exc = (sp.get('excludedGrouping') || '').split(',').filter(Boolean);
+      let list = [...pool.values()].filter(g => (!inc.length || inc.includes(g.type)) && !exc.includes(g.type));
+      const q = (sp.get('search') || sp.get('q') || '').toLowerCase();
+      if (q) list = list.filter(g => (g.name + ' ' + g.producer).toLowerCase().includes(q));
+      const lim = parseInt(sp.get('limit')) || 64;
+      res.end(JSON.stringify({ games: list.slice(0, lim), next_cursor: null }));
+      return;
+    } catch (e) { /* fall through */ }
+  }
+
   // New-build payment methods (must precede captured-file serving)
   if ((pathname === '/v2/payment-methods' || pathname === '/api/v2/payment-methods') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -2768,9 +2794,9 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // ── NEW BUILD (proof of concept): assets captured by recapture.js ──
   const NEW_BUILD_ROOT = path.join(__dirname, '..', 'new-build', 'root');
   const NEW_PAGES = {
-    '/casino': 'home', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
+    '/casino': 'lobby', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
     '/casino/originals/mines': 'mines', '/casino/originals/mines-game': 'mines', '/casino/originals/blackjack': 'blackjack',
-    '/new/casino': 'home', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
+    '/new/casino': 'lobby', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
   };
   const _rawPath = decodeURIComponent(url.pathname);
   const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
@@ -2782,7 +2808,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
-      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\/\/assets\.rbgcdn\.com\/[^\/]+\/raw\/originals\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)}})()</script></head>');
+      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\/\/assets\.rbgcdn\.com\/[^\/]+\/raw\/originals\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\/trace|apple\.com\/library\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)}})()</script></head>');
       nh = nh.replace(/<meta name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}</style>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(nh);
