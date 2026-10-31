@@ -2744,9 +2744,6 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  // RSC soft-navigation fetches can't be served; fail fast so Next falls back to a hard load
-  if (req.method === 'GET' && (req.headers['rsc'] || url.searchParams.has('_rsc'))) { res.writeHead(404, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' }); res.end('x'); return; }
-
   // Captured real games/providers lists. Games are filtered from a merged pool by grouping/excludedGrouping.
   if (req.method === 'GET' && (pathname === '/v1/public/games/list' || pathname === '/v1/public/providers/list')) {
     const isGames = pathname.includes('games');
@@ -2804,6 +2801,18 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   const _rawPath = decodeURIComponent(url.pathname);
   const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
   if (_npKey === '/casino/originals/mines') { res.writeHead(302, { Location: '/casino/originals/mines-game' }); res.end(); return; }
+  const _dm = _rawPath.match(/^\/_next\/data\/[^\/]+\/(?:[a-z]{2}\/)?(.+)\.json$/);
+  if (_dm && req.method === 'GET') {
+    const _dk = '/' + _dm[1].replace(/\/index$/, '');
+    if (NEW_PAGES[_dk]) {
+      try {
+        const dh = fs.readFileSync(path.join(__dirname, '..', 'new-build', 'pages', NEW_PAGES[_dk] + '.html'), 'utf8');
+        const nd = JSON.parse(dh.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/)[1]);
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify({ pageProps: nd.props.pageProps, __N_SSP: true })); return;
+      } catch (e) { /* fall through */ }
+    }
+  }
   if (NEW_PAGES[_npKey] && req.method === 'GET' && url.searchParams.get('old') !== '1') {
     try {
       let nh = fs.readFileSync(path.join(__dirname, '..', 'new-build', 'pages', NEW_PAGES[_npKey] + '.html'), 'utf8');
@@ -2811,7 +2820,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
-      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\/\/assets\.rbgcdn\.com\/[^\/]+\/raw\/originals\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\/trace|apple\.com\/library\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\.json(\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();history.pushState(null,"",h);return}if(/^\/casino\/originals\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true)})()</script></head>');
+      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true)})()</script></head>');
       nh = nh.replace(/<meta name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}</style>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(nh);
@@ -2825,8 +2834,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       const d = path.dirname(np);
       if (fs.existsSync(d)) { const f = fs.readdirSync(d).find(n => n.startsWith(path.basename(np))); if (f) np = path.join(d, f); }
     }
-    if (np.startsWith(NEW_BUILD_ROOT) && fs.existsSync(np) && fs.statSync(np).isFile() && !resolveFile(path.basename(pathname))) {
-      res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np),       'Cache-Control': pathname.startsWith('/_next/static/') ? 'public, max-age=31536000, s-maxage=31536000, immutable' : 'public, max-age=86400, s-maxage=86400' });
+    if (np.startsWith(NEW_BUILD_ROOT) && fs.existsSync(np) && fs.statSync(np).isFile() && (/Manifest\.js$/.test(pathname) || !resolveFile(path.basename(pathname)))) {
+      res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np),       'Cache-Control': /Manifest\.js$/.test(pathname) ? 'no-cache' : pathname.startsWith('/_next/static/') ? 'public, max-age=31536000, s-maxage=31536000, immutable' : 'public, max-age=86400, s-maxage=86400' });
       if (np.endsWith('.js') && !pathname.startsWith('/api/')) res.end(fs.readFileSync(np, 'utf8').replace(/https:\/\/(services|api|originals)\.rainbet\.com/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host));
       else res.end(fs.readFileSync(np));
       return;
