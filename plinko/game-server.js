@@ -2638,9 +2638,55 @@ function parseBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
     req.on('data', c => data += c);
-    req.on('end', () => { try { resolve(JSON.parse(data || '{}')); } catch(e) { reject(e); } });
+    req.on('end', () => { try { resolve(JSON.parse(data || '{}')); } catch(e) { resolve({}); } });
   });
 }
+
+// ============================================================
+// BITCOIN DEPOSIT SIMULATION (paired with the /crypto wallet app)
+// ============================================================
+const CRYPTO_SECRET = process.env.CRYPTO_SECRET || 'rb-local-crypto-secret-v1';
+const CRYPTO_APP_DIR = path.join(__dirname, '..', 'cryptoapp');
+const CRYPTO_CONFS_REQUIRED = 3;
+const CRYPTO_CONF_MS = 5000;
+const B32 = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+const _cryptoTx = [];
+const _spotCache = { t: 0, data: null };
+const SPOT_FALLBACK = { BTC: 67500, ETH: 3450, SOL: 165, LTC: 85, DOGE: 0.16, USDT: 1 };
+
+function _b32mac(label, input, len) {
+  const d = crypto.createHmac('sha256', CRYPTO_SECRET).update(label + input).digest();
+  let s = '';
+  for (let i = 0; i < len; i++) s += B32[d[i] % 32];
+  return s;
+}
+function btcDepositAddress(userId) {
+  const body = _b32mac('n:', userId, 14);
+  return 'bc1q' + body + _b32mac('s:', body, 24);
+}
+function isRainbetBtcAddress(addr) {
+  if (typeof addr !== 'string' || addr.length !== 42 || addr.slice(0, 4) !== 'bc1q') return false;
+  const body = addr.slice(4, 18);
+  return addr.slice(18) === _b32mac('s:', body, 24) && body === _b32mac('n:', 'local-player-001', 14);
+}
+function cryptoConfs(t) {
+  return Math.min(6, Math.floor((Date.now() - t.ts) / CRYPTO_CONF_MS));
+}
+async function getSpotPrices() {
+  if (_spotCache.data && Date.now() - _spotCache.t < 60000) return _spotCache.data;
+  const out = Object.assign({}, SPOT_FALLBACK);
+  await Promise.all(['BTC', 'ETH', 'SOL', 'LTC', 'DOGE'].map(async sym => {
+    try {
+      const r = await fetch('https://api.coinbase.com/v2/prices/' + sym + '-USD/spot', { signal: AbortSignal.timeout(2500) });
+      const j = await r.json();
+      const p = parseFloat(j && j.data && j.data.amount);
+      if (p > 0) out[sym] = p;
+    } catch (e) { /* keep fallback */ }
+  }));
+  _spotCache.t = Date.now(); _spotCache.data = out;
+  return out;
+}
+const CRYPTO_MIME = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json', '.json': 'application/json', '.ico': 'image/x-icon' };
 
 // 1px transparent PNG (fallback for missing images)
 const PIXEL = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=', 'base64');
@@ -2663,6 +2709,21 @@ async function handleRequest(req, res) {
     const _cookieBal = parseFloat(_rbBalMatch[1]);
     if (!isNaN(_cookieBal) && _cookieBal >= 0) playerBalance = _cookieBal;
   }
+  // Credit confirmed on-chain (simulated) BTC deposits once per tx; credited ids live in a cookie
+  let _cdep = ((_rbCookieHdr.match(/rb_cdep=([A-Za-z0-9_,-]*)/) || [])[1] || '').split(',').filter(Boolean);
+  if (_cryptoTx.length && !pathname.startsWith('/crypto') && !pathname.startsWith('/api/crypto')) {
+    for (const t of _cryptoTx) {
+      if (cryptoConfs(t) >= CRYPTO_CONFS_REQUIRED && !_cdep.includes(t.id) && Date.now() - t.ts < 86400000) {
+        playerBalance = parseFloat((playerBalance + t.usd).toFixed(2));
+        totalDeposited = parseFloat((totalDeposited + t.usd).toFixed(2));
+        transactionHistory.unshift({ id: crypto.randomUUID(), type: 'crypto_deposit', amount: t.usd, currency: 'BTC', status: 'completed', timestamp: new Date().toISOString() });
+        _cdep.push(t.id);
+        invalidatePageCaches();
+        log('BTC DEPOSIT CREDITED: ' + t.btc + ' BTC = $' + t.usd);
+      }
+    }
+    _cdep = _cdep.slice(-20);
+  }
   // NOTE: BJ session is restored lazily inside the /action handler only (not here),
   // so stale rb_session cookies never block new /play requests.
   // Wrap res.writeHead to set cookies via setHeader (reliable across Node versions)
@@ -2671,6 +2732,7 @@ async function handleRequest(req, res) {
     const _h = Object.assign({}, headers || {});
     const _cookies = [
       'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
+      'rb_cdep=' + _cdep.join(',') + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
     ];
     if (bjActiveSession && bjActiveSession.status !== 'finished') {
       try {
@@ -2743,6 +2805,46 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+
+  // ── Crypto wallet app (static, ./cryptoapp) ──
+  if (pathname === '/crypto') { res.writeHead(302, { Location: '/crypto/' }); res.end(); return; }
+  if (pathname.startsWith('/crypto/') && (req.method === 'GET' || req.method === 'HEAD')) {
+    let rel = pathname.slice('/crypto/'.length) || 'index.html';
+    const fp = path.join(CRYPTO_APP_DIR, rel);
+    if (fp.startsWith(CRYPTO_APP_DIR) && fs.existsSync(fp) && fs.statSync(fp).isFile()) {
+      res.writeHead(200, { 'Content-Type': CRYPTO_MIME[path.extname(fp)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+      res.end(fs.readFileSync(fp));
+    } else { res.writeHead(404); res.end('Not found'); }
+    return;
+  }
+  if (pathname === '/api/crypto/prices' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify(await getSpotPrices()));
+    return;
+  }
+  if (pathname === '/api/crypto/send' && req.method === 'POST') {
+    const body = await parseBody(req);
+    const btc = parseFloat(body.amount);
+    if (!(btc > 0) || typeof body.address !== 'string') { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'invalid_request' })); return; }
+    const txid = crypto.randomBytes(32).toString('hex');
+    if (isRainbetBtcAddress(body.address)) {
+      const price = (await getSpotPrices()).BTC;
+      _cryptoTx.push({ id: txid.slice(0, 12), txid, address: body.address, btc, usd: parseFloat((btc * price).toFixed(2)), ts: Date.now() });
+      if (_cryptoTx.length > 200) _cryptoTx.shift();
+      log('BTC DEPOSIT DETECTED: ' + btc + ' BTC');
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ txid, status: 'broadcast' }));
+    return;
+  }
+  if ((pathname === '/v1/crypto/deposit-address' || pathname === '/api/v1/crypto/deposit-address') && req.method === 'POST') {
+    const body = await parseBody(req);
+    const code = String(body.crypto_code || body.currency || 'BTC').toUpperCase();
+    const addr = code === 'BTC' ? btcDepositAddress('local-player-001') : '0x' + crypto.createHash('sha256').update(CRYPTO_SECRET + code).digest('hex').slice(0, 40);
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ deposit_address: addr, address: addr, extra_parameter: '', minimum: code === 'BTC' ? 0.0001 : 1, network: body.network || code, confirmations_required: CRYPTO_CONFS_REQUIRED }));
+    return;
+  }
 
   // Captured real games/providers lists. Games are filtered from a merged pool by grouping/excludedGrouping.
   if (req.method === 'GET' && (pathname === '/v1/public/games/list' || pathname === '/v1/public/providers/list')) {
