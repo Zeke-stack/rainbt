@@ -1,0 +1,3 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,20777,s=>{s.v(t=>Promise.all(["static/chunks/0b4jff9e2mv0s.js","static/chunks/0wuhif8p2u4bk.js"].map(t=>s.l(t))).then(()=>t(640640)))},173745,s=>{s.v(t=>Promise.all(["static/chunks/0h8okpqqhw1i_.js","static/chunks/0wuhif8p2u4bk.js"].map(t=>s.l(t))).then(()=>t(9496)))}]);
+
+//# sourceMappingURL=2o75p8sdyycvy.js.map

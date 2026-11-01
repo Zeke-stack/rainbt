@@ -25,6 +25,20 @@ const TARGETS = {
   'chicken-cross': '/casino/originals/chicken-cross',
   mines: '/casino/originals/mines-game',
   blackjack: '/casino/originals/blackjack',
+  baccarat: '/casino/originals/baccarat',
+  'case-battles': '/casino/originals/case-battles',
+  'case-opening': '/casino/originals/case-opening',
+  coinflip: '/casino/originals/coinflip',
+  dice: '/casino/originals/dice',
+  hilo: '/casino/originals/hilo',
+  keno: '/casino/originals/keno',
+  limbo: '/casino/originals/limbo',
+  moles: '/casino/originals/moles',
+  'rock-paper-scissors': '/casino/originals/rock-paper-scissors',
+  roulette: '/casino/originals/roulette',
+  tower: '/casino/originals/tower',
+  war: '/casino/originals/war',
+  wheel: '/casino/originals/wheel',
 };
 
 const args = process.argv.slice(2);

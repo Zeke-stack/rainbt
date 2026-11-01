@@ -2642,6 +2642,18 @@ function parseBody(req) {
   });
 }
 
+const _extraOriginals = require('./originals-extra')({
+  getBal: () => playerBalance,
+  setBal: (v) => { playerBalance = v; },
+  addStats: (stake, payout) => {
+    totalBets++;
+    totalWagered = Math.round((totalWagered + stake) * 100) / 100;
+    totalProfit = Math.round((totalProfit + payout - stake) * 100) / 100;
+  },
+  log,
+  parseBody,
+});
+
 // ============================================================
 // BITCOIN DEPOSIT SIMULATION (paired with the /crypto wallet app)
 // ============================================================
@@ -2900,6 +2912,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     '/casino/originals/mines': 'mines', '/casino/originals/mines-game': 'mines', '/casino/originals/blackjack': 'blackjack',
     '/new/casino': 'lobby', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
   };
+  const EXTRA_ORIGINALS = ['dice', 'limbo', 'keno', 'hilo', 'tower', 'coinflip', 'wheel', 'roulette', 'moles', 'war', 'baccarat', 'rock-paper-scissors'];
+  EXTRA_ORIGINALS.forEach(s => { NEW_PAGES['/casino/originals/' + s] = s; NEW_PAGES['/new/' + s] = s; });
   const _rawPath = decodeURIComponent(url.pathname);
   const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
   if (_npKey === '/casino/originals/mines') { res.writeHead(302, { Location: '/casino/originals/mines-game' }); res.end(); return; }
@@ -2924,6 +2938,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
+      nh = nh.replace(/zBv6Ec0QhqPv65H7M9exc/g, 'atCG64oKVyJonJJvWGau0');
       nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}@media(max-width:550px){div.fixed[class*=\"z-[5002]\"] .max-1\\.5xs\\:h-dvh{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box}div.fixed[class*=\"z-[5002]\"] .h-\\[calc\\(100dvh-74px\\)\\]{height:calc(100dvh - 74px - env(safe-area-inset-top))!important}div.fixed[class*=\"z-[5002]\"] input,div.fixed[class*=\"z-[5002]\"] textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}}</style>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(nh);
@@ -2967,6 +2982,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.end(JSON.stringify({ target: _plinkoTargetBucket }));
     return;
   }
+
+  if (pathname.startsWith('/api/v1/original-games/') && await _extraOriginals(req, res, pathname)) return;
 
   // Plinko drop-ball
   if ((pathname === '/api/plinko/drop-ball' || pathname === '/api/v1/original-games/plinko/drop-ball') && req.method === 'POST') {
@@ -3326,7 +3343,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   if (pathname === '/v1/feature-flags') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end('["mines-enabled","plinko-enabled","chicken-cross-enabled","blackjack-enabled"]');
+    res.end('["mines-enabled","plinko-enabled","chicken-cross-enabled","blackjack-enabled","dice-enabled","limbo-enabled","keno-enabled","hilo-enabled","tower-enabled","coinflip-enabled","wheel-enabled","roulette-enabled","moles-enabled","war-enabled","baccarat-enabled","rps-enabled"]');
     return;
   }
 
