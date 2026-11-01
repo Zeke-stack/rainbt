@@ -65,7 +65,9 @@ module.exports = function createOriginals(ctx) {
       const over = !!b.over;
       const roll = Math.round(Number(b.roll) * 100);
       if (!(roll >= 100 && roll <= 9800)) return { error: 'er_invalid_roll' };
-      const rollResult = Math.floor(rand() * 10000);
+      const rigged = ctx.rig.consume('dice');
+      let rollResult = Math.floor(rand() * 10000);
+      if (rigged) rollResult = over ? roll + Math.floor(rand() * (10000 - roll)) : Math.floor(rand() * roll);
       const win = over ? rollResult >= roll : rollResult < roll;
       const chance = (over ? 10000 - roll : roll) / 10000;
       const mult = Math.floor((0.99 / chance) * 10000) / 10000;
@@ -77,7 +79,8 @@ module.exports = function createOriginals(ctx) {
       const target = Number(b.target_multiplier);
       if (!(target >= 1.01 && target <= 1000000)) return { error: 'er_invalid_target' };
       const u = rand();
-      const m = Math.max(1, Math.floor((0.99 / (1 - u)) * 100) / 100);
+      let m = Math.max(1, Math.floor((0.99 / (1 - u)) * 100) / 100);
+      if (ctx.rig.consume('limbo')) m = Math.max(m, Math.ceil(target * 100) / 100);
       const win = m >= target;
       const payout = win ? r2(stake * target) : 0;
       const gr = settle('limbo', stake, payout, b.currency, win ? target : 0);
@@ -92,7 +95,11 @@ module.exports = function createOriginals(ctx) {
       if (sel.length < 1 || sel.length > 10) return { error: 'er_invalid_selection' };
       const pool = Array.from({ length: grid }, (_, i) => i + 1);
       const drawn = [];
-      for (let i = 0; i < 10; i++) drawn.push(pool.splice(crypto.randomInt(0, pool.length), 1)[0]);
+      if (ctx.rig.consume('keno')) {
+        for (const n of sel) { drawn.push(n); pool.splice(pool.indexOf(n), 1); }
+      }
+      while (drawn.length < 10) drawn.push(pool.splice(crypto.randomInt(0, pool.length), 1)[0]);
+      for (let i = drawn.length - 1; i > 0; i--) { const j = crypto.randomInt(0, i + 1); [drawn[i], drawn[j]] = [drawn[j], drawn[i]]; }
       const matches = sel.filter((n) => drawn.includes(n)).sort((a, c) => a - c);
       const mult = (KENO[sel.length][diff] || [])[matches.length] || 0;
       const payout = r2(stake * mult);
@@ -107,17 +114,25 @@ module.exports = function createOriginals(ctx) {
       const sideOf = (s) => (s === 'tails' ? 'tails' : 'heads');
       const flip = () => (rand() < 0.5 ? 'heads' : 'tails');
       let coins, target, results, win, side, sides;
+      let rigged = false;
       if (b.mode === 'classic') {
         sides = (b.sides || []).map(sideOf);
         coins = sides.length;
         if (coins < 1 || coins > 20) return { error: 'er_invalid_coins' };
         target = coins;
-        results = sides.map(flip);
+        rigged = ctx.rig.consume('coinflip');
+        results = rigged ? sides.slice() : sides.map(flip);
         win = results.every((r, i) => r === sides[i]);
       } else {
         coins = Number(b.coins); target = Number(b.target); side = sideOf(b.side);
         if (!(coins >= 1 && coins <= 20 && target >= 1 && target <= coins)) return { error: 'er_invalid_coins' };
+        rigged = ctx.rig.consume('coinflip');
         results = Array.from({ length: coins }, flip);
+        if (rigged) {
+          const other = side === 'heads' ? 'tails' : 'heads';
+          let have = results.filter((r) => r === side).length;
+          for (let i = 0; i < coins && have < target; i++) if (results[i] === other) { results[i] = side; have++; }
+        }
         win = results.filter((r) => r === side).length >= target;
       }
       const mult = coinflipMultiplier(coins, target);
@@ -132,15 +147,25 @@ module.exports = function createOriginals(ctx) {
       if (!bets.length || bets.some((x) => !(x.amount > 0) || !(x.type in ROUL_NET))) return { error: 'er_invalid_bet' };
       const stake = r2(bets.reduce((s, x) => s + x.amount, 0));
       if (stake > getBal()) return { error: 'er_insufficient_balance' };
-      const n = crypto.randomInt(0, 37);
-      const types = rouletteTypes(n);
-      let payout = 0;
-      for (const x of bets) {
-        const hit = ['straight-up', 'split', 'zero-split', 'street', 'zero-trio', 'six-line', 'corner', 'first-four'].includes(x.type)
-          ? x.numbers.includes(n) : types.includes(x.type);
-        if (hit) payout += x.amount * (ROUL_NET[x.type] + 1);
+      const payFor = (num) => {
+        const ts = rouletteTypes(num);
+        let p = 0;
+        for (const x of bets) {
+          const hit = ['straight-up', 'split', 'zero-split', 'street', 'zero-trio', 'six-line', 'corner', 'first-four'].includes(x.type)
+            ? x.numbers.includes(num) : ts.includes(x.type);
+          if (hit) p += x.amount * (ROUL_NET[x.type] + 1);
+        }
+        return p;
+      };
+      let n = crypto.randomInt(0, 37);
+      if (ctx.rig.consume('roulette')) {
+        const pays = Array.from({ length: 37 }, (_, i) => payFor(i));
+        const mx = Math.max(...pays);
+        const best = pays.map((p, i) => (p === mx ? i : -1)).filter((i) => i >= 0);
+        n = best[crypto.randomInt(0, best.length)];
       }
-      payout = r2(payout);
+      const types = rouletteTypes(n);
+      const payout = r2(payFor(n));
       const gr = settle('roulette', stake, payout, b.currency, stake > 0 ? payout / stake : 0);
       return {
         game_result: gr,

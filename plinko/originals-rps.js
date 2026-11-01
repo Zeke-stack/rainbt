@@ -18,6 +18,12 @@ let active = null;
 module.exports = function (ctx) {
   const { getBal, setBal, addStats, log } = ctx;
 
+  if (ctx.rig) {
+    ctx.rig.onArm('rps', () => {
+      if (active && !active.rigged) { active.rigged = true; return true; }
+      return false;
+    });
+  }
   const send = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(obj));
@@ -26,7 +32,7 @@ module.exports = function (ctx) {
 
   // Plays one hand against a random house hand; after a loss (auto mode) rounds are recorded but ignored.
   function playRound(s, bet) {
-    const house = HANDS[crypto.randomInt(0, 3)];
+    const house = s.rigged ? BEATS[bet] : HANDS[crypto.randomInt(0, 3)];
     const result = resultOf(bet, house);
     const mult = streakMult(s.streak);
     if (!s.lost) {
@@ -115,6 +121,7 @@ module.exports = function (ctx) {
         const s = newSession(b, rest === 'freeplay');
         if (s.error) return send(res, s), true;
         setBal(r2(getBal() - s.stake));
+        if (ctx.rig && ctx.rig.consume('rps')) s.rigged = true;
         active = s;
         send(res, build(s, false));
         return true;
@@ -126,6 +133,7 @@ module.exports = function (ctx) {
         const bets = (Array.isArray(b.bets) ? b.bets : []).map(normHand);
         if (!bets.length || bets.some((x) => !x)) return send(res, { error: 'er_invalid_bets' }), true;
         setBal(r2(getBal() - s.stake));
+        if (ctx.rig && ctx.rig.consume('rps')) s.rigged = true;
         for (const bet of bets.slice(0, MAX_ROUNDS)) {
           playRound(s, bet);
           if (!s.lost && s.cur >= MAX_MULT) break;

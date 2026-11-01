@@ -110,7 +110,17 @@ module.exports = function createBaccarat(ctx) {
     const stake = r2(bets.reduce((s, x) => s + x.amount, 0));
     if (stake > getBal()) return { error: 'er_insufficient_balance' };
 
-    const round = dealRound();
+    const rigged = ctx.rig.consume('baccarat');
+    let round = dealRound();
+    if (rigged) {
+      const evalPay = (rd) => bets.reduce((s, x) => s + x.amount * spotMult(x.type, rd), 0);
+      let best = evalPay(round);
+      for (let i = 0; i < 400; i++) {
+        const cand = dealRound();
+        const p = evalPay(cand);
+        if (p > best) { best = p; round = cand; }
+      }
+    }
     let payout = 0;
     const betResults = bets.map((x) => {
       const m = spotMult(x.type, round);

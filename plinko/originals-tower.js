@@ -33,6 +33,22 @@ module.exports = function createTower(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
 
+  if (ctx.rig) {
+    ctx.rig.onArm('tower', () => {
+      if (session && !session.rigged) { session.rigged = true; return true; }
+      return false;
+    });
+  }
+
+  // Makes tile idx safe while keeping the number of safe tiles in the row unchanged.
+  const forceSafe = (row, idx) => {
+    if (row[idx]) return row;
+    const others = row.map((v, i) => (v && i !== idx ? i : -1)).filter((i) => i >= 0);
+    if (others.length) row[others[crypto.randomInt(0, others.length)]] = false;
+    row[idx] = true;
+    return row;
+  };
+
   const reply = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(obj));
@@ -121,6 +137,7 @@ module.exports = function createTower(ctx) {
           id: crypto.randomUUID(), stake, currency: b.currency || 'USD',
           difficulty: b.difficulty || 'easy', results: [],
         };
+        if (ctx.rig && ctx.rig.consume('tower')) session.rigged = true;
         reply(res, result(session, false, [], 0, 0));
         return true;
       }
@@ -138,9 +155,11 @@ module.exports = function createTower(ctx) {
           difficulty: diff, results: [],
         };
         let lost = false;
+        const rigged = !!(ctx.rig && ctx.rig.consume('tower'));
         for (let i = 0; i < Math.min(picks.length, ROWS); i++) {
           const idx = Math.min(Math.max(0, Number(picks[i]) | 0), tiles - 1);
-          const ent = entry(diff, rollRow(diff), idx, i + 1);
+          const row = rigged ? forceSafe(rollRow(diff), idx) : rollRow(diff);
+          const ent = entry(diff, row, idx, i + 1);
           s.results.push(ent);
           if (!ent.player_round_win) { lost = true; break; }
         }
@@ -175,7 +194,8 @@ module.exports = function createTower(ctx) {
         return reply(res, { error: 'er_invalid_tile' }), true;
       }
       if (s.results.length >= ROWS) return reply(res, { error: 'er_game_over' }), true;
-      const ent = entry(s.difficulty, rollRow(s.difficulty), idx, s.results.length + 1);
+      const row = s.rigged ? forceSafe(rollRow(s.difficulty), idx) : rollRow(s.difficulty);
+      const ent = entry(s.difficulty, row, idx, s.results.length + 1);
       s.results.push(ent);
       if (!ent.player_round_win) {
         session = null;

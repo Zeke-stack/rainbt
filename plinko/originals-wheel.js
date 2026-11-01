@@ -17,6 +17,12 @@ let active = null;
 module.exports = function (ctx) {
   const { getBal, setBal, addStats, log } = ctx;
 
+  if (ctx.rig) {
+    ctx.rig.onArm('wheel', () => {
+      if (active && !active.rigged) { active.rigged = true; return true; }
+      return false;
+    });
+  }
   const send = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(obj));
@@ -26,12 +32,23 @@ module.exports = function (ctx) {
   const base = (risk) => RISKS[risk].map((x) => x[0]);
 
   // Plays one round against the current multipliers (leading 0 included) and returns the round record.
-  function spinRound(risk, mults) {
+  function spinRound(risk, mults, rigged) {
     let u = rand();
     let rank = 0;
-    for (; rank < RISKS[risk].length - 1; rank++) {
-      u -= RISKS[risk][rank][1];
-      if (u < 0) break;
+    if (rigged) {
+      const tbl = RISKS[risk];
+      const total = tbl.slice(1).reduce((a, x) => a + x[1], 0);
+      let t = rand() * total;
+      rank = tbl.length - 1;
+      for (let i = 1; i < tbl.length; i++) {
+        t -= tbl[i][1];
+        if (t < 0) { rank = i; break; }
+      }
+    } else {
+      for (; rank < RISKS[risk].length - 1; rank++) {
+        u -= RISKS[risk][rank][1];
+        if (u < 0) break;
+      }
     }
     const result = mults[rank];
     const next = rank === 0 ? mults : mults.map((m) => Math.min(MAX_MULT, r2(m * RISKS[risk][rank][0])));
@@ -74,7 +91,7 @@ module.exports = function (ctx) {
 
   // Runs one round; ends the game on a miss or after the final round.
   function advance(s) {
-    const { next, round } = spinRound(s.risk, s.mults);
+    const { next, round } = spinRound(s.risk, s.mults, s.rigged);
     s.rounds.push(round);
     s.cum = round.wheel_result;
     s.mults = next;
@@ -123,6 +140,7 @@ module.exports = function (ctx) {
         const s = newGame(b, free);
         if (s.error) return send(res, s), true;
         if (!free) setBal(r2(getBal() - s.stake));
+        if (ctx.rig && ctx.rig.consume('wheel')) s.rigged = true;
         const over = advance(s);
         if (!over) active = s;
         send(res, response(s, over));
@@ -134,6 +152,7 @@ module.exports = function (ctx) {
         if (s.error) return send(res, s), true;
         const maxRounds = Math.min(MAX_ROUNDS, Math.max(1, parseInt(b.max_rounds, 10) || 1));
         setBal(r2(getBal() - s.stake));
+        if (ctx.rig && ctx.rig.consume('wheel')) s.rigged = true;
         while (!advance(s) && s.rounds.length < maxRounds);
         send(res, response(s, true));
         return true;

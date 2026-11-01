@@ -70,7 +70,7 @@ module.exports = function createWar(ctx) {
     return view(s, status, true, payout);
   }
 
-  function deal(b, stake, sides) {
+  function deal(b, stake, sides, rigged) {
     const s = {
       id: crypto.randomUUID(),
       actionId: crypto.randomUUID(),
@@ -87,6 +87,11 @@ module.exports = function createWar(ctx) {
     };
     s.player.push(draw(s));
     s.dealer.push(draw(s));
+    while (rigged && cmp(s.player[0], s.dealer[0]) <= 0) {
+      s.shoe.push(s.player[0], s.dealer[0]);
+      s.player = [draw(s)];
+      s.dealer = [draw(s)];
+    }
     const tie = cmp(s.player[0], s.dealer[0]) === 0;
     const sameColour = tie && colour(s.player[0]) === colour(s.dealer[0]);
     for (const [type, amount] of sides) {
@@ -151,7 +156,7 @@ module.exports = function createWar(ctx) {
     const total = r2(stake + sides.reduce((a, x) => a + x[1], 0));
     if (total > getBal()) return { error: 'er_insufficient_balance' };
     setBal(r2(getBal() - total));
-    return deal(b, stake, sides);
+    return deal(b, stake, sides, ctx.rig.consume('war'));
   }
 
   return async function handle(req, res, pathname) {

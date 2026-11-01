@@ -177,6 +177,18 @@ function saveState() {
 // ---- Plinko cheat: server-side target bucket ----
 let _plinkoTargetBucket = null; // Set by /api/plinko/set-target, consumed by handleDropBall
 
+// Fair Play rig: stays on while drops keep arriving within the gap (autobet), ends when they stop
+const PLINKO_RIG_GAP_MS = 4000;
+let _plinkoRigAt = 0; // time of last rigged drop, or of arming
+let _plinkoRigOn = false;
+let _plinkoLastDropAt = 0;
+function plinkoRigActive() {
+  _plinkoLastDropAt = Date.now();
+  if (_plinkoRigOn && Date.now() - _plinkoRigAt > PLINKO_RIG_GAP_MS) _plinkoRigOn = false;
+  if (!_plinkoRigOn && _origCtx.rig.consume('plinko')) { _plinkoRigOn = true; _plinkoRigAt = Date.now(); }
+  return _plinkoRigOn;
+}
+
 // Provably fair seeds
 const serverSeed = crypto.randomBytes(32).toString('hex');
 const serverSeedHash = crypto.createHash('sha256').update(serverSeed).digest('hex');
@@ -258,6 +270,16 @@ function handleDropBall(body, isFreeplay) {
   }
   if (targetBucket !== null && targetBucket !== undefined) {
     log(`CHEAT: Using target bucket ${targetBucket}`);
+  }
+  if (plinkoRigActive()) {
+    const ms = MULTIPLIERS[risk][rows];
+    const ok = (b) => b !== null && b !== undefined && ms[b] >= 1;
+    if (!ok(targetBucket)) {
+      const good = [];
+      ms.forEach((m, i) => { if (m >= 1) good.push(i); });
+      if (good.length) targetBucket = good[Math.floor(Math.random() * good.length)];
+    }
+    _plinkoRigAt = Date.now();
   }
   const { pathResult, multiplier } = simulatePlinko(rows, risk, targetBucket !== null ? targetBucket : undefined);
   const payout = isFreeplay ? 0 : parseFloat((amount * multiplier).toFixed(2));
@@ -1195,7 +1217,8 @@ function minesStartGame(betAmount, mineCount, totalTiles, currency) {
     payout: 0,
     gameOver: false,
     cashedOut: false,
-    startTime: Date.now()
+    startTime: Date.now(),
+    rigged: _origCtx.rig.consume('mines')
   };
 
   minesActiveSession = session;
@@ -1222,11 +1245,24 @@ function minesStartGame(betAmount, mineCount, totalTiles, currency) {
   return session;
 }
 
+function minesRigSafe(session, index) {
+  // Rigged round: relocate the mine under a clicked tile to a hidden safe tile
+  if (!session.rigged || !session.minePositions.has(index)) return;
+  var spots = [];
+  for (var i = 0; i < session.tiles; i++) {
+    if (i !== index && !session.minePositions.has(i) && !session.revealed.has(i)) spots.push(i);
+  }
+  if (!spots.length) return;
+  session.minePositions.delete(index);
+  session.minePositions.add(spots[Math.floor(Math.random() * spots.length)]);
+}
+
 function minesRevealTile(session, index) {
   if (session.gameOver) return { success: false, error: 'Game is over' };
   if (index < 0 || index >= session.tiles) return { success: false, error: 'Invalid tile' };
   if (session.revealed.has(index)) return { success: false, error: 'Already revealed' };
 
+  minesRigSafe(session, index);
   var isMine = session.minePositions.has(index);
   session.revealed.add(index);
   session.revealedCellsCount++;
@@ -1296,7 +1332,7 @@ function minesEncodeState(session) {
     id: session.id, dp: session.displayBoard, mp: Array.from(session.minePositions),
     t: session.tiles, m: session.mines, b: session.betAmount, c: session.currency,
     r: Array.from(session.revealed), rc: session.revealedCellsCount, mu: session.multiplier,
-    st: session.startTime, bal: playerBalance
+    st: session.startTime, bal: playerBalance, rg: session.rigged ? 1 : 0
   });
   var iv = crypto.randomBytes(12);
   var cipher = crypto.createCipheriv('aes-256-gcm', MINES_STATE_KEY, iv);
@@ -1314,7 +1350,7 @@ function minesDecodeState(token) {
       session: {
         id: d.id, displayBoard: d.dp, minePositions: new Set(d.mp), tiles: d.t, mines: d.m,
         betAmount: d.b, currency: d.c, revealed: new Set(d.r), revealedCellsCount: d.rc,
-        multiplier: d.mu, payout: 0, gameOver: false, cashedOut: false, startTime: d.st
+        multiplier: d.mu, payout: 0, gameOver: false, cashedOut: false, startTime: d.st, rigged: !!d.rg
       },
       balance: d.bal
     };
@@ -1462,7 +1498,41 @@ function bjMakeGameState(session) {
   };
 }
 
+function bjRigPlan(upCard) {
+  // Ranks the dealer must receive (hole card first) so they draw until they bust
+  const order = RANKS.slice().sort((a, b) => (bjCardValue(b) + Math.random() * 6) - (bjCardValue(a) + Math.random() * 6));
+  const dfs = (cards, limit) => {
+    const t = bjHandTotal(cards);
+    if (t > 21) return [];
+    if (t >= 17 || cards.length >= limit) return null;
+    for (const r of order) {
+      const rest = dfs(cards.concat(r + 's'), limit);
+      if (rest) return [r].concat(rest);
+    }
+    return null;
+  };
+  for (let limit = 2; limit <= 7; limit++) {
+    const p = dfs([upCard], limit);
+    if (p) return p;
+  }
+  return null;
+}
+
+function bjRigCard(rank) { return rank + SUITS[Math.floor(Math.random() * 4)]; }
+
+function bjRigSession(session) {
+  const plan = bjRigPlan(session.dealerCards[0]);
+  if (!plan) return false;
+  session.rigged = true;
+  session.dealerCards[1] = bjRigCard(plan[0]);
+  return true;
+}
+
 function bjDealerPlay(session) {
+  if (session.rigged) {
+    const plan = bjRigPlan(session.dealerCards[0]);
+    if (plan) session.dealerCards = [session.dealerCards[0]].concat(plan.map(bjRigCard));
+  }
   // Reveal and draw until >= 17
   while (bjHandTotal(session.dealerCards) < 17) {
     session.dealerCards.push(session.deck.shift());
@@ -1536,7 +1606,12 @@ function bjStartGame(betAmount, currency) {
   const playerCard1 = deck.shift();
   const dealerCard1 = deck.shift();
   const playerCard2 = deck.shift();
-  const dealerCard2 = deck.shift();
+  let dealerCard2 = deck.shift();
+  const bjRiggedStart = _origCtx.rig.consume('blackjack');
+  if (bjRiggedStart) {
+    const p = bjRigPlan(dealerCard1);
+    if (p) dealerCard2 = bjRigCard(p[0]);
+  }
 
   const session = {
     gameHistoryId: crypto.randomUUID(),
@@ -1561,6 +1636,7 @@ function bjStartGame(betAmount, currency) {
     insuranceOffered: false,
     insuranceTaken: false,
     insuranceWon: false,
+    rigged: bjRiggedStart,
     payout: 0,
   };
 
@@ -2652,6 +2728,26 @@ const _origCtx = ({
   },
   log,
   parseBody,
+  rig: require('./rig'),
+});
+// Fair Play pressed mid-round: flag the active session (return true when it did)
+_origCtx.rig.onArm('mines', () => {
+  if (minesActiveSession && !minesActiveSession.gameOver) { minesActiveSession.rigged = true; return true; }
+  return false;
+});
+_origCtx.rig.onArm('chicken', () => {
+  if (ccActiveSession && !ccActiveSession.gameOver) { ccActiveSession.rigged = true; return true; }
+  return false;
+});
+_origCtx.rig.onArm('blackjack', () => {
+  if (bjActiveSession && bjActiveSession.status === 'playerTurn') return bjRigSession(bjActiveSession);
+  return false;
+});
+_origCtx.rig.onArm('plinko', () => {
+  if (_plinkoRigOn || Date.now() - _plinkoLastDropAt <= PLINKO_RIG_GAP_MS) {
+    _plinkoRigOn = true; _plinkoRigAt = Date.now(); return true;
+  }
+  return false;
 });
 const _origHandlers = [require('./originals-extra')(_origCtx)];
 for (const n of ['hilo', 'tower', 'moles', 'war', 'wheel', 'baccarat', 'rps']) {
@@ -2946,6 +3042,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
+      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>(function(){document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href*=\\"modal=fairplay\\"]");if(!a)return;e.preventDefault();e.stopImmediatePropagation();var g=(location.pathname.split("/").filter(Boolean).pop()||"");try{fetch("/api/fp-arm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({game:g}),keepalive:true})}catch(x){}},true)})()</script>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
       nh = nh.replace(/zBv6Ec0QhqPv65H7M9exc/g, 'atCG64oKVyJonJJvWGau0');
       nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}@media(max-width:550px){div.fixed[class*=\"z-[5002]\"] .max-1\\.5xs\\:h-dvh{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box}div.fixed[class*=\"z-[5002]\"] .h-\\[calc\\(100dvh-74px\\)\\]{height:calc(100dvh - 74px - env(safe-area-inset-top))!important}div.fixed[class*=\"z-[5002]\"] input,div.fixed[class*=\"z-[5002]\"] textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}}</style>');
@@ -2967,6 +3064,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       else res.end(fs.readFileSync(np));
       return;
     }
+  }
+
+  if (pathname === '/api/fp-arm' && req.method === 'POST') {
+    const b = await parseBody(req);
+    const ok = _origCtx.rig.arm(b.game);
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok }));
+    return;
   }
 
   if (pathname === '/api/plinko/set-target' && req.method === 'POST') {
@@ -3099,6 +3204,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         betAmount: betAmount, balanceType: body.balance_type || 'primary',
         currency: currency, difficulty: difficulty, round: 0,
         currentMultiplier: 0, payout: '0', gameOver: false, results: [],
+        rigged: _origCtx.rig.consume('chicken'),
       };
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(ccMakeGameResponse(ccActiveSession)));
@@ -3126,12 +3232,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       totalWagered = parseFloat((totalWagered + betAmount).toFixed(2));
       const diff = CC_DIFFICULTY[difficulty];
       const session = { id: crypto.randomUUID(), betAmount, currency, difficulty, round: 0, currentMultiplier: 0, payout: '0', gameOver: false, results: [] };
+      const apRigged = _origCtx.rig.consume('chicken');
       for (let r = 1; r <= maxRounds && r <= diff.maxRounds; r++) {
         const mult = ccCalcMultiplier(r, diff.factor);
         const winPct = ccCalcWinPercentage(r, diff.factor);
         const threshold = parseFloat(winPct);
         const roll = Math.random() * 100;
-        const didLose = roll >= threshold;
+        const didLose = apRigged ? false : roll >= threshold;
         const actionId = crypto.randomUUID();
         if (didLose) {
           session.round = r; session.currentMultiplier = 0; session.gameOver = true;
@@ -3181,7 +3288,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         const winPct = ccCalcWinPercentage(nextRound, diff.factor);
         const threshold = parseFloat(winPct);
         const roll = Math.random() * 100;
-        const didLose = roll >= threshold;
+        const didLose = ccActiveSession.rigged ? false : roll >= threshold;
         const actionId = crypto.randomUUID();
         if (didLose) {
           ccActiveSession.round = nextRound;
@@ -3492,6 +3599,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       var hitMine = false;
       for (var i = 0; i < selectedTiles.length; i++) {
         var idx = parseInt(selectedTiles[i], 10);
+        minesRigSafe(session, idx);
         if (session.minePositions.has(idx)) {
           hitMine = true;
           session.revealed.add(idx);

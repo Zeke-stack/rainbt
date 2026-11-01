@@ -70,6 +70,19 @@ module.exports = function createHilo(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
 
+  if (ctx.rig) {
+    ctx.rig.onArm('hilo', () => {
+      if (session && !session.rigged) { session.rigged = true; return true; }
+      return false;
+    });
+  }
+
+  const winningCard = (cur, action) => {
+    const wins = RANKS.filter((r) => isWin(cur, r + 'h', action));
+    if (!wins.length) return randomCard();
+    return wins[crypto.randomInt(0, wins.length)] + SUITS[crypto.randomInt(0, 4)];
+  };
+
   const reply = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(obj));
@@ -133,6 +146,7 @@ module.exports = function createHilo(ctx) {
           id: crypto.randomUUID(), stake, currency: b.currency || 'USD', mult: 1, wins: 0, skips: 0,
           results: [{ action: 'higher-same', card, game_action_id: newAction(), multiplier: 1 }],
         };
+        if (ctx.rig && ctx.rig.consume('hilo')) session.rigged = true;
         reply(res, view(session, false));
         return true;
       }
@@ -161,7 +175,7 @@ module.exports = function createHilo(ctx) {
         return true;
       }
       if (!outcomes(cur[0], b.action)) return reply(res, { error: 'er_invalid_action' }), true;
-      const next = randomCard();
+      const next = s.rigged ? winningCard(cur, b.action) : randomCard();
       if (isWin(cur, next, b.action)) {
         s.mult = stepMultiplier(cur[0], b.action, s.mult);
         s.wins++;

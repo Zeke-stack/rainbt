@@ -26,6 +26,12 @@ module.exports = function createMoles(ctx) {
 
   let session = null;
 
+  if (ctx.rig) {
+    ctx.rig.onArm('moles', () => {
+      if (session && !session.rigged) { session.rigged = true; return true; }
+      return false;
+    });
+  }
   const reply = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(obj));
@@ -59,9 +65,14 @@ module.exports = function createMoles(ctx) {
     };
   }
 
-  function playRound(s, hole) {
+  function playRound(s, hole, rigged) {
     const round = s.rounds.length + 1;
-    const moleIndexes = drawMoles(s.moleCount);
+    let moleIndexes = drawMoles(s.moleCount);
+    // In this game a round is won when the picked hole is among mole_indexes
+    if (rigged && !moleIndexes.includes(hole)) {
+      moleIndexes[crypto.randomInt(0, moleIndexes.length)] = hole;
+      moleIndexes.sort((a, b) => a - b);
+    }
     const win = moleIndexes.includes(hole);
     const entry = {
       game_action_id: crypto.randomUUID(),
@@ -111,7 +122,8 @@ module.exports = function createMoles(ctx) {
         if (stake > getBal()) return reply(res, { error: 'er_insufficient_balance' }), true;
         setBal(r2(getBal() - stake));
         session = { id: crypto.randomUUID(), bet: stake, currency: b.currency || 'USD', moleCount, rounds: [] };
-        return reply(res, view(session, false, 0, 0)), true;
+                if (ctx.rig && ctx.rig.consume('moles')) session.rigged = true;
+                return reply(res, view(session, false, 0, 0)), true;
       }
 
       if (!sub && seg === 'autoplay') {
@@ -126,7 +138,8 @@ module.exports = function createMoles(ctx) {
         if (stake > getBal()) return reply(res, { error: 'er_insufficient_balance' }), true;
         setBal(r2(getBal() - stake));
         const s = { id: crypto.randomUUID(), bet: stake, currency: b.currency || 'USD', moleCount, rounds: [] };
-        for (const p of picks) if (!playRound(s, p).player_round_win) break;
+        const rigged = !!(ctx.rig && ctx.rig.consume('moles'));
+        for (const p of picks) if (!playRound(s, p, rigged).player_round_win) break;
         const won = s.rounds.every((r) => r.player_round_win);
         const mult = won ? lastMult(s.rounds) : 0;
         const payout = won ? r2(stake * mult) : 0;
@@ -141,7 +154,7 @@ module.exports = function createMoles(ctx) {
         if (!s || s.id !== seg) return reply(res, { error: 'er_no_active_game' }), true;
         const hole = Number(b.selected_hole_index);
         if (!Number.isInteger(hole) || hole < 0 || hole >= HOLES) return reply(res, { error: 'er_invalid_hole' }), true;
-        const entry = playRound(s, hole);
+        const entry = playRound(s, hole, s.rigged);
         if (!entry.player_round_win) {
           finish(s, 0);
           return reply(res, view(s, true, 0, 0)), true;
