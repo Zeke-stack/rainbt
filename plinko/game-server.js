@@ -2922,9 +2922,9 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
-      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true)})()</script></head>');
+      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
-      nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}div.fixed.inset-0[class*=\"z-[5002]\"]:not([class*=\"backdrop\"]){padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);box-sizing:border-box}</style>');
+      nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}@media(max-width:550px){div.fixed[class*=\"z-[5002]\"] .max-1\\.5xs\\:h-dvh{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box}div.fixed[class*=\"z-[5002]\"] .h-\\[calc\\(100dvh-74px\\)\\]{height:calc(100dvh - 74px - env(safe-area-inset-top))!important}div.fixed[class*=\"z-[5002]\"] input,div.fixed[class*=\"z-[5002]\"] textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}}</style>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(nh);
     } catch (e) { res.writeHead(500); res.end('Error: ' + e.stack); }
@@ -3859,23 +3859,45 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // â”€â”€ Crypto withdraw â”€â”€
   if ((pathname === '/v1/crypto/withdraw' || pathname === '/api/v1/crypto/withdraw') && req.method === 'POST') {
     const body = await parseBody(req);
-    const amount = parseFloat(body.amount) || 0;
-    const currency = (body.currency || 'USD').toUpperCase();
-    const address = body.address || body.wallet_address || '0x0000';
+    const currency = String(body.currency || 'USD').toUpperCase();
+    const code = String(body.crypto_code || currency).toUpperCase();
+    const address = String(body.address || body.wallet_address || '').trim();
     const network = body.network || 'default';
+    let amount = parseFloat(body.amount) || 0;
+    const px = await getSpotPrices();
+    if (px[currency] && currency !== 'USDT') amount = amount * px[currency];
+    amount = parseFloat(amount.toFixed(2));
+    if (address.length < 10) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'invalid_address' }));
+      return;
+    }
     if (amount <= 0 || amount > playerBalance) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: amount > playerBalance ? 'Insufficient balance' : 'Invalid amount' }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: amount > playerBalance ? 'insufficient_balance' : 'invalid_amount' }));
       return;
     }
     playerBalance = parseFloat((playerBalance - amount).toFixed(2));
     totalWithdrawn = parseFloat((totalWithdrawn + amount).toFixed(2));
     const txId = crypto.randomUUID();
-    transactionHistory.unshift({ id: txId, type: 'crypto_withdraw', amount, currency, network, address, status: 'completed', timestamp: new Date().toISOString() });
-    log('CRYPTO WITHDRAW: -$' + amount + ' to ' + address + ' (' + currency + '/' + network + ') balance: $' + playerBalance);
+    const txid = crypto.createHash('sha256').update(txId).digest('hex');
+    transactionHistory.unshift({ id: txId, type: 'crypto_withdraw', amount, currency: code, network, address, status: 'completed', timestamp: new Date().toISOString() });
+    log('CRYPTO WITHDRAW: -$' + amount + ' to ' + address + ' (' + code + '/' + network + ') balance: $' + playerBalance);
     invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ success: true, transaction_id: txId, amount, currency, network, address, balance: playerBalance, status: 'completed' }));
+    res.end(JSON.stringify({ success: true, txid, transaction_id: txId, amount, currency, network, address, balance: playerBalance, status: 'completed' }));
+    return;
+  }
+
+  if ((pathname === '/v1/crypto/fee' || pathname === '/api/v1/crypto/fee') && req.method === 'POST') {
+    const body = await parseBody(req);
+    const code = String(body.crypto_code || 'BTC').toUpperCase();
+    const px = (await getSpotPrices())[code] || 1;
+    const usdFee = { low: 0.35, standard: 0.6, medium: 0.6, high: 1.1 };
+    const fees = {};
+    for (const k of Object.keys(usdFee)) fees[k] = { fee: parseFloat((usdFee[k] / px).toFixed(8)), currency_fee: usdFee[k] };
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ fees, base_crypto: code }));
     return;
   }
 
