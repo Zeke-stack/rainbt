@@ -2642,7 +2642,7 @@ function parseBody(req) {
   });
 }
 
-const _extraOriginals = require('./originals-extra')({
+const _origCtx = ({
   getBal: () => playerBalance,
   setBal: (v) => { playerBalance = v; },
   addStats: (stake, payout) => {
@@ -2653,6 +2653,15 @@ const _extraOriginals = require('./originals-extra')({
   log,
   parseBody,
 });
+const _origHandlers = [require('./originals-extra')(_origCtx)];
+for (const n of ['hilo', 'tower', 'moles', 'war', 'wheel', 'baccarat', 'rps']) {
+  try { _origHandlers.push(require('./originals-' + n)(_origCtx)); }
+  catch (e) { if (e.code !== 'MODULE_NOT_FOUND') log('originals-' + n + ' failed: ' + e.message); }
+}
+async function _extraOriginals(req, res, pathname) {
+  for (const h of _origHandlers) { if (await h(req, res, pathname)) return true; }
+  return false;
+}
 
 // ============================================================
 // BITCOIN DEPOSIT SIMULATION (paired with the /crypto wallet app)
@@ -2983,7 +2992,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
-  if (pathname.startsWith('/api/v1/original-games/') && await _extraOriginals(req, res, pathname)) return;
+  if (/^\/api\/v[12]\/original-games\//.test(pathname) && await _extraOriginals(req, res, pathname)) return;
 
   // Plinko drop-ball
   if ((pathname === '/api/plinko/drop-ball' || pathname === '/api/v1/original-games/plinko/drop-ball') && req.method === 'POST') {
