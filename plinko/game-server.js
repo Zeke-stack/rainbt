@@ -2807,7 +2807,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
   // ── Crypto wallet app (static, ./cryptoapp) ──
-  if (pathname === '/crypto') { res.writeHead(302, { Location: '/crypto/' }); res.end(); return; }
+  if (pathname === '/crypto') { pathname = '/crypto/'; }
   if (pathname.startsWith('/crypto/') && (req.method === 'GET' || req.method === 'HEAD')) {
     let rel = pathname.slice('/crypto/'.length) || 'index.html';
     const fp = path.join(CRYPTO_APP_DIR, rel);
