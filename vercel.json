@@ -11,6 +11,8 @@
     { "source": "/", "destination": "/casino", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/crypto", "destination": "/api?__vercel_path=crypto/index.html" },
+    { "source": "/crypto/", "destination": "/api?__vercel_path=crypto/index.html" },
     { "source": "/:path*", "destination": "/api?__vercel_path=:path*" }
   ]
 }
