@@ -28,9 +28,10 @@ module.exports = function createMoles(ctx) {
 
   if (ctx.rig) {
     ctx.rig.onArm('moles', () => {
-      if (session && !session.rigged) { session.rigged = true; return true; }
+      if (session) { session.rigged = true; return true; }
       return false;
     });
+    ctx.rig.onActive('moles', () => !!(session && session.rigged));
   }
   const reply = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });

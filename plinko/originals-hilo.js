@@ -72,9 +72,10 @@ module.exports = function createHilo(ctx) {
 
   if (ctx.rig) {
     ctx.rig.onArm('hilo', () => {
-      if (session && !session.rigged) { session.rigged = true; return true; }
+      if (session) { session.rigged = true; return true; }
       return false;
     });
+    ctx.rig.onActive('hilo', () => !!(session && session.rigged));
   }
 
   const winningCard = (cur, action) => {

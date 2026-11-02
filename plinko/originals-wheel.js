@@ -19,9 +19,10 @@ module.exports = function (ctx) {
 
   if (ctx.rig) {
     ctx.rig.onArm('wheel', () => {
-      if (active && !active.rigged) { active.rigged = true; return true; }
+      if (active) { active.rigged = true; return true; }
       return false;
     });
+    ctx.rig.onActive('wheel', () => !!(active && active.rigged));
   }
   const send = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });

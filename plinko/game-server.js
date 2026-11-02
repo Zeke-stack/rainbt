@@ -348,6 +348,15 @@ function getBalanceKey() {
   return `${playerBalance}|${promotionalBalance}|${vaultBalance}`;
 }
 
+// rb_bal cookie restore must never apply a STALE cookie (sent by a request that was in flight
+// before a bet/cashout) over a newer in-memory balance. Every balance change gets a version.
+let _balVer = 0;
+let _balSeen = null;
+function _balSync() {
+  if (_balSeen === null) { _balSeen = playerBalance; return; }
+  if (playerBalance !== _balSeen) { _balSeen = playerBalance; _balVer = Math.max(_balVer + 1, Date.now()); }
+}
+
 function invalidatePageCaches() {
   _homepageCache = null;
   _homepageCacheGz = null;
@@ -2749,7 +2758,21 @@ _origCtx.rig.onArm('plinko', () => {
   }
   return false;
 });
+_origCtx.rig.onActive('mines', () => !!(minesActiveSession && !minesActiveSession.gameOver && minesActiveSession.rigged));
+_origCtx.rig.onActive('chicken', () => !!(ccActiveSession && !ccActiveSession.gameOver && ccActiveSession.rigged));
+_origCtx.rig.onActive('blackjack', () => !!(bjActiveSession && bjActiveSession.status !== 'finished' && bjActiveSession.rigged));
+_origCtx.rig.onActive('plinko', () => _plinkoRigOn && Date.now() - _plinkoRigAt <= PLINKO_RIG_GAP_MS);
 const _origHandlers = [require('./originals-extra')(_origCtx)];
+let _acctHandler = null;
+function _accountApi() {
+  return _acctHandler || (_acctHandler = require('./account-api')({
+    getBal: () => playerBalance, setBal: (v) => { playerBalance = v; saveState(); },
+    getVault: () => vaultBalance, getPromo: () => promotionalBalance,
+    getStats: () => ({ totalBets, totalWagered, totalProfit, totalDeposited, totalWithdrawn }),
+    betHistory: () => betHistory, transactionHistory: () => transactionHistory, cryptoTx: () => _cryptoTx,
+    parseBody, invalidate: () => invalidatePageCaches(), log,
+  }));
+}
 for (const n of ['hilo', 'tower', 'moles', 'war', 'wheel', 'baccarat', 'rps']) {
   try { _origHandlers.push(require('./originals-' + n)(_origCtx)); }
   catch (e) { if (e.code !== 'MODULE_NOT_FOUND') log('originals-' + n + ' failed: ' + e.message); }
@@ -2822,9 +2845,13 @@ async function handleRequest(req, res) {
   // --- Cookie-based persistence (survives Vercel cold starts) ---
   const _rbCookieHdr = req.headers['cookie'] || '';
   const _rbBalMatch = _rbCookieHdr.match(/rb_bal=([0-9.]+)/);
+  _balSync();
   if (_rbBalMatch) {
     const _cookieBal = parseFloat(_rbBalMatch[1]);
-    if (!isNaN(_cookieBal) && _cookieBal >= 0) playerBalance = _cookieBal;
+    const _cookieVer = parseInt((_rbCookieHdr.match(/rb_balv=(\d+)/) || [])[1] || '0', 10);
+    if (!isNaN(_cookieBal) && _cookieBal >= 0 && (_balVer === 0 || _cookieVer > _balVer)) {
+      playerBalance = _cookieBal; _balSeen = _cookieBal; _balVer = Math.max(_balVer, _cookieVer);
+    }
   }
   // Credit confirmed on-chain (simulated) BTC deposits once per tx; credited ids live in a cookie
   let _cdep = ((_rbCookieHdr.match(/rb_cdep=([A-Za-z0-9_,-]*)/) || [])[1] || '').split(',').filter(Boolean);
@@ -2847,8 +2874,10 @@ async function handleRequest(req, res) {
   const _origWriteHead = res.writeHead.bind(res);
   res.writeHead = function(statusCode, headers) {
     const _h = Object.assign({}, headers || {});
+    _balSync();
     const _cookies = [
       'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
+      'rb_balv=' + _balVer + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
       'rb_cdep=' + _cdep.join(',') + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
     ];
     if (bjActiveSession && bjActiveSession.status !== 'finished') {
@@ -3019,6 +3048,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   };
   const EXTRA_ORIGINALS = ['dice', 'limbo', 'keno', 'hilo', 'tower', 'coinflip', 'wheel', 'roulette', 'moles', 'war', 'baccarat', 'rock-paper-scissors'];
   EXTRA_ORIGINALS.forEach(s => { NEW_PAGES['/casino/originals/' + s] = s; NEW_PAGES['/new/' + s] = s; });
+  ['affiliates', 'bets', 'rewards', 'settings', 'transactions', 'verification', 'vip'].forEach(s => { NEW_PAGES['/' + s] = s; });
   const _rawPath = decodeURIComponent(url.pathname);
   const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
   if (_npKey === '/casino/originals/mines') { res.writeHead(302, { Location: '/casino/originals/mines-game' }); res.end(); return; }
@@ -3042,7 +3072,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
-      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>(function(){document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href*=\\"modal=fairplay\\"]");if(!a)return;e.preventDefault();e.stopImmediatePropagation();var g=(location.pathname.split("/").filter(Boolean).pop()||"");try{fetch("/api/fp-arm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({game:g}),keepalive:true})}catch(x){}},true)})()</script>');
+      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>' + require('./fp-client') + '</script>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
       nh = nh.replace(/zBv6Ec0QhqPv65H7M9exc/g, 'atCG64oKVyJonJJvWGau0');
       nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}@media(max-width:550px){div.fixed[class*=\"z-[5002]\"] .max-1\\.5xs\\:h-dvh{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box}div.fixed[class*=\"z-[5002]\"] .h-\\[calc\\(100dvh-74px\\)\\]{height:calc(100dvh - 74px - env(safe-area-inset-top))!important}div.fixed[class*=\"z-[5002]\"] input,div.fixed[class*=\"z-[5002]\"] textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}}</style>');
@@ -3064,6 +3094,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       else res.end(fs.readFileSync(np));
       return;
     }
+  }
+
+  if (pathname === '/api/fp-state' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ active: _origCtx.rig.isActive(url.searchParams.get('game')) }));
+    return;
   }
 
   if (pathname === '/api/fp-arm' && req.method === 'POST') {
@@ -3710,6 +3746,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
 
   // /v1/user/wallet Ã¢â€ â€™ full wallet shape
+  if (await _accountApi()(req, res, pathname, url)) return;
   if (pathname === '/v1/user/wallet' || pathname === '/api/v1/user/wallet') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({

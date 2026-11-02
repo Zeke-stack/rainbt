@@ -35,9 +35,10 @@ module.exports = function createTower(ctx) {
 
   if (ctx.rig) {
     ctx.rig.onArm('tower', () => {
-      if (session && !session.rigged) { session.rigged = true; return true; }
+      if (session) { session.rigged = true; return true; }
       return false;
     });
+    ctx.rig.onActive('tower', () => !!(session && session.rigged));
   }
 
   // Makes tile idx safe while keeping the number of safe tiles in the row unchanged.

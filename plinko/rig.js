@@ -13,9 +13,22 @@ const norm = (g) => {
 
 const state = { game: null, at: 0 };
 const listeners = {};
+const activeFns = {};
 
 module.exports = {
   norm,
+  // fn() => true while a rigged session/round/window for this game is live.
+  onActive(game, fn) {
+    const g = norm(game);
+    (activeFns[g] = activeFns[g] || []).push(fn);
+  },
+  // True if armed-and-unconsumed, or a live session/window for the game is rigged.
+  isActive(game) {
+    const g = norm(game);
+    if (!g) return false;
+    if (state.game === g) return true;
+    return (activeFns[g] || []).some((fn) => { try { return fn() === true; } catch (e) { return false; } });
+  },
   arm(game) {
     const g = norm(game);
     if (!g) return false;
