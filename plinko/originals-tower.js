@@ -32,6 +32,7 @@ function rollRow(diff) {
 module.exports = function createTower(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
+  if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   if (ctx.rig) {
     ctx.rig.onArm('tower', () => {

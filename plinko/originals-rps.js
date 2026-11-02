@@ -17,6 +17,7 @@ let active = null;
 
 module.exports = function (ctx) {
   const { getBal, setBal, addStats, log } = ctx;
+  if (ctx.onReset) ctx.onReset(() => { active = null; });
 
   if (ctx.rig) {
     ctx.rig.onArm('rps', () => {

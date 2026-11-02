@@ -69,6 +69,7 @@ function betActions(card, wins, skipsUsed, prevMult) {
 module.exports = function createHilo(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
+  if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   if (ctx.rig) {
     ctx.rig.onArm('hilo', () => {

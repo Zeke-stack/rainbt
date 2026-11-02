@@ -21,6 +21,7 @@ module.exports = function createWar(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
 
   let session = null;
+  if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   const reply = (res, obj) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });

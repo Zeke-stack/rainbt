@@ -44,6 +44,7 @@ module.exports = {
     if (state.game && state.game === norm(game)) { state.game = null; return true; }
     return false;
   },
+  reset() { state.game = null; state.at = 0; },
   peek(game) { return state.game === norm(game); },
   // fn() is called on arm; return true if it consumed the rig (e.g. flagged the active session).
   onArm(game, fn) {

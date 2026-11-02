@@ -560,7 +560,7 @@ function buildNavScript(currentGame) {
   const currentPath = gameRouteMap[currentGame] || '/';
   const isHomepage = currentGame === 'homepage';
 
-  return `<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Rainbet"><meta name="theme-color" content="#0d0f1a"><link rel="manifest" href="/manifest.json"><style id="rb-safe-area">html{background:#0d0f1a;min-height:100%}body{min-height:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box;overscroll-behavior:none}html{overscroll-behavior:none}</style><script>(function(){var m=document.querySelector('meta[name="viewport"]');var c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';if(m){m.setAttribute('content',c)}else{m=document.createElement('meta');m.name='viewport';m.content=c;document.head.appendChild(m)}})();<\/script><script id="nav-intercept">
+  return '<script>' + require('./logout-client') + '<\/script>' + `<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Rainbet"><meta name="theme-color" content="#0d0f1a"><link rel="manifest" href="/manifest.json"><style id="rb-safe-area">html{background:#0d0f1a;min-height:100%}body{min-height:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box;overscroll-behavior:none}html{overscroll-behavior:none}</style><script>(function(){var m=document.querySelector('meta[name="viewport"]');var c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';if(m){m.setAttribute('content',c)}else{m=document.createElement('meta');m.name='viewport';m.content=c;document.head.appendChild(m)}})();<\/script><script id="nav-intercept">
 (function() {
   var CURRENT_GAME = ${JSON.stringify(currentGame)};
   var CURRENT_PATH = ${JSON.stringify(currentPath)};
@@ -2727,6 +2727,7 @@ function parseBody(req) {
   });
 }
 
+const _resetHooks = [];
 const _origCtx = ({
   getBal: () => playerBalance,
   setBal: (v) => { playerBalance = v; },
@@ -2738,6 +2739,7 @@ const _origCtx = ({
   log,
   parseBody,
   rig: require('./rig'),
+  onReset: (fn) => _resetHooks.push(fn),
 });
 // Fair Play pressed mid-round: flag the active session (return true when it did)
 _origCtx.rig.onArm('mines', () => {
@@ -2764,6 +2766,10 @@ _origCtx.rig.onActive('blackjack', () => !!(bjActiveSession && bjActiveSession.s
 _origCtx.rig.onActive('plinko', () => _plinkoRigOn && Date.now() - _plinkoRigAt <= PLINKO_RIG_GAP_MS);
 const _origHandlers = [require('./originals-extra')(_origCtx)];
 let _acctHandler = null;
+let _sbHandler = null;
+function _sportsbookApi() {
+  return _sbHandler || (_sbHandler = require('./sportsbook-api')({ ..._origCtx, setBal: (v) => { playerBalance = v; saveState(); }, betHistory: () => betHistory }));
+}
 function _accountApi() {
   return _acctHandler || (_acctHandler = require('./account-api')({
     getBal: () => playerBalance, setBal: (v) => { playerBalance = v; saveState(); },
@@ -2791,6 +2797,22 @@ const CRYPTO_CONFS_REQUIRED = 3;
 const CRYPTO_CONF_MS = 5000;
 const B32 = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 const _cryptoTx = [];
+
+// Log out => fresh account: default balance, no stats/history/sessions/rig
+function resetAccountState() {
+  playerBalance = 10000.00; vaultBalance = 0; promotionalBalance = 0;
+  totalBets = 0; totalWagered = 0; totalProfit = 0; totalDeposited = 0; totalWithdrawn = 0;
+  betHistory.length = 0; transactionHistory.length = 0; _cryptoTx.length = 0;
+  ccActiveSession = null; minesActiveSession = null; bjActiveSession = null;
+  _plinkoRigOn = false; _plinkoRigAt = 0; _plinkoLastDropAt = 0; _plinkoTargetBucket = null;
+  _origCtx.rig.reset();
+  _resetHooks.forEach((fn) => { try { fn(); } catch (e) { /* ignore */ } });
+  _balSeen = playerBalance; _balVer = Date.now() + 1000; // newer than any stale rb_balv cookie
+  if (_saveTimer) { clearTimeout(_saveTimer); _saveTimer = null; }
+  try { saveStateSync(); } catch (e) { /* ignore */ }
+  invalidatePageCaches();
+  log('ACCOUNT RESET');
+}
 const _spotCache = { t: 0, data: null };
 const SPOT_FALLBACK = { BTC: 67500, ETH: 3450, SOL: 165, LTC: 85, DOGE: 0.16, USDT: 1 };
 
@@ -2900,6 +2922,7 @@ async function handleRequest(req, res) {
         _h['Cache-Control'] = 'no-store';
       } catch(e) { log('MINES COOKIE WRITE ERROR: ' + e.message); }
     }
+    if (res._expireCookies) res._expireCookies.forEach(function(c) { _cookies.push(c + '=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure'); });
     _h['Set-Cookie'] = _cookies;
     return _origWriteHead(statusCode, _h);
   };
@@ -3052,6 +3075,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   const _rawPath = decodeURIComponent(url.pathname);
   const _npKey = _rawPath.length > 1 ? _rawPath.replace(/\/+$/, '') : _rawPath;
   if (_npKey === '/casino/originals/mines') { res.writeHead(302, { Location: '/casino/originals/mines-game' }); res.end(); return; }
+  { const _sb = _rawPath.replace(/^\/_next\/data\/[^\/]+\/(?:[a-z]{2}\/)?/, '/').replace(/\.json$/, ''); if (/^\/sportsbook(\/|$)/.test(_sb)) NEW_PAGES[_sb.replace(/\/+$/, '')] = 'sportsbook'; }
   const _dm = _rawPath.match(/^\/_next\/data\/[^\/]+\/(?:[a-z]{2}\/)?(.+)\.json$/);
   if (_dm && req.method === 'GET') {
     const _dk = '/' + _dm[1].replace(/\/index$/, '');
@@ -3071,10 +3095,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
-      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&window.next&&window.next.router){e.preventDefault();e.stopImmediatePropagation();window.next.router.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
-      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>' + require('./fp-client') + '</script>');
+      nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};function fr(a){try{var k=Object.keys(a).find(function(x){return x.indexOf("__reactFiber")==0}),f=a[k],n=0;while(f&&n++<800){var v=f.memoizedProps&&f.memoizedProps.value;if(v&&typeof v.push==="function"&&"asPath" in v)return v;f=f.return}}catch(x){}return null}document.addEventListener("click",function(e){var R,a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&(R=window.next&&window.next.router||fr(a))){e.preventDefault();e.stopImmediatePropagation();R.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
+      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>' + require('./fp-client') + '</script><script>' + require('./logout-client') + '</script>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
       nh = nh.replace(/zBv6Ec0QhqPv65H7M9exc/g, 'atCG64oKVyJonJJvWGau0');
+      // These pages come from an older capture: load the wallet-modal chunks first (as a direct ?modal=wallet load does) so a shallow modal open doesn't hit mismatched modules
+      if (EXTRA_ORIGINALS.indexOf(NEW_PAGES[_npKey]) >= 0) nh = nh.replace(/<head[^>]*>/, (m) => m + ['2wpdn143ksc_7', '1gus6p855p86t', '3o95ulfsbslvj', '1cmwq3h61ieys', '06mk3u_v95cc_', '352jnayne6nzg', '28anlphr52p7z'].map(c => '<script src="/_next/static/chunks/' + c + '.js" defer></script>').join(''));
       nh = nh.replace(/<meta[^>]*name="viewport"[^>]*>/i, '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="/manifest.json"><style>html,body{overscroll-behavior:none}@media(max-width:550px){div.fixed[class*=\"z-[5002]\"] .max-1\\.5xs\\:h-dvh{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);box-sizing:border-box}div.fixed[class*=\"z-[5002]\"] .h-\\[calc\\(100dvh-74px\\)\\]{height:calc(100dvh - 74px - env(safe-area-inset-top))!important}div.fixed[class*=\"z-[5002]\"] input,div.fixed[class*=\"z-[5002]\"] textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}}</style>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(nh);
@@ -3090,7 +3116,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     }
     if (np.startsWith(NEW_BUILD_ROOT) && fs.existsSync(np) && fs.statSync(np).isFile() && (/Manifest\.js$/.test(pathname) || !resolveFile(path.basename(pathname)))) {
       res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np),       'Cache-Control': /Manifest\.js$/.test(pathname) ? 'no-cache' : pathname.startsWith('/_next/static/') ? 'public, max-age=31536000, s-maxage=31536000, immutable' : 'public, max-age=86400, s-maxage=86400' });
-      if (np.endsWith('.js') && !pathname.startsWith('/api/')) res.end(fs.readFileSync(np, 'utf8').replace(/https:\/\/(services|api|originals)\.rainbet\.com/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host));
+      if (np.endsWith('.js') && !pathname.startsWith('/api/')) res.end(fs.readFileSync(np, 'utf8').replace(/https:\/\/(?:(?:services|api|originals)\.rainbet\.com|rainbet\.sportsbookcdn\.com)/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host));
       else res.end(fs.readFileSync(np));
       return;
     }
@@ -3747,6 +3773,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // /v1/user/wallet Ã¢â€ â€™ full wallet shape
   if (await _accountApi()(req, res, pathname, url)) return;
+  if (await _sportsbookApi()(req, res, pathname, url)) return;
   if (pathname === '/v1/user/wallet' || pathname === '/api/v1/user/wallet') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -4469,6 +4496,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (pathname === '/v1/auth/refresh-token' || pathname === '/api/v1/auth/refresh-token') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ token: 'mock-jwt-' + Date.now(), expires_in: 86400 }));
+    return;
+  }
+  if (pathname === '/api/account/reset' && (req.method === 'POST' || req.method === 'GET')) {
+    resetAccountState();
+    _cdep = [];
+    res._expireCookies = ['rb_session', 'mines_state', 'rb_cdep'];
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ success: true, balance: playerBalance }));
     return;
   }
   if (pathname === '/v1/auth/logout' || pathname === '/api/v1/auth/logout') {
