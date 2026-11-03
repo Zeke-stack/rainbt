@@ -1940,7 +1940,7 @@ function buildHomepageHTML() {
       const pp = nd.props.pageProps;
       pp.wallet = { active: { currency: 'USD', primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance } };
       pp.userData = pp.userData || {};
-      pp.userData.public_id = pp.userData.public_id || 'LOCAL_PLAYER_001';
+      pp.userData.public_id = pp.userData.public_id || '7KX2M9QPD4';
       pp.userData.currency = 'USD';
       pp.userData.username = pp.userData.username || 'LTTCMARKETONTOP';
       pp.userData.preferences = pp.userData.preferences || {};
@@ -2201,7 +2201,7 @@ function buildPlinkoHTML() {
       const pp = nd.props.pageProps;
       pp.wallet = { active: { currency: 'USD', primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance } };
       pp.userData = pp.userData || {};
-      pp.userData.public_id = pp.userData.public_id || 'LOCAL_PLAYER_001';
+      pp.userData.public_id = pp.userData.public_id || '7KX2M9QPD4';
       pp.userData.currency = 'USD';
       pp.userData.username = pp.userData.username || 'LTTCMARKETONTOP';
       pp.userData.preferences = pp.userData.preferences || {};
@@ -2904,6 +2904,11 @@ async function handleRequest(req, res) {
     const _cookieVer = parseInt((_rbCookieHdr.match(/rb_balv=(\d+)/) || [])[1] || '0', 10);
     if (!isNaN(_cookieBal) && _cookieBal >= 0 && (_balVer === 0 || _cookieVer > _balVer)) {
       playerBalance = _cookieBal; _balSeen = _cookieBal; _balVer = Math.max(_balVer, _cookieVer);
+      const _st = (_rbCookieHdr.match(/rb_st=([0-9.\-_]+)/) || [])[1];
+      if (_st) {
+        const p = _st.split('_').map(Number);
+        if (p.length === 3 && p.every(isFinite) && p[0] >= 0 && p[1] >= 0) { totalBets = p[0]; totalWagered = p[1]; totalProfit = p[2]; }
+      }
     }
   }
   // Credit confirmed on-chain (simulated) BTC deposits once per tx; credited ids live in a cookie
@@ -2931,6 +2936,7 @@ async function handleRequest(req, res) {
     const _cookies = [
       'rb_bal=' + playerBalance.toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
       'rb_balv=' + _balVer + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
+      'rb_st=' + totalBets + '_' + (+totalWagered).toFixed(2) + '_' + (+totalProfit).toFixed(2) + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
       'rb_cdep=' + _cdep.join(',') + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
     ];
     if (res._minesState) _h['Cache-Control'] = 'no-store';
@@ -3982,7 +3988,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       id: 'local-player-001',
-      public_id: 'LOCAL_PLAYER_001',
+      public_id: '7KX2M9QPD4',
       username: 'LTTCMARKETONTOP',
       email: 'player@localhost',
       email_verified_at: new Date().toISOString(),
@@ -4507,7 +4513,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       id: 'local-player-001',
-      public_id: 'LOCAL_PLAYER_001',
+      public_id: '7KX2M9QPD4',
       username: 'LTTCMARKETONTOP',
       email: 'player@localhost',
       email_verified_at: new Date().toISOString(),
@@ -4982,7 +4988,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
             nd.props.pageProps.balances = { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance };
             nd.props.pageProps.userData = nd.props.pageProps.userData || {};
             nd.props.pageProps.userData.currency = 'USD';
-            nd.props.pageProps.userData.public_id = nd.props.pageProps.userData.public_id || 'LOCAL_PLAYER_001';
+            nd.props.pageProps.userData.public_id = nd.props.pageProps.userData.public_id || '7KX2M9QPD4';
             nd.props.pageProps.userData.username = nd.props.pageProps.userData.username || 'LTTCMARKETONTOP';
             nd.props.pageProps.userData.preferences = nd.props.pageProps.userData.preferences || {};
             nd.props.pageProps.userData.auth = nd.props.pageProps.userData.auth || { type: 'local', email_verified_at: new Date().toISOString(), has_2fa: 0 };
