@@ -7,10 +7,8 @@
       "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,new-build/**,cryptoapp/**,cc-page.html,chicken-cross.html}"
     }
   },
-  "redirects": [
-    { "source": "/", "destination": "/casino", "permanent": false }
-  ],
   "rewrites": [
+    { "source": "/", "destination": "/api?__vercel_path=" },
     { "source": "/crypto", "destination": "/api?__vercel_path=crypto/index.html" },
     { "source": "/crypto/", "destination": "/api?__vercel_path=crypto/index.html" },
     { "source": "/:path*", "destination": "/api?__vercel_path=:path*" }
