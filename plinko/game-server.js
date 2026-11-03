@@ -3081,7 +3081,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // ── NEW BUILD (proof of concept): assets captured by recapture.js ──
   const NEW_BUILD_ROOT = path.join(__dirname, '..', 'new-build', 'root');
   const NEW_PAGES = {
-    '/casino': 'lobby', '/': 'home', '/home': 'home', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
+    '/casino': 'home', '/': 'home', '/home': 'home', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
     '/casino/originals/mines': 'mines', '/casino/originals/mines-game': 'mines', '/casino/originals/blackjack': 'blackjack',
     '/new/casino': 'lobby', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
   };
