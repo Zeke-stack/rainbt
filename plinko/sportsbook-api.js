@@ -491,7 +491,7 @@ module.exports = function createSportsbook(ctx) {
         bet.payout = lost ? 0 : r2(bet.stake * odds);
         bet.settledAt = now;
         if (bet.payout > 0) setBal(r2(getBal() + bet.payout));
-        addStats(bet.stake, bet.payout);
+        addStats(bet.stake, bet.payout, 3); // sportsbook wagers count 3x toward rank
         const h = history();
         if (h) {
           const row = h.find((x) => x.id === bet.id);

@@ -2732,9 +2732,9 @@ const _resetHooks = [];
 const _origCtx = ({
   getBal: () => playerBalance,
   setBal: (v) => { playerBalance = v; },
-  addStats: (stake, payout) => {
+  addStats: (stake, payout, wagerMult) => {
     totalBets++;
-    totalWagered = Math.round((totalWagered + stake) * 100) / 100;
+    totalWagered = Math.round((totalWagered + stake * (wagerMult || 1)) * 100) / 100;
     totalProfit = Math.round((totalProfit + payout - stake) * 100) / 100;
   },
   log,
