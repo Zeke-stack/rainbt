@@ -161,7 +161,7 @@ module.exports = function createBaccarat(ctx) {
     if (!m) return false;
     try {
       if (m[1] === 'active-session') {
-        reply(res, { error: 'er_no_active_game' });
+        reply(res, { error: 'no_active_session' });
         return true;
       }
       if (req.method !== 'POST') return false;

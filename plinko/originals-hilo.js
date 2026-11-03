@@ -69,6 +69,7 @@ function betActions(card, wins, skipsUsed, prevMult) {
 module.exports = function createHilo(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
+  const store = ctx.sessions.register('hilo', { get: () => session, set: (v) => { session = v; } });
   if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   if (ctx.rig) {
@@ -157,17 +158,25 @@ module.exports = function createHilo(ctx) {
       const cm = rest.match(/^([\w-]+)\/cashout$/);
       if (!am && !cm) return false;
       const id = (am || cm)[1];
-      if (!session || session.id !== id) return reply(res, { error: 'er_no_active_game' }), true;
+      const b = cm ? {} : await ctx.parseBody(req);
       const s = session;
+      if (!s || s.id !== id) {
+        const rp = store.replay(id);
+        return reply(res, rp || { error: 'er_no_active_game' }), true;
+      }
+      const done = () => {
+        const v = view(s, true);
+        store.setLast(s.id, v);
+        reply(res, v);
+      };
 
       if (cm) {
         if (s.wins < 1) return reply(res, { error: 'er_cannot_cashout' }), true;
         finish(s, r2(s.stake * s.mult), s.mult);
-        reply(res, view(s, true));
+        done();
         return true;
       }
 
-      const b = await ctx.parseBody(req);
       const cur = s.results[s.results.length - 1].card;
       if (b.action === 'skip') {
         if (s.skips >= MAX_SKIPS) return reply(res, { error: 'er_no_skips_remaining' }), true;
@@ -186,7 +195,7 @@ module.exports = function createHilo(ctx) {
       } else {
         s.results.push({ action: b.action, card: next, game_action_id: newAction(), multiplier: 0 });
         finish(s, 0, 0);
-        reply(res, view(s, true));
+        done();
       }
       return true;
     } catch (e) {

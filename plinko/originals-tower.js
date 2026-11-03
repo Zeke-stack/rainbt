@@ -32,6 +32,7 @@ function rollRow(diff) {
 module.exports = function createTower(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
   let session = null;
+  const store = ctx.sessions.register('tower', { get: () => session, set: (v) => { session = v; } });
   if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   if (ctx.rig) {
@@ -177,8 +178,17 @@ module.exports = function createTower(ctx) {
       const cm = rest.match(/^([\w-]+)\/cashout$/);
       if (!bm && !cm) return false;
       const id = (bm || cm)[1];
-      if (!session || session.id !== id) return reply(res, { error: 'er_no_active_game' }), true;
+      const b = cm ? {} : await ctx.parseBody(req);
       const s = session;
+      if (!s || s.id !== id) {
+        const rp = store.replay(id);
+        return reply(res, rp || { error: 'er_no_active_game' }), true;
+      }
+      const finalReply = (over, results, mult, payout) => {
+        const r = result(s, over, results, mult, payout);
+        if (over) store.setLast(s.id, r);
+        reply(res, r);
+      };
 
       if (cm) {
         if (!s.results.length) return reply(res, { error: 'er_cannot_cashout' }), true;
@@ -186,11 +196,10 @@ module.exports = function createTower(ctx) {
         const payout = r2(s.stake * mult);
         session = null;
         settle(s, payout);
-        reply(res, result(s, true, s.results, mult, payout));
+        finalReply(true, s.results, mult, payout);
         return true;
       }
 
-      const b = await ctx.parseBody(req);
       const idx = Number(b.selected_tile_index);
       if (!Number.isInteger(idx) || idx < 0 || idx >= DIFF[s.difficulty].tiles) {
         return reply(res, { error: 'er_invalid_tile' }), true;
@@ -202,12 +211,12 @@ module.exports = function createTower(ctx) {
       if (!ent.player_round_win) {
         session = null;
         settle(s, 0);
-        reply(res, result(s, true, reveal(s.results, s.difficulty), 0, 0));
+        finalReply(true, reveal(s.results, s.difficulty), 0, 0);
       } else if (s.results.length >= ROWS) {
         const payout = r2(s.stake * ent.multiplier);
         session = null;
         settle(s, payout);
-        reply(res, result(s, true, s.results, ent.multiplier, payout));
+        finalReply(true, s.results, ent.multiplier, payout);
       } else {
         reply(res, result(s, false, s.results, ent.multiplier, r2(s.stake * ent.multiplier)));
       }

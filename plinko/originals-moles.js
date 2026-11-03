@@ -25,6 +25,7 @@ module.exports = function createMoles(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
 
   let session = null;
+  const store = ctx.sessions.register('moles', { get: () => session, set: (v) => { session = v; } });
   if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   if (ctx.rig) {
@@ -65,6 +66,12 @@ module.exports = function createMoles(ctx) {
       wallet: wallet(),
       balance: getBal(),
     };
+  }
+
+  function done(res, s, mult, payout) {
+    const v = view(s, true, mult, payout);
+    store.setLast(s.id, v);
+    reply(res, v);
   }
 
   function playRound(s, hole, rigged) {
@@ -153,31 +160,31 @@ module.exports = function createMoles(ctx) {
 
       if (sub === 'action') {
         const s = session;
-        if (!s || s.id !== seg) return reply(res, { error: 'er_no_active_game' }), true;
+        if (!s || s.id !== seg) return reply(res, store.replay(seg) || { error: 'er_no_active_game' }), true;
         const hole = Number(b.selected_hole_index);
         if (!Number.isInteger(hole) || hole < 0 || hole >= HOLES) return reply(res, { error: 'er_invalid_hole' }), true;
         const entry = playRound(s, hole, s.rigged);
         if (!entry.player_round_win) {
           finish(s, 0);
-          return reply(res, view(s, true, 0, 0)), true;
+          return done(res, s, 0, 0), true;
         }
         const mult = Number(entry.multiplier);
         if (s.rounds.length >= MAX_ROUNDS || mult >= MAX_MULT) {
           const payout = r2(s.bet * mult);
           finish(s, payout);
-          return reply(res, view(s, true, mult, payout)), true;
+          return done(res, s, mult, payout), true;
         }
         return reply(res, view(s, false, mult, 0)), true;
       }
 
       if (sub === 'cashout') {
         const s = session;
-        if (!s || s.id !== seg) return reply(res, { error: 'er_no_active_game' }), true;
+        if (!s || s.id !== seg) return reply(res, store.replay(seg) || { error: 'er_no_active_game' }), true;
         const mult = lastMult(s.rounds);
         if (!(mult > 0)) return reply(res, { error: 'er_cashout_unavailable' }), true;
         const payout = r2(s.bet * mult);
         finish(s, payout);
-        return reply(res, view(s, true, mult, payout)), true;
+        return done(res, s, mult, payout), true;
       }
     } catch (e) {
       res.writeHead(400, { 'Content-Type': 'application/json' });

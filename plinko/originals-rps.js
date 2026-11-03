@@ -17,6 +17,7 @@ let active = null;
 
 module.exports = function (ctx) {
   const { getBal, setBal, addStats, log } = ctx;
+  const store = ctx.sessions.register('rps', { get: () => active, set: (v) => { active = v; } });
   if (ctx.onReset) ctx.onReset(() => { active = null; });
 
   if (ctx.rig) {
@@ -87,7 +88,9 @@ module.exports = function (ctx) {
     addStats(s.stake, payout);
     log('RPS: bet=' + s.stake.toFixed(2) + ' payout=' + payout.toFixed(2) + ' bal=' + getBal().toFixed(2));
     if (active === s) active = null;
-    return build(s, true, mult);
+    const out = build(s, true, mult);
+    store.setLast(s.id, out);
+    return out;
   }
 
   function newSession(b, free) {
@@ -147,7 +150,7 @@ module.exports = function (ctx) {
 
       const bm = rest.match(/^([^/]+)\/bet$/);
       if (bm) {
-        if (!active || active.id !== bm[1]) return send(res, { error: 'er_no_active_session' }), true;
+        if (!active || active.id !== bm[1]) return send(res, store.replay(bm[1]) || { error: 'er_no_active_session' }), true;
         const bet = normHand(b.bet);
         if (!bet) return send(res, { error: 'er_invalid_bet' }), true;
         playRound(active, bet);
@@ -158,7 +161,8 @@ module.exports = function (ctx) {
 
       const cm = rest.match(/^([^/]+)\/cashout$/);
       if (cm) {
-        if (!active || active.id !== cm[1] || !active.won) return send(res, { error: 'er_cannot_cashout' }), true;
+        if (!active || active.id !== cm[1]) return send(res, store.replay(cm[1]) || { error: 'er_cannot_cashout' }), true;
+        if (!active.won) return send(res, { error: 'er_cannot_cashout' }), true;
         send(res, end(active, Math.min(active.cur, MAX_MULT)));
         return true;
       }

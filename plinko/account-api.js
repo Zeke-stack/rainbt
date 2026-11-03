@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const USER = {
   id: 'local-player-001',
   public_id: 'LOCAL_PLAYER_001',
-  username: 'Player',
+  username: 'LTTCMARKETONTOP',
   email: 'player@localhost',
   registered_at: '2024-01-01T12:00:00.000Z',
   affiliate_code: 'PLAYER',

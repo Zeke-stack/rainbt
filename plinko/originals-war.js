@@ -21,6 +21,12 @@ module.exports = function createWar(ctx) {
   const { getBal, setBal, addStats, log } = ctx;
 
   let session = null;
+  const store = ctx.sessions.register('war', {
+    get: () => session,
+    set: (v) => { session = v; },
+    pack: (s) => s && Object.assign({}, s, { shoe: s.shoe.map((c) => c[0] + c[1]).join('') }),
+    unpack: (s) => s && Object.assign({}, s, { shoe: (s.shoe.match(/.{2}/g) || []).map((c) => [c[0], c[1]]) }),
+  });
   if (ctx.onReset) ctx.onReset(() => { session = null; });
 
   const reply = (res, obj) => {
@@ -68,7 +74,9 @@ module.exports = function createWar(ctx) {
     setBal(r2(getBal() + payout));
     addStats(s.bet + s.raise + s.sideStake, payout + s.sidePayout);
     log('WAR: bet=' + s.bet.toFixed(2) + ' raise=' + s.raise.toFixed(2) + ' status=' + status + ' payout=' + payout.toFixed(2) + ' bal=' + getBal().toFixed(2));
-    return view(s, status, true, payout);
+    const v = view(s, status, true, payout);
+    store.setLast(s.id, v);
+    return v;
   }
 
   function deal(b, stake, sides, rigged) {
@@ -194,7 +202,7 @@ module.exports = function createWar(ctx) {
       }
 
       const s = session;
-      if (!s) return reply(res, { error: 'er_no_active_game' }), true;
+      if (!s) return reply(res, store.replay(route.split('/')[0]) || { error: 'er_no_active_game' }), true;
       if (b.action === 'surrender') return reply(res, surrender(s)), true;
       if (b.action === 'go-to-war') {
         if (s.bet > getBal()) return reply(res, { error: 'er_insufficient_balance' }), true;

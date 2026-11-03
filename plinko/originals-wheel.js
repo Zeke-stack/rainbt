@@ -16,6 +16,7 @@ let active = null;
 
 module.exports = function (ctx) {
   const { getBal, setBal, addStats, log } = ctx;
+  const store = ctx.sessions.register('wheel', { get: () => active, set: (v) => { active = v; } });
   if (ctx.onReset) ctx.onReset(() => { active = null; });
 
   if (ctx.rig) {
@@ -88,7 +89,9 @@ module.exports = function (ctx) {
   function response(s, over) {
     const payout = over ? r2(s.stake * s.cum) : 0;
     if (over) finish(s, payout);
-    return { game_result: gameResult(s, over, payout), wheel_result: s.rounds, wallet: wallet(), balance: getBal() };
+    const out = { game_result: gameResult(s, over, payout), wheel_result: s.rounds, wallet: wallet(), balance: getBal() };
+    if (over) store.setLast(s.id, out);
+    return out;
   }
 
   // Runs one round; ends the game on a miss or after the final round.
@@ -162,7 +165,7 @@ module.exports = function (ctx) {
 
       const sp = rest.match(/^([^/]+)\/([^/]+)\/spin$/);
       if (sp) {
-        if (!active || active.id !== sp[1]) return send(res, { error: 'er_no_active_session' }), true;
+        if (!active || active.id !== sp[1]) return send(res, store.replay(sp[1]) || { error: 'er_no_active_session' }), true;
         const over = advance(active);
         send(res, response(active, over));
         return true;
@@ -170,7 +173,8 @@ module.exports = function (ctx) {
 
       const co = rest.match(/^([^/]+)\/cashout$/);
       if (co) {
-        if (!active || active.id !== co[1] || !active.rounds.length) return send(res, { error: 'er_no_active_session' }), true;
+        if (!active || active.id !== co[1]) return send(res, store.replay(co[1]) || { error: 'er_no_active_session' }), true;
+        if (!active.rounds.length) return send(res, { error: 'er_cannot_cashout' }), true;
         send(res, response(active, true));
         return true;
       }

@@ -1647,6 +1647,7 @@ function bjStartGame(betAmount, currency) {
     insuranceWon: false,
     rigged: bjRiggedStart,
     payout: 0,
+    startedAt: Date.now(),
   };
 
   // Deduct bet
@@ -1941,7 +1942,7 @@ function buildHomepageHTML() {
       pp.userData = pp.userData || {};
       pp.userData.public_id = pp.userData.public_id || 'LOCAL_PLAYER_001';
       pp.userData.currency = 'USD';
-      pp.userData.username = pp.userData.username || 'Player';
+      pp.userData.username = pp.userData.username || 'LTTCMARKETONTOP';
       pp.userData.preferences = pp.userData.preferences || {};
       pp.userData.auth = pp.userData.auth || { type: 'local', email_verified_at: new Date().toISOString(), has_2fa: 0 };
       pp.userData.kyc_level = pp.userData.kyc_level || 2;
@@ -2202,7 +2203,7 @@ function buildPlinkoHTML() {
       pp.userData = pp.userData || {};
       pp.userData.public_id = pp.userData.public_id || 'LOCAL_PLAYER_001';
       pp.userData.currency = 'USD';
-      pp.userData.username = pp.userData.username || 'Player';
+      pp.userData.username = pp.userData.username || 'LTTCMARKETONTOP';
       pp.userData.preferences = pp.userData.preferences || {};
       pp.userData.auth = pp.userData.auth || { type: 'local', email_verified_at: new Date().toISOString(), has_2fa: 0 };
       pp.userData.kyc_level = pp.userData.kyc_level || 2;
@@ -2740,6 +2741,34 @@ const _origCtx = ({
   parseBody,
   rig: require('./rig'),
   onReset: (fn) => _resetHooks.push(fn),
+  sessions: require('./session-store'),
+});
+_origCtx.sessions.setBalanceGetter(() => playerBalance);
+
+// In-server session games share the same cookie-backed store as the originals-* modules
+const _ccStore = _origCtx.sessions.register('cc', {
+  get: () => ccActiveSession && !ccActiveSession.gameOver ? ccActiveSession : null,
+  set: (v) => { ccActiveSession = v; },
+});
+const _bjStore = _origCtx.sessions.register('bj', {
+  get: () => bjActiveSession && bjActiveSession.status !== 'finished' ? bjActiveSession : null,
+  set: (v) => { bjActiveSession = v; },
+  pack: (s) => s && Object.assign({}, s, { deck: Array.isArray(s.deck) ? s.deck.join('') : '' }),
+  unpack: (s) => s && Object.assign({}, s, { deck: typeof s.deck === 'string' ? (s.deck.match(/.{2}/g) || []) : [] }),
+});
+const _minesStore = _origCtx.sessions.register('mines', {
+  get: () => minesActiveSession && !minesActiveSession.gameOver ? minesActiveSession : null,
+  set: (v) => { minesActiveSession = v; },
+  pack: (s) => s && {
+    id: s.id, dp: s.displayBoard, mp: Array.from(s.minePositions), t: s.tiles, m: s.mines, b: s.betAmount,
+    c: s.currency, r: Array.from(s.revealed), rc: s.revealedCellsCount, mu: s.multiplier, st: s.startTime,
+    rg: s.rigged ? 1 : 0,
+  },
+  unpack: (d) => d && {
+    id: d.id, displayBoard: d.dp, minePositions: new Set(d.mp), tiles: d.t, mines: d.m, betAmount: d.b,
+    currency: d.c, revealed: new Set(d.r), revealedCellsCount: d.rc, multiplier: d.mu, payout: 0,
+    gameOver: false, cashedOut: false, startTime: d.st, rigged: !!d.rg,
+  },
 });
 // Fair Play pressed mid-round: flag the active session (return true when it did)
 _origCtx.rig.onArm('mines', () => {
@@ -2807,6 +2836,7 @@ function resetAccountState() {
   _plinkoRigOn = false; _plinkoRigAt = 0; _plinkoLastDropAt = 0; _plinkoTargetBucket = null;
   _origCtx.rig.reset();
   _resetHooks.forEach((fn) => { try { fn(); } catch (e) { /* ignore */ } });
+  _origCtx.sessions.resetAll();
   _balSeen = playerBalance; _balVer = Date.now() + 1000; // newer than any stale rb_balv cookie
   if (_saveTimer) { clearTimeout(_saveTimer); _saveTimer = null; }
   try { saveStateSync(); } catch (e) { /* ignore */ }
@@ -2868,6 +2898,7 @@ async function handleRequest(req, res) {
   const _rbCookieHdr = req.headers['cookie'] || '';
   const _rbBalMatch = _rbCookieHdr.match(/rb_bal=([0-9.]+)/);
   _balSync();
+  _origCtx.sessions.begin(req);
   if (_rbBalMatch) {
     const _cookieBal = parseFloat(_rbBalMatch[1]);
     const _cookieVer = parseInt((_rbCookieHdr.match(/rb_balv=(\d+)/) || [])[1] || '0', 10);
@@ -2902,26 +2933,11 @@ async function handleRequest(req, res) {
       'rb_balv=' + _balVer + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
       'rb_cdep=' + _cdep.join(',') + '; Path=/; Max-Age=2592000; SameSite=None; Secure',
     ];
-    if (bjActiveSession && bjActiveSession.status !== 'finished') {
-      try {
-        // Pack deck as flat string ("2hAcKs...") to stay well under 4KB cookie limit
-        const _sesClone = Object.assign({}, bjActiveSession);
-        _sesClone.deck = Array.isArray(_sesClone.deck) ? _sesClone.deck.join('') : '';
-        const _sesJson = encodeURIComponent(JSON.stringify(_sesClone));
-        _cookies.push('rb_session=' + _sesJson + '; Path=/; Max-Age=86400; SameSite=None; Secure');
-      } catch(e) { log(`SESSION COOKIE WRITE ERROR: ${e.message}`); }
-    }
-    // NOTE: never actively clear rb_session — other Vercel instances don't have bjActiveSession
-    // in memory, so they must not wipe a cookie that a /play response just set.
-    // Stale session cookies are harmless: the action handler ignores mismatched IDs,
-    // and /play always force-resets bjActiveSession=null before starting a new game.
-    if (res._minesState) {
-      try {
-        const _ms = minesActiveSession && !minesActiveSession.gameOver ? minesEncodeState(minesActiveSession) : 'none';
-        _cookies.push('mines_state=' + _ms + '; Path=/; Max-Age=86400; HttpOnly; SameSite=None; Secure');
-        _h['Cache-Control'] = 'no-store';
-      } catch(e) { log('MINES COOKIE WRITE ERROR: ' + e.message); }
-    }
+    if (res._minesState) _h['Cache-Control'] = 'no-store';
+    // Retire the legacy single-purpose cookies (now carried by rb_s_*)
+    if (/(?:^|;\s*)rb_session=/.test(_rbCookieHdr)) _cookies.push('rb_session=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure');
+    if (/(?:^|;\s*)mines_state=/.test(_rbCookieHdr)) _cookies.push('mines_state=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure');
+    try { _origCtx.sessions.flush(req).forEach(function(c) { _cookies.push(c); }); } catch(e) { log('SESSION COOKIE WRITE ERROR: ' + e.message); }
     if (res._expireCookies) res._expireCookies.forEach(function(c) { _cookies.push(c + '=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure'); });
     _h['Set-Cookie'] = _cookies;
     return _origWriteHead(statusCode, _h);
@@ -3065,7 +3081,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // ── NEW BUILD (proof of concept): assets captured by recapture.js ──
   const NEW_BUILD_ROOT = path.join(__dirname, '..', 'new-build', 'root');
   const NEW_PAGES = {
-    '/casino': 'lobby', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
+    '/casino': 'lobby', '/': 'home', '/home': 'home', '/casino/originals/plinko': 'plinko', '/casino/originals/chicken-cross': 'chicken',
     '/casino/originals/mines': 'mines', '/casino/originals/mines-game': 'mines', '/casino/originals/blackjack': 'blackjack',
     '/new/casino': 'lobby', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
   };
@@ -3335,8 +3351,9 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       try {
         const body = await parseBody(req);
         if (!ccActiveSession || ccActiveSession.gameOver || ccActiveSession.id !== actionMatch[1]) {
+          const _rp = _ccStore.replay(actionMatch[1]);
           res.writeHead(200, {'Content-Type':'application/json'});
-          res.end(JSON.stringify({ error: 'er_no_active_session' }));
+          res.end(JSON.stringify(_rp || { error: 'er_no_active_session' }));
           return;
         }
         const diff = CC_DIFFICULTY[ccActiveSession.difficulty];
@@ -3366,7 +3383,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
           log('CC WIN: Round ' + nextRound + ' | ' + mult + 'x | Potential: ' + (ccActiveSession.betAmount * mult).toFixed(2));
         }
         const resp = ccMakeGameResponse(ccActiveSession);
-        if (ccActiveSession.gameOver) ccActiveSession = null;
+        if (ccActiveSession.gameOver) { _ccStore.setLast(ccActiveSession.id, resp); ccActiveSession = null; }
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(resp));
       } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
@@ -3381,8 +3398,9 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       try {
         const body = await parseBody(req);
         if (!ccActiveSession || ccActiveSession.gameOver || ccActiveSession.id !== cashoutMatch[1]) {
+          const _rp = _ccStore.replay(cashoutMatch[1]);
           res.writeHead(200, {'Content-Type':'application/json'});
-          res.end(JSON.stringify({ error: 'er_no_active_session' }));
+          res.end(JSON.stringify(_rp || { error: 'er_no_active_session' }));
           return;
         }
         if (ccActiveSession.round === 0) {
@@ -3397,6 +3415,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         totalProfit = parseFloat((totalProfit + payout - ccActiveSession.betAmount).toFixed(2));
         log('CC CASHOUT: ' + ccActiveSession.betAmount.toFixed(2) + ' -> ' + ccActiveSession.payout + ' (' + ccActiveSession.currentMultiplier + 'x) | Balance: ' + playerBalance.toFixed(2));
         const resp = ccMakeGameResponse(ccActiveSession);
+        _ccStore.setLast(ccActiveSession.id, resp);
         ccActiveSession = null;
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(resp));
@@ -3434,13 +3453,21 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         res.end(JSON.stringify({ error: 'Insufficient balance' }));
         return;
       }
+      // A double-clicked Deal must not strand the first stake or leave the client holding a dead game id
+      if (bjActiveSession && bjActiveSession.status === 'playerTurn' && bjActiveSession.betAmount === betAmount && Date.now() - (bjActiveSession.startedAt || 0) < 3000) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ gameState: bjMakeGameState(bjActiveSession), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
+        return;
+      }
       // Force-clear any stale in-memory session before starting a new game.
       // (On Vercel each instance is independent; stale cookies must never block new games.)
       bjActiveSession = null;
       const session = bjStartGame(betAmount, body.currency || 'USD');
       log(`BJ DEAL: bet=${betAmount} status=${session.status} balance=${playerBalance.toFixed(2)}`);
+      const _bjPlayResp = { gameState: bjMakeGameState(session), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } };
+      if (session.status === 'finished') _bjStore.setLast(session.gameHistoryId, _bjPlayResp);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ gameState: bjMakeGameState(session), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
+      res.end(JSON.stringify(_bjPlayResp));
     } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     return;
   }
@@ -3474,24 +3501,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       try {
         const body = await parseBody(req);
         const _expectedId = bjActionMatch[1];
-        // Restore BJ session from cookie if not in-memory or if in-memory ID doesn't match
         if (!bjActiveSession || bjActiveSession.gameHistoryId !== _expectedId) {
-          const _sesMatch = _rbCookieHdr.match(/rb_session=([^;\s]+)/);
-          if (_sesMatch) {
-            try {
-              const _parsed = JSON.parse(decodeURIComponent(_sesMatch[1]));
-              if (_parsed && _parsed.gameHistoryId === _expectedId && _parsed.status !== 'finished') {
-                if (typeof _parsed.deck === 'string') _parsed.deck = _parsed.deck.match(/.{2}/g) || [];
-                bjActiveSession = _parsed;
-                log(`SESSION RESTORED from cookie: ${_expectedId.slice(0,8)} status=${_parsed.status}`);
-              }
-            } catch(e) { log(`SESSION RESTORE ERROR: ${e.message}`); }
+          const _rp = _bjStore.replay(_expectedId);
+          if (_rp) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(_rp));
+            return;
           }
-        }
-        if (!bjActiveSession || bjActiveSession.gameHistoryId !== _expectedId) {
-          const _bjReason = !bjActiveSession
-            ? (_rbCookieHdr.includes('rb_session') ? 'cookie_id_mismatch' : 'no_cookie')
-            : 'id_mismatch_' + bjActiveSession.gameHistoryId.slice(0, 8);
+          const _bjReason = !bjActiveSession ? 'no_session' : 'id_mismatch_' + bjActiveSession.gameHistoryId.slice(0, 8);
           log(`BJ ACTION 400: reason=${_bjReason} expected=${_expectedId.slice(0,8)}`);
           res.writeHead(400, {'Content-Type':'application/json'});
           res.end(JSON.stringify({ error: 'er_no_active_game', debug: _bjReason }));
@@ -3502,8 +3519,10 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
         const sessionRef = bjActiveSession; // keep reference before it might get nulled
         bjDoAction(sessionRef, actionObj);
         log(`BJ ACTION: ${actionName} status=${sessionRef.status} balance=${playerBalance.toFixed(2)}`);
+        const _bjResp = { gameState: bjMakeGameState(sessionRef), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } };
+        if (sessionRef.status === 'finished') _bjStore.setLast(sessionRef.gameHistoryId, _bjResp);
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ gameState: bjMakeGameState(sessionRef), wallet: { active: { primary: playerBalance, promotional: promotionalBalance, vault: vaultBalance, currency: 'USD' } } }));
+        res.end(JSON.stringify(_bjResp));
       } catch(e) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
       return;
     }
@@ -3529,6 +3548,8 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   const _minesNew = pathname.match(/^\/(?:api\/)?v1\/original-games\/mines\/(active-session|play|autoplay|[\w-]+\/action|[\w-]+\/cashout)$/);
   if (_minesNew) {
     const k = _minesNew[1];
+    var _mid = k.split('/')[0];
+    if (k.endsWith('/action') || k.endsWith('/cashout')) res._minesReqId = _mid;
     if (k === 'active-session') pathname = '/v1/games/mines/active-session';
     else if (k === 'play') pathname = '/v1/games/mines/new-game';
     else if (k === 'autoplay') pathname = '/v1/games/mines/new-game-auto';
@@ -3547,7 +3568,6 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
 
   if (pathname.indexOf('/v1/games/mines/') === 0 || pathname === '/api/v1/original-games/mines-game/active-session') {
-    minesRestoreFromCookie(req);
     minesAttachStateCookie(req, res);
   }
 
@@ -3715,17 +3735,21 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       const index = parseInt(body.index, 10);
 
       if (!minesActiveSession || minesActiveSession.gameOver) {
+        var _rp = res._minesReqId ? _minesStore.replay(res._minesReqId, 'reveal') : null;
+        if (_rp) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(_rp)); return; }
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'er_no_active_game' }));
         return;
       }
 
+      var _sid = minesActiveSession.id;
       var result = minesRevealTile(minesActiveSession, index);
       if (!result.success && result.error) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: result.error }));
         return;
       }
+      if (!minesActiveSession) _minesStore.setLast(_sid, result, 'reveal');
 
       log('[MINES] REVEAL: index=' + index + ' cell=' + result.cell + ' mult=' + result.multiplier + ' revealed=' + result.revealedCellsCount + (result.cell === 'M' ? ' BOOM!' : '') + ' balance=' + playerBalance.toFixed(2));
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -3740,12 +3764,16 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   // Mines: cashout
   if (pathname === '/v1/games/mines/cashout' && req.method === 'GET') {
     if (!minesActiveSession || minesActiveSession.gameOver) {
+      var _rp2 = res._minesReqId ? _minesStore.replay(res._minesReqId, 'cashout') : null;
+      if (_rp2) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(_rp2)); return; }
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'er_no_active_game' }));
       return;
     }
 
+    var _sid2 = minesActiveSession.id;
     var result = minesCashout(minesActiveSession);
+    if (!minesActiveSession) _minesStore.setLast(_sid2, result, 'cashout');
     log('[MINES] CASHOUT: mult=' + result.multiplier + ' payout=' + result.payout + ' balance=' + playerBalance.toFixed(2));
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(result));
@@ -3955,7 +3983,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.end(JSON.stringify({
       id: 'local-player-001',
       public_id: 'LOCAL_PLAYER_001',
-      username: 'Player',
+      username: 'LTTCMARKETONTOP',
       email: 'player@localhost',
       email_verified_at: new Date().toISOString(),
       currency: 'USD',
@@ -4480,7 +4508,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     res.end(JSON.stringify({
       id: 'local-player-001',
       public_id: 'LOCAL_PLAYER_001',
-      username: 'Player',
+      username: 'LTTCMARKETONTOP',
       email: 'player@localhost',
       email_verified_at: new Date().toISOString(),
       currency: 'USD',
@@ -4513,7 +4541,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
   if (pathname === '/v1/auth/log-in' || pathname === '/api/v1/auth/log-in' || pathname === '/v1/auth/sign-up' || pathname === '/api/v1/auth/sign-up') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ token: 'mock-jwt-' + Date.now(), user: { id: 'local-player-001', username: 'Player', currency: 'USD' } }));
+    res.end(JSON.stringify({ token: 'mock-jwt-' + Date.now(), user: { id: 'local-player-001', username: 'LTTCMARKETONTOP', currency: 'USD' } }));
     return;
   }
   if (pathname.startsWith('/v1/auth/') || pathname.startsWith('/api/v1/auth/')) {
@@ -4820,7 +4848,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       currencyPayout: b.payout,
       payout: b.payout,
       multiplier: b.multiplier,
-      user: { id: 'local-player', username: 'Player', rank: 'bronze-1' },
+      user: { id: 'local-player', username: 'LTTCMARKETONTOP', rank: 'bronze-1' },
       game: { name: 'Plinko', icon: '/games/plinko/icon.png' }
     }));
     res.end(JSON.stringify(historyItems));
@@ -4955,7 +4983,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
             nd.props.pageProps.userData = nd.props.pageProps.userData || {};
             nd.props.pageProps.userData.currency = 'USD';
             nd.props.pageProps.userData.public_id = nd.props.pageProps.userData.public_id || 'LOCAL_PLAYER_001';
-            nd.props.pageProps.userData.username = nd.props.pageProps.userData.username || 'Player';
+            nd.props.pageProps.userData.username = nd.props.pageProps.userData.username || 'LTTCMARKETONTOP';
             nd.props.pageProps.userData.preferences = nd.props.pageProps.userData.preferences || {};
             nd.props.pageProps.userData.auth = nd.props.pageProps.userData.auth || { type: 'local', email_verified_at: new Date().toISOString(), has_2fa: 0 };
             nd.props.pageProps.userData.kyc_level = nd.props.pageProps.userData.kyc_level || 2;
