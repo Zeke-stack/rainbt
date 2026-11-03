@@ -116,8 +116,11 @@
     }
     function pollBets() {
       if (dead) return;
-      api('/sb-api/bets').then(function (r) {
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem('sbk_bets') || '[]'); } catch (e) { /* ignore */ }
+      api('/sb-api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ bets: saved }) }).then(function (r) {
         if (dead || !r || !r.bets) return;
+        try { localStorage.setItem('sbk_bets', JSON.stringify(r.bets.slice(0, 100))); } catch (e) { /* ignore */ }
         r.bets.forEach(function (b) {
           var old = S.nextBets[b.id];
           if (old === 'open' && b.status !== 'open') {

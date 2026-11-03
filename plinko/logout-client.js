@@ -35,6 +35,7 @@ function logoutClient() {
     var ok = document.getElementById('rb-logout-ok');
     if (ok) { ok.textContent = 'Resetting...'; ok.disabled = true; }
     var done = function () { location.replace('/casino'); };
+    try { localStorage.removeItem('sbk_bets'); } catch (e) { /* ignore */ }
     fetch('/api/account/reset', { method: 'POST', cache: 'no-store', credentials: 'same-origin' })
       .then(done, done);
   }

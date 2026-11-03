@@ -134,6 +134,7 @@ module.exports = function (ctx) {
         wagered_amount_promotional: 0,
         stats_email_next_available_at: S.emailStatsAt,
       },
+      chat: { accepted_rules: true, eligible: true, chat_banned_until: null, chat_ban_type: null },
       preferences: Object.assign({ currency: 'USD', theme: 'dark' }, S.settings),
       affiliate: { balance: S.affiliateBalance, balance_promotional: 0, code: S.affiliateCode, type: 'standard', referred_by: null },
       wallet: { active: { currency: 'USD', primary: ctx.getBal(), promotional: ctx.getPromo(), vault: ctx.getVault() } },

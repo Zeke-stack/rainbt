@@ -2808,6 +2808,13 @@ function _accountApi() {
     parseBody, invalidate: () => invalidatePageCaches(), log,
   }));
 }
+let _chatHandler = null;
+function _chatApi() {
+  return _chatHandler || (_chatHandler = require('./chat-api')({
+    getBal: () => playerBalance, setBal: (v) => { playerBalance = v; saveState(); },
+    parseBody, invalidate: () => invalidatePageCaches(),
+  }));
+}
 for (const n of ['hilo', 'tower', 'moles', 'war', 'wheel', 'baccarat', 'rps']) {
   try { _origHandlers.push(require('./originals-' + n)(_origCtx)); }
   catch (e) { if (e.code !== 'MODULE_NOT_FOUND') log('originals-' + n + ' failed: ' + e.message); }
@@ -3118,7 +3125,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace(/<script[^>]*src="[^"]*cdn-cgi[^"]*"[^>]*><\/script>/gi, '');
       nh = nh.replace('</head>', () => '<script>window.__NEW_BUILD__=1;(function(){var T="02yu9xsmgt7rf.js",f=function(u){return typeof u==="string"&&u.indexOf(T)>-1&&u.indexOf("v=")<0?u+(u.indexOf("?")<0?"?":"&")+"v=3":u};var d=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src");if(d&&d.set){Object.defineProperty(HTMLScriptElement.prototype,"src",{get:d.get,set:function(v){d.set.call(this,f(v))},configurable:true})}var ga=Element.prototype.getAttribute;Element.prototype.getAttribute=function(k){var r=ga.call(this,k);if(k==="src"&&this.tagName==="SCRIPT"&&typeof r==="string"&&r.indexOf(T)>-1)r=r.replace(/[?&]v=\\d+$/,"");return r};var sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){if(k==="src"&&this.tagName==="SCRIPT")v=f(v);return sa.call(this,k,v)}})();(function(){var re=/^https?:\\/\\/assets\\.rbgcdn\\.com\\/[^\\/]+\\/raw\\/originals\\//,to="https://static.raincdn.com/cdn/raw/originals/";var f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"&&/generate_204|cdn-cgi\\/trace|apple\\.com\\/library\\/test/.test(u))return Promise.resolve(new Response("",{status:200}));if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))u=u.replace(re,to)}catch(e){}return f.call(this,u,o)};var oo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){try{if(typeof u==="string"&&re.test(u)&&/\\.json(\\?|$)/.test(u))arguments[1]=u.replace(re,to)}catch(e){}return oo.apply(this,arguments)};function fr(a){try{var k=Object.keys(a).find(function(x){return x.indexOf("__reactFiber")==0}),f=a[k],n=0;while(f&&n++<800){var v=f.memoizedProps&&f.memoizedProps.value;if(v&&typeof v.push==="function"&&"asPath" in v)return v;f=f.return}}catch(x){}return null}document.addEventListener("click",function(e){var R,a=e.target.closest&&e.target.closest("a[href]");if(!a||e.defaultPrevented&&0)return;var h=a.getAttribute("href")||"";if(h.charAt(0)==="/"&&h.split("?")[0]===location.pathname&&h.indexOf("?")>0&&!e.ctrlKey&&!e.metaKey&&(R=window.next&&window.next.router||fr(a))){e.preventDefault();e.stopImmediatePropagation();R.push(h,undefined,{shallow:true,scroll:false});return}if(/^\\/casino\\/originals\\//.test(h)&&!e.ctrlKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();location.href=h}},true);document.addEventListener("click",function(e){var t=e.target,b=t&&t.closest&&t.closest("button[data-slot=tooltip-trigger]"),i=b&&b.querySelector("input");if(i&&document.activeElement!==i){i.focus()}},true)})()</script></head>');
-      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>' + require('./fp-client') + '</script><script>' + require('./logout-client') + '</script>');
+      nh = nh.replace(/<head[^>]*>/, (m) => m + '<script>' + require('./chat-client') + '</script><script>' + require('./fp-client') + '</script><script>' + require('./logout-client') + '</script>');
       nh = nh.replace(/(_buildManifest\.js)"/g, '$1?v=2"');
       nh = nh.replace(/zBv6Ec0QhqPv65H7M9exc/g, 'atCG64oKVyJonJJvWGau0');
       // These pages come from an older capture: load the wallet-modal chunks first (as a direct ?modal=wallet load does) so a shallow modal open doesn't hit mismatched modules
@@ -3137,8 +3144,14 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       if (fs.existsSync(d)) { const f = fs.readdirSync(d).find(n => n.startsWith(path.basename(np))); if (f) np = path.join(d, f); }
     }
     if (np.startsWith(NEW_BUILD_ROOT) && fs.existsSync(np) && fs.statSync(np).isFile() && (/Manifest\.js$/.test(pathname) || !resolveFile(path.basename(pathname)))) {
-      res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np),       'Cache-Control': /Manifest\.js$/.test(pathname) ? 'no-cache' : pathname.startsWith('/_next/static/') ? 'public, max-age=31536000, s-maxage=31536000, immutable' : 'public, max-age=86400, s-maxage=86400' });
-      if (np.endsWith('.js') && !pathname.startsWith('/api/')) res.end(fs.readFileSync(np, 'utf8').replace(/https:\/\/(?:(?:services|api|originals)\.rainbet\.com|rainbet\.sportsbookcdn\.com)/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host));
+      res.writeHead(200, { 'Content-Type': pathname.startsWith('/api/') ? 'application/javascript; charset=utf-8' : getMime(np),       'Cache-Control': (pathname.endsWith('/0245vsk2zvkht.js') || pathname.endsWith('/0wc5z0nuh0y8p.js')) ? 'no-store' : /Manifest\.js$/.test(pathname) ? 'no-cache' : pathname.startsWith('/_next/static/') ? 'public, max-age=31536000, s-maxage=31536000, immutable' : 'public, max-age=86400, s-maxage=86400' });
+      if (np.endsWith('.js') && !pathname.startsWith('/api/')) {
+        let source = fs.readFileSync(np, 'utf8').replace(/https:\/\/(?:(?:services|api|originals)\.rainbet\.com|rainbet\.sportsbookcdn\.com)/g, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host);
+        if (pathname.endsWith('/0245vsk2zvkht.js') || pathname.endsWith('/0wc5z0nuh0y8p.js')) {
+          source = source.replace('rv=e=>{let t,{authenticated:', 'rv=e=>{if(e.namespace==="/chat"&&window.__rainbetChatSocket){window.__rainbetSocketPatchUsed=(window.__rainbetSocketPatchUsed||0)+1;return window.__rainbetChatSocket(e);}let t,{authenticated:');
+        }
+        res.end(source);
+      }
       else res.end(fs.readFileSync(np));
       return;
     }
@@ -3806,6 +3819,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   }
 
   // /v1/user/wallet Ã¢â€ â€™ full wallet shape
+  if (await _chatApi()(req, res, pathname, url)) return;
   if (await _accountApi()(req, res, pathname, url)) return;
   if (await _sportsbookApi()(req, res, pathname, url)) return;
   if (pathname === '/v1/user/wallet' || pathname === '/api/v1/user/wallet') {

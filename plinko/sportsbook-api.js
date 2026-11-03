@@ -600,6 +600,27 @@ module.exports = function createSportsbook(ctx) {
       reply(res, { now, balance: getBal(), sports, events, snapshotAt: snapshot.fetchedAt });
       return true;
     }
+    if (pathname === '/sb-api/sync' && req.method === 'POST') {
+      const body = await ctx.parseBody(req);
+      const known = new Set(bets.map((b) => b.id));
+      const h = history();
+      (Array.isArray(body && body.bets) ? body.bets.slice(0, 100) : []).forEach((b) => {
+        if (!b || typeof b.id !== 'string' || known.has(b.id) || !Array.isArray(b.legs) || !b.legs.length || !(b.stake > 0)) return;
+        if (!['open', 'won', 'lost', 'void'].includes(b.status)) return;
+        bets.push(b);
+        known.add(b.id);
+        if (h && !h.find((x) => x.id === b.id)) {
+          const settled = b.status !== 'open';
+          h.push({ id: b.id, game: 'sportsbook', amount: b.stake, payout: settled ? b.payout || 0 : 0, multiplier: settled ? r2((b.payout || 0) / b.stake) : 0, currency: 'USD', time: b.placedAt, result: !settled ? 'pending' : b.status === 'won' ? 'win' : b.status === 'void' ? 'push' : 'loss' });
+        }
+      });
+      bets.sort((a, b) => b.placedAt - a.placedAt);
+      if (bets.length > 300) bets.length = 300;
+      settleDue();
+      saveBets();
+      reply(res, { balance: getBal(), bets: bets.map(publicBet) });
+      return true;
+    }
     if (pathname === '/sb-api/bets' && req.method === 'GET') {
       reply(res, { balance: getBal(), bets: bets.map(publicBet) });
       return true;
