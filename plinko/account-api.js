@@ -16,14 +16,14 @@ const USER = {
 const LADDER = [];
 (function build() {
   const t = {
-    bronze: [1000, 2500, 5000, 10000],
-    silver: [25000, 50000, 100000, 175000],
-    gold: [250000, 400000, 600000, 850000],
-    platinum: [1200000, 1800000, 2500000, 3500000],
-    diamond: [5000000, 7500000, 10000000, 15000000],
-    infernal: [25000000, 35000000, 50000000, 75000000],
+    bronze: [4000, 10000, 18000, 26000, 36000],
+    silver: [50000, 60000, 72000, 84000, 95000],
+    gold: [110000, 200000, 300000, 400000, 500000],
+    platinum: [700000, 3000000, 7000000],
+    diamond: [10000000],
+    infernal: [500000000],
   };
-  const roman = ['I', 'II', 'III', 'IV'];
+  const roman = ['I', 'II', 'III', 'IV', 'V'];
   let id = 1;
   for (const name of Object.keys(t)) {
     t[name].forEach((th, i) => LADDER.push({
@@ -31,7 +31,7 @@ const LADDER = [];
       reward: Math.round(th * 0.004 * 100) / 100,
     }));
   }
-  LADDER.push({ id: id++, name: 'infernal-diamond', division: 'I', threshold: 100000000, threshold_promotional: 400000000, reward: 400000 });
+  LADDER.push({ id: id++, name: 'infernal-diamond', division: 'I', threshold: 1000000000, threshold_promotional: 4000000000, reward: 4000000 });
 })();
 
 function rankFor(wagered) {
