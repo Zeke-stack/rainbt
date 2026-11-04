@@ -1,7 +1,7 @@
 {
-  "name": "Vaultline",
-  "short_name": "Vaultline",
-  "description": "Secure self-custody crypto wallet",
+  "name": "DeadDrop",
+  "short_name": "DeadDrop",
+  "description": "Private escrow wallet. No logs. No trace.",
   "start_url": "/crypto/",
   "scope": "/crypto/",
   "display": "standalone",
