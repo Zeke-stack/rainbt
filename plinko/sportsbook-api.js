@@ -603,6 +603,38 @@ module.exports = function createSportsbook(ctx) {
     }
     return evIndex;
   }
+  const LIVE_HOST = 'https://api-a-c7818b61-600.sptpub.com';
+  const liveCache = new Map();
+  let liveDownUntil = 0;
+  async function liveFetch(rel, search) {
+    if (Date.now() < liveDownUntil) return null;
+    const key = rel + search;
+    const isManifest = /\/(live|prematch)\/brand\/\d+\/en\/0$/.test(rel);
+    const ttl = isManifest ? 1500 : 60000;
+    const hit = liveCache.get(key);
+    if (hit && Date.now() - hit.t < ttl) return hit.body;
+    try {
+      const r = await fetch(LIVE_HOST + rel + search, { signal: AbortSignal.timeout(5000), headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json', Origin: 'https://rainbet.sportsbookcdn.com', Referer: 'https://rainbet.sportsbookcdn.com/' } });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const body = Buffer.from(await r.arrayBuffer());
+      liveCache.set(key, { t: Date.now(), body });
+      if (liveCache.size > 300) for (const k of [...liveCache.keys()].slice(0, 100)) liveCache.delete(k);
+      if (/\/(live|prematch)\/brand\/\d+\/en\/\d{6,}$/.test(rel)) {
+        try {
+          const j = JSON.parse(body.toString('utf8'));
+          const idx = betbyEvents();
+          for (const id of Object.keys(j.events || {})) {
+            const ev = j.events[id], d = ev.desc || {};
+            idx.set(id, { competitors: (d.competitors || []).map((c) => ({ name: c.name })), tournament: { name: (j.tournaments && j.tournaments[d.tournament] || {}).name || '' }, sport: { id: d.sport }, scheduled: d.scheduled, markets: ev.markets });
+          }
+        } catch (e) { /* diff or partial */ }
+      }
+      return body;
+    } catch (e) {
+      if (!hit && !/^Error: http 404/.test(String(e))) liveDownUntil = Date.now() + 15000;
+      return hit ? hit.body : null;
+    }
+  }
   const MARKET_NAMES = { 1: '1x2', 10: 'Double chance', 16: 'Handicap', 18: 'Total', 26: 'Total', 186: 'Winner', 219: 'Winner', 223: 'Handicap', 225: 'Total', 251: 'Winner' };
   const hash32 = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
   function selName(sel, desc) {
@@ -738,6 +770,15 @@ module.exports = function createSportsbook(ctx) {
         res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
         res.end(JSON.stringify({ ...base, user_id: '7KX2M9QPD4', external_id: '7KX2M9QPD4', balance: String(Math.round(getBal() * 100)), is_authorized: true }));
         return true;
+      }
+      if (m[1] === 'api' && req.method === 'GET' && /^\/api\/v\d+\/(live|prematch|side|auth_side|top|descriptions)\//.test(rel)) {
+        const body = await liveFetch(rel, url.search);
+        if (body) {
+          const isManifest = /\/en\/0$/.test(rel);
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': isManifest ? 'no-store' : 'public, max-age=60', 'Access-Control-Allow-Origin': '*', 'X-Betby-Source': 'live' });
+          res.end(body);
+          return true;
+        }
       }
       if (fs.existsSync(file) && fs.statSync(file).isFile()) {
         res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
