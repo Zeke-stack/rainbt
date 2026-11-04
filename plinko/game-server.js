@@ -2895,6 +2895,13 @@ const PIXEL = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQ
 // ============================================================
 async function handleRequest(req, res) {
   _currentOrigin = getOrigin(req);
+  const _origEnd = res.end;
+  res.end = function (chunk, ...rest) {
+    if (typeof chunk === 'string' && chunk.length < 2e6 && /"(?:multiplier|payout_multiplier|cashout_multiplier)":\s*-?\d+\.\d{3,}/.test(chunk)) {
+      chunk = chunk.replace(/("(?:multiplier|payout_multiplier|cashout_multiplier)":\s*)(-?\d+\.\d{3,})/g, (m, k, v) => k + String(Math.round(parseFloat(v) * 100) / 100));
+    }
+    return _origEnd.call(this, chunk, ...rest);
+  };
   const url = new URL(req.url, _currentOrigin);
   let pathname = decodeURIComponent(url.pathname);
 
@@ -3924,6 +3931,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
 
   // Crypto/currencies endpoint (must return array for .reduce())
   if (pathname === '/v1/crypto' || pathname === '/api/v1/crypto') {
+    const _spx = await getSpotPrices();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify([
       { code: 'BTC', name: 'Bitcoin', icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/btc.svg', networks: [{network:'BTC',deposit:1,withdrawal:1},{network:'Lightning',deposit:1,withdrawal:0}] },
@@ -3947,7 +3955,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       { code: 'GBP', name: 'British Pound', symbol: '\u00a3', icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/gbp.svg', fiat: true },
       { code: 'CAD', name: 'Canadian Dollar', symbol: 'C\$', icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/cad.svg', fiat: true },
       { code: 'BRL', name: 'Brazilian Real', symbol: 'R\$', icon: 'https://assets.rbgcdn.com/223k2P3/raw/currencies/brl.svg', fiat: true }
-    ]));
+    ].map(c => c.fiat ? c : Object.assign(c, { rate: _spx[c.code] || ({ USDT: 1, USDC: 1, BNB: 600, XRP: 2.2, TRX: 0.25, ADA: 0.7, MATIC: 0.5, AVAX: 30, DOT: 6, SHIB: 0.00002, APE: 1 })[c.code] || 1 }))));
     return;
   }
 
