@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[29128],{92400(e,t,n){n.r(t),n.d(t,{default:()=>u});var s=n(41930),a=n(81726),d=n(8797),o=n(21377);const r=(0,a.Mz)(o.A,(e,t,n)=>(0,d.selectRecommendedEventIds)(e,t,n),(e,t)=>t.map(t=>e[t]).filter(Boolean));var c=n(41652),l=n(26970);const u=({eventId:e,tournamentId:t})=>{const n=(0,s.d4)(n=>r(n,t,e));return(0,l.jsx)(c.A,{events:n})}}}]);
+//# sourceMappingURL=RecommendedForFinishedEventsSpotlight.21bec7c3.chunk.js.map

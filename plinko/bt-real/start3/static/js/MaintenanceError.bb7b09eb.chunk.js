@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[80706],{66153(e,a,n){n.r(a);var c=n(78661),o=n(56887),r=n(40972),s=n(42353),l=n(26970);n.d(a,["default",0,()=>{const{t:e}=(0,o.B)(),a=(0,c.A)();return(0,l.jsx)(s.A,{icon:(0,l.jsx)(r.A,{name:"maintenance",size:72,color:a.common.warningColor}),secondaryText:e("Please check back soon"),children:e("We are briefly unavailable")})}])}}]);
+//# sourceMappingURL=MaintenanceError.bb7b09eb.chunk.js.map

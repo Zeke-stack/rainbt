@@ -576,6 +576,107 @@ module.exports = function createSportsbook(ctx) {
     return { ok: true, bets: out.map(publicBet), balance: getBal() };
   }
 
+  // ---- real Betby widget bets (coupon format), settled with odds-fair random outcomes
+  const BB_FILE = path.join(process.env.VERCEL ? require('os').tmpdir() : __dirname, 'sportsbook-bbets.json');
+  let bbets = [];
+  try { bbets = JSON.parse(fs.readFileSync(BB_FILE, 'utf8')); } catch (e) { /* none */ }
+  const saveBB = () => { try { fs.writeFileSync(BB_FILE, JSON.stringify(bbets.slice(0, 200))); } catch (e) { /* read-only */ } };
+  if (ctx.onReset) ctx.onReset(() => { bbets = []; saveBB(); });
+  const BB_DIR = path.join(__dirname, 'bt-real', 'mirror', 'api-a-c7818b61-600.sptpub.com', 'api', 'v4');
+  let evIndex = null;
+  function betbyEvents() {
+    if (evIndex) return evIndex;
+    evIndex = new Map();
+    for (const kind of ['prematch', 'live']) {
+      const dir = path.join(BB_DIR, kind, 'brand', '2374656571012681728', 'en');
+      let files = [];
+      try { files = fs.readdirSync(dir).filter((f) => /^\d{6,}$/.test(f)); } catch (e) { continue; }
+      for (const f of files) {
+        try {
+          const j = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+          for (const id of Object.keys(j.events || {})) {
+            const ev = j.events[id], d = ev.desc || {};
+            evIndex.set(id, { competitors: (d.competitors || []).map((c) => ({ name: c.name })), tournament: { name: (j.tournaments && j.tournaments[d.tournament] || {}).name || '' }, sport: { id: d.sport }, scheduled: d.scheduled, markets: ev.markets });
+          }
+        } catch (e) { /* skip */ }
+      }
+    }
+    return evIndex;
+  }
+  const MARKET_NAMES = { 1: '1x2', 10: 'Double chance', 16: 'Handicap', 18: 'Total', 26: 'Total', 186: 'Winner', 219: 'Winner', 223: 'Handicap', 225: 'Total', 251: 'Winner' };
+  const hash32 = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
+  function selName(sel, desc) {
+    const c = desc.competitors || [];
+    if (String(sel.market_id) === '1') return sel.outcome_id === '1' ? (c[0] && c[0].name) : sel.outcome_id === '2' ? (c[1] && c[1].name) : 'draw';
+    return sel.specifiers ? String(sel.outcome_id) + ' (' + sel.specifiers.replace(/^.*=/, '') + ')' : String(sel.outcome_id);
+  }
+  function placeBetby(body) {
+    const idx = betbyEvents();
+    const fail = (message, code, alt) => ({ accepted: [], error: [{ bet_request_id: '', message, code: code || 1, ...(alt ? { alt_stake: alt } : {}) }], slips: undefined });
+    let coupons;
+    if (Array.isArray(body)) coupons = body;
+    else if (body && Array.isArray(body.slips)) coupons = body.slips.map((s) => ({ ...s, bet_request_id: s.bets.map((i) => body.bets[i].event_id + '_' + body.bets[i].market_id + '_' + body.bets[i].outcome_id).join('_'), selections: s.bets.map((i) => body.bets[i]) }));
+    else return fail('Invalid bet');
+    const isSlips = !Array.isArray(body);
+    let total = 0;
+    for (const c of coupons) {
+      const stake = r2(Number(c.sum));
+      if (!(stake >= MIN_STAKE)) return fail('Min stake amount is ' + MIN_STAKE.toFixed(2), 221, MIN_STAKE.toFixed(2));
+      if (stake > MAX_STAKE) return fail('Maximum stake is $' + MAX_STAKE);
+      total += stake;
+    }
+    total = r2(total);
+    if (total > getBal() + 1e-9) return fail('Insufficient balance');
+    const now = Date.now(), accepted = [], slips = [];
+    setBal(r2(getBal() - total));
+    for (const c of coupons) {
+      const id = String(BigInt('0x' + crypto.randomBytes(7).toString('hex')) + 1000000000000n);
+      const sels = c.selections.map((s) => {
+        const ev = idx.get(String(s.event_id)) || {};
+        const mid = String(s.market_id);
+        return { event_id: String(s.event_id), market_id: mid, market_name: MARKET_NAMES[mid] || 'Market', outcome_id: String(s.outcome_id), specifiers: s.specifiers || '', outcome_name: selName({ ...s, market_id: mid, outcome_id: String(s.outcome_id) }, ev), k: String(s.k), status: 'open', desc: { competitors: ev.competitors || [], tournament: ev.tournament || {}, sport: ev.sport || {}, scheduled: ev.scheduled } };
+      });
+      const k = c.selections.length > 1 ? r2(c.selections.reduce((a, s) => a * Number(s.k), 1)) : Number(c.k || c.selections[0].k);
+      const stake = r2(Number(c.sum));
+      const bet = { id, front_bet_id: id, type: c.selections.length > 1 ? 'combo' : 'single', status: 'open', timestamp: Math.floor(now / 1000), k: k.toFixed(2), sum: stake.toFixed(2), potential_win: r2(stake * k).toFixed(2), currency: 'USD', selections: sels, bet_request_id: c.bet_request_id };
+      bbets.unshift(bet);
+      accepted.push({ bet_request_id: c.bet_request_id, bonus_id: null });
+      slips.push({ accepted: true, front_bet_id: id });
+      const h = history();
+      if (h) h.unshift({ id: 'sb' + id, game: 'sportsbook', amount: stake, payout: 0, multiplier: 0, currency: 'USD', time: now, result: 'pending' });
+      log('SPORTSBOOK: placed ' + bet.type + ' ' + id + ' stake=' + stake.toFixed(2) + ' k=' + bet.k + ' bal=' + getBal().toFixed(2));
+    }
+    if (bbets.length > 200) bbets.length = 200;
+    saveBB();
+    return isSlips ? { success: true, slips, error: [] } : { accepted, error: [] };
+  }
+  function settleBetby() {
+    const now = Date.now();
+    let changed = false;
+    for (const bet of bbets) {
+      if (bet.status !== 'open') continue;
+      const delay = 60e3 + hash32(bet.id + 'd') * 120e3;
+      if (now - bet.timestamp * 1000 < delay) continue;
+      let prob = 1;
+      for (const s of bet.selections) prob *= Math.min(0.97, 0.94 / Number(s.k));
+      const won = hash32(bet.id + 'w') < prob;
+      const stake = Number(bet.sum);
+      const payout = won ? r2(stake * Number(bet.k)) : 0;
+      bet.status = won ? 'won' : 'lost';
+      bet.selections.forEach((s) => { s.status = won ? 'won' : 'lost'; });
+      if (won) { bet.result_sum = payout.toFixed(2); setBal(r2(getBal() + payout)); }
+      addStats(stake, payout, 3);
+      const h = history();
+      const row = h && h.find((x) => x.id === 'sb' + bet.id);
+      if (row) { row.payout = payout; row.multiplier = r2(payout / stake); row.result = won ? 'win' : 'loss'; }
+      log('SPORTSBOOK: ' + bet.id + ' ' + bet.status + ' stake=' + stake.toFixed(2) + ' payout=' + payout.toFixed(2));
+      changed = true;
+    }
+    if (changed) saveBB();
+  }
+  const tmb = setInterval(settleBetby, 5000);
+  if (tmb.unref) tmb.unref();
+
   if (!lastRefreshAt && Date.now() - (snapshot.fetchedAt || 0) > REFRESH_MS) refreshSnapshot();
   const rt = setInterval(() => { if (Date.now() - lastRefreshAt > REFRESH_MS) refreshSnapshot(); }, 60e3);
   if (rt.unref) rt.unref();
@@ -583,7 +684,69 @@ module.exports = function createSportsbook(ctx) {
   return async function handle(req, res, pathname, url) {
     if (pathname === '/bt-renderer.min.js') {
       res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
-      res.end(fs.readFileSync(CLIENT_FILE));
+      const real = path.join(__dirname, 'bt-real', 'bt-renderer.min.js');
+      if (fs.existsSync(real) && url.searchParams.get('fake') !== '1') {
+        let src = fs.readFileSync(real, 'utf8');
+        const O = 'location.origin+';
+        src = src.replace('r("https://api-a-c7818b61-600.sptpub.com")', 'r(' + O + '"/bt-api")')
+          .replace('r("https://files-immutable-4cbc033nbd3.sptpub.com")', 'r(' + O + '"/bt-files")')
+          .replace('r("https://bt-app-static-themes.sptpub.com")', 'r(' + O + '"/bt-themes")')
+          .replace('r("https://static.sptpub.com")', 'r(' + O + '"/bt-static")')
+          .replace('a.p="https://start3.sptpub.com/"', 'a.p=' + O + '"/bt-start3/"');
+        res.end(src);
+      } else res.end(fs.readFileSync(CLIENT_FILE));
+      return true;
+    }
+    if (/^\/bt-api\/api\/v2\/coupon\/brand\/\d+\/bet\/place$/.test(pathname) && req.method === 'POST') {
+      const b = await ctx.parseBody(req).catch(() => null);
+      const out = placeBetby(b);
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(out));
+      return true;
+    }
+    if (/^\/bt-api\/api\/v2\/my_bets\/list$/.test(pathname)) {
+      settleBetby();
+      const q = url.searchParams;
+      const st = q.get('status') || '';
+      const skip = Number(q.get('skip')) || 0, limit = Number(q.get('limit')) || 50;
+      const from = Number(q.get('timestamp_from')) || 0, to = Number(q.get('timestamp_to')) || 0;
+      let list = bbets.filter((x) => (!st || x.status === st) && (!from || x.timestamp >= from) && (!to || x.timestamp <= to));
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ count: list.length, results: list.slice(skip, skip + limit) }));
+      return true;
+    }
+    if (/^\/bt-(api|files|themes|static|start3)\//.test(pathname)) {
+      if (req.method !== 'GET' && req.method !== 'OPTIONS' && !process.env.VERCEL) {
+        const b = await ctx.parseBody(req).catch(() => ({}));
+        try { fs.appendFileSync(path.join(__dirname, 'bt-real', 'posts.log'), req.method + ' ' + pathname + url.search + ' ' + JSON.stringify(b) + '\n'); } catch (e) {}
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end('{}');
+        return true;
+      }
+      const m = pathname.match(/^\/bt-(\w+)(\/.*)$/);
+      const hosts = { api: 'api-a-c7818b61-600.sptpub.com', files: 'files-immutable-4cbc033nbd3.sptpub.com', themes: 'bt-app-static-themes.sptpub.com', static: 'static.sptpub.com', start3: 'start3.sptpub.com' };
+      const host = hosts[m[1]];
+      const rel = decodeURIComponent(m[2]).replace(/\.\.+/g, '');
+      const sfx = url.search ? '@' + encodeURIComponent(url.search).replace(/%/g, '_') : '';
+      const dir = path.join(__dirname, 'bt-real', m[1] === 'start3' ? 'start3' : path.join('mirror', host));
+      const file = path.join(dir, rel + sfx);
+      const types = { '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.woff': 'font/woff' };
+      if (m[1] === 'api' && /\/auth\/brand\/\d+\/identify$/.test(rel)) {
+        const sf = path.join(dir, rel.replace(/identify$/, 'settings') + '@' + encodeURIComponent('?lang=en').replace(/%/g, '_'));
+        let base = {};
+        try { base = JSON.parse(fs.readFileSync(sf, 'utf8')); } catch (e) {}
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ ...base, user_id: '7KX2M9QPD4', external_id: '7KX2M9QPD4', balance: String(Math.round(getBal() * 100)), is_authorized: true }));
+        return true;
+      }
+      if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+        res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
+        res.end(fs.readFileSync(file));
+      } else {
+        if (!process.env.VERCEL) try { fs.appendFileSync(path.join(__dirname, 'bt-real', 'missing.txt'), m[1] + ' ' + rel + url.search + '\n'); } catch (e) {}
+        res.writeHead(/\/(favorite|promo|bonus)\b/.test(rel) ? 200 : 404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(/\/(favorite|promo\/tournaments|promo\/banners)/.test(rel) ? '[]' : '{}');
+      }
       return true;
     }
     if (pathname === '/v1/sportsbook/initiate') {

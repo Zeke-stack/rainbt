@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[57963],{57963(e,t,n){var r=n(12040),s=n(48761),a=n(26970);const o=(0,r.A)({promoTournamentLoader:{width:"100%",height:"100%",display:"flex",justifyContent:"center",alignItems:"center"}});n.d(t,["A",0,()=>{const e=o();return(0,a.jsx)("div",{className:e.promoTournamentLoader,children:(0,a.jsx)(s.A,{})})}])}}]);
+//# sourceMappingURL=57963.d78c5450.chunk.js.map

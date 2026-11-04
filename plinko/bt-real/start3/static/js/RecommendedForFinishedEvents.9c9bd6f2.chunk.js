@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[64180],{83156(e,t,n){n.r(t);var s=n(63474),d=n(41930),a=n(58877),c=n(7964),o=n(46635),r=n(26970);const u=()=>{const{tournamentId:e,eventId:t}=(0,a.A)(),n=(0,d.d4)(n=>c.Tp.selectRecommendedEventIds(n,e,t));return(0,r.jsx)(o.A,{eventIds:n})},m=(0,s.memo)(u);n.d(t,["default",0,m])}}]);
+//# sourceMappingURL=RecommendedForFinishedEvents.9c9bd6f2.chunk.js.map

@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[13854],{13854(r,t,e){e.d(t,["A",0,(r,t=null)=>{try{return JSON.parse(r)}catch{return t}}])}}]);
+//# sourceMappingURL=13854.15a8bd7e.chunk.js.map

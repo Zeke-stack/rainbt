@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[86221],{6318(e,t,s){s.r(t);var a=s(41930),l=s(90624),p=s(58877),r=s(7964),u=s(99586),d=s(94843),o=s(26970);s.d(t,["default",0,()=>{const{eventId:e}=(0,p.A)(),t=(0,a.d4)(r.Tp.selectAppDataLoaded),s=(0,a.d4)(t=>(0,u.A)(t,e));return t?s?.sport?.id===d.cDd?(0,o.jsx)(l.C5,{to:"/",replace:!0}):(0,o.jsx)(l.C5,{to:`/${s?.sport.slug}/${s?.category.slug}/${s?.tournament.slug}/${s?.slug}-${e}`,replace:!0}):null}])}}]);
+//# sourceMappingURL=EventRedirect.9f43eb47.chunk.js.map

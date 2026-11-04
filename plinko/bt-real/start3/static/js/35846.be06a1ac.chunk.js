@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[35846],{35846(s,n,c){var o=c(41930),t=c(36357),u=c(60314),a=c(93667),e=c(26970);c.d(n,["A",0,s=>{const n=(0,o.wA)();return(0,e.jsx)(t.A,{...s,onUseBonusClick:s=>n((0,u.applyBonus)(s)),onActivateBonusClick:(s,c)=>n((0,a.acceptBonus)(s,c))})}])}}]);
+//# sourceMappingURL=35846.be06a1ac.chunk.js.map

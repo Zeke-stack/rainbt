@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkbetby_app||=[]).push([[30456],{30456(a,e,t){var r=t(4200),i=t(9329),n=t(26970);t.d(e,["A",0,({activeMarketIndex:a,fastAppear:e,markets:t,onMarketChange:s})=>(0,n.jsx)(i.BU,{$fastAppear:e,role:"tablist",children:t.map((e,t)=>{const d=String(e.marketName||e.marketId);return(0,n.jsx)(i.ac,{type:"button","data-editor-id":"rindleMarketTab",$active:t===a,"aria-selected":t===a,"data-title":d,onClick:()=>s(t),role:"tab",children:d},(0,r.g0)(e,t))})})])}}]);
+//# sourceMappingURL=30456.ed3631d4.chunk.js.map
