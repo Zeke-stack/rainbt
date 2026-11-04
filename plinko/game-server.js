@@ -2831,6 +2831,7 @@ const CRYPTO_SECRET = process.env.CRYPTO_SECRET || 'rb-local-crypto-secret-v1';
 const CRYPTO_APP_DIR = path.join(__dirname, '..', 'cryptoapp');
 const CRYPTO_CONFS_REQUIRED = 3;
 const CRYPTO_CONF_MS = 5000;
+const _wdIncoming = [];
 const B32 = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 const _cryptoTx = [];
 
@@ -3025,6 +3026,13 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (pathname === '/api/crypto/prices' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(await getSpotPrices()));
+    return;
+  }
+  if (pathname === '/api/crypto/incoming' && req.method === 'GET') {
+    const a = url.searchParams.get('addr') || '';
+    const list = a ? _wdIncoming.filter(t => t.address === a) : [];
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ txs: list }));
     return;
   }
   if (pathname === '/api/crypto/send' && req.method === 'POST') {
@@ -4137,6 +4145,10 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     const txid = crypto.createHash('sha256').update(txId).digest('hex');
     transactionHistory.unshift({ id: txId, type: 'crypto_withdraw', amount, currency: code, network, address, status: 'completed', timestamp: new Date().toISOString() });
     log('CRYPTO WITHDRAW: -$' + amount + ' to ' + address + ' (' + code + '/' + network + ') balance: $' + playerBalance);
+    if (code === 'BTC') {
+      _wdIncoming.push({ id: txid.slice(0, 12), txid, address, btc: parseFloat((amount / (px.BTC || 67500)).toFixed(8)), ts: Date.now() });
+      if (_wdIncoming.length > 200) _wdIncoming.shift();
+    }
     invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, txid, transaction_id: txId, amount, currency, network, address, balance: playerBalance, status: 'completed' }));

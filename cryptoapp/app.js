@@ -94,7 +94,7 @@
     if (!S.txs.length) return h + '<div class="center sub" style="margin-top:80px">No transactions yet</div>';
     h += '<div class="list">' + S.txs.map(function (t, i) {
       var c = confs(t), done = c >= CONFS;
-      return '<button class="row" data-tx="' + i + '">' + icon(t.sym) + '<div class="grow"><div class="nm">Sent ' + t.sym + '</div><div class="sub">' + fmtDate(t.ts) + ' · <span class="pill ' + (done ? 'done' : 'pend') + '">' + (done ? 'Confirmed' : 'Pending ' + c + '/' + CONFS) + '</span></div></div><div class="rt"><div class="a">-' + amt(t.amount, t.sym) + '</div><div class="sub">' + usd(t.amount * prices[t.sym]) + '</div></div></button>';
+      return '<button class="row" data-tx="' + i + '">' + icon(t.sym) + '<div class="grow"><div class="nm">' + (t.dir === 'in' ? 'Received ' : 'Sent ') + t.sym + '</div><div class="sub">' + fmtDate(t.ts) + ' · <span class="pill ' + (done ? 'done' : 'pend') + '">' + (done ? 'Confirmed' : 'Pending ' + c + '/' + CONFS) + '</span></div></div><div class="rt"><div class="a">' + (t.dir === 'in' ? '+' : '-') + amt(t.amount, t.sym) + '</div><div class="sub">' + usd(t.amount * prices[t.sym]) + '</div></div></button>';
     }).join('') + '</div>';
     return h;
   }
@@ -192,7 +192,7 @@
   }
   function txDetail(i) {
     var t = S.txs[i], c = confs(t), done = c >= CONFS;
-    openSheet('<div class="sh-t">Sent ' + t.sym + '</div><div class="big">-' + amt(t.amount, t.sym) + ' ' + t.sym + '</div><div class="center" style="margin-bottom:14px"><span class="pill ' + (done ? 'done' : 'pend') + '">' + (done ? 'Confirmed' : 'Pending ' + c + '/' + CONFS) + '</span></div>' +
+    openSheet('<div class="sh-t">' + (t.dir === 'in' ? 'Received ' : 'Sent ') + t.sym + '</div><div class="big">' + (t.dir === 'in' ? '+' : '-') + amt(t.amount, t.sym) + ' ' + t.sym + '</div><div class="center" style="margin-bottom:14px"><span class="pill ' + (done ? 'done' : 'pend') + '">' + (done ? 'Confirmed' : 'Pending ' + c + '/' + CONFS) + '</span></div>' +
       '<div class="kv"><span>Date</span><span>' + fmtDate(t.ts) + '</span></div><div class="kv"><span>To</span><span style="max-width:62%;word-break:break-all;text-align:right;font-family:ui-monospace,Menlo,monospace;font-size:12px">' + t.to + '</span></div><div class="kv"><span>Network fee</span><span>' + (t.fee || 0) + ' BTC</span></div><div class="kv"><span>Transaction ID</span><span style="max-width:62%;word-break:break-all;text-align:right;font-family:ui-monospace,Menlo,monospace;font-size:11px">' + t.txid + '</span></div>');
   }
   function assetSheet(sym) {
@@ -219,6 +219,20 @@
   function refreshPrices() {
     fetch(API + '/api/crypto/prices').then(function (r) { return r.json(); }).then(function (p) { Object.keys(p).forEach(function (k) { prices[k] = p[k]; }); if (!$('sheet').classList.contains('on')) render(); }).catch(function () {});
   }
+  function pollIncoming() {
+    fetch(API + '/api/crypto/incoming?addr=' + encodeURIComponent(S.addr), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+      var changed = false;
+      (j.txs || []).forEach(function (t) {
+        if (S.txs.some(function (x) { return x.txid === t.txid; })) return;
+        S.hold.BTC = (S.hold.BTC || 0) + t.btc;
+        S.txs.unshift({ sym: 'BTC', amount: t.btc, fee: 0, to: S.addr, ts: t.ts, txid: t.txid, dir: 'in' });
+        changed = true;
+      });
+      if (changed) { save(); if (!$('sheet').classList.contains('on')) render(); toast('Received Bitcoin'); }
+    }).catch(function () {});
+  }
+  pollIncoming();
+  setInterval(pollIncoming, 3000);
   refreshPrices();
   setInterval(refreshPrices, 60000);
   setInterval(function () { if (tab === 'activity' && !$('sheet').classList.contains('on')) render(); }, 2500);
