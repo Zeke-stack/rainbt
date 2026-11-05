@@ -93,8 +93,61 @@
     });
     return h + '</div>';
   }
+  var actView = 'tx', rcpts = null, rcptErr = false, rcptAt = 0;
+  function loadReceipts() {
+    if (Date.now() - rcptAt < 2000) return;
+    rcptAt = Date.now();
+    fetch(API + '/bt-api/api/v2/my_bets/list?limit=50', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+      var n = JSON.stringify(j.results || []), o = JSON.stringify(rcpts || []);
+      rcptErr = false; rcpts = j.results || [];
+      if (n !== o && tab === 'activity' && actView === 'rc' && !$('sheet').classList.contains('on')) render();
+    }).catch(function () { rcptErr = true; if (rcpts === null) { rcpts = []; if (tab === 'activity' && actView === 'rc') render(); } });
+  }
+  function seg() {
+    return '<div class="seg"><button data-view="tx" class="' + (actView === 'tx' ? 'on' : '') + '">Transactions</button><button data-view="rc" class="' + (actView === 'rc' ? 'on' : '') + '">Receipts</button></div>';
+  }
+  function betLabel(b) { return b.type === 'combo' ? 'Parlay (' + b.selections.length + ' legs)' : 'Single'; }
+  function stat(b) { return b.status === 'won' ? ['Won', 'done'] : b.status === 'lost' ? ['Lost', 'lost'] : ['Open', 'pend']; }
+  function evName(s) { var c = (s.desc && s.desc.competitors) || []; return c.length ? c.map(function (x) { return x.name; }).join(' vs ') : 'Event #' + s.event_id; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function receipts() {
+    var h = '<div class="top"><h1>Activity</h1></div>' + seg();
+    if (rcpts === null) { loadReceipts(); return h + '<div class="center sub" style="margin-top:80px">Loading receipts…</div>'; }
+    loadReceipts();
+    if (!rcpts.length) return h + '<div class="center sub" style="margin-top:80px">No sportsbook receipts yet<br>Bets you place on Rainbet Sports appear here</div>';
+    return h + '<div class="list">' + rcpts.map(function (b, i) {
+      var st = stat(b), first = b.selections[0];
+      var ret = b.status === 'won' ? '+$' + Number(b.result_sum || b.potential_win).toFixed(2) : b.status === 'lost' ? '-$' + Number(b.sum).toFixed(2) : '$' + Number(b.sum).toFixed(2);
+      return '<button class="row" data-rc="' + i + '"><div class="coin rcico">R</div><div class="grow"><div class="nm">' + esc(b.type === 'combo' ? betLabel(b) : evName(first)) + '</div><div class="sub">' + fmtDate(b.timestamp * 1000) + ' · <span class="pill ' + st[1] + '">' + st[0] + '</span></div></div><div class="rt"><div class="a ' + (b.status === 'won' ? 'up' : b.status === 'lost' ? 'dn' : '') + '">' + ret + '</div><div class="sub">@ ' + b.k + '</div></div></button>';
+    }).join('') + '</div>';
+  }
+  function barcode(seed) {
+    var r = rng(seed), x = 0, out = '';
+    while (x < 236) { var w = 1 + Math.floor(r() * 3); if (r() > 0.45) out += '<rect x="' + x + '" y="0" width="' + w + '" height="44"/>'; x += w + 1; }
+    return '<svg viewBox="0 0 240 44" class="bar" fill="#111">' + out + '</svg>';
+  }
+  function receiptDetail(i) {
+    var b = rcpts[i]; if (!b) return;
+    var st = stat(b), d = new Date(b.timestamp * 1000);
+    var payout = b.status === 'won' ? Number(b.result_sum || b.potential_win) : b.status === 'lost' ? 0 : Number(b.potential_win);
+    var h = '<div class="rcpt"><div class="rh"><div class="logo">RAINBET</div><div class="rs">Sportsbook · Bet Receipt</div></div>';
+    h += '<div class="rstat ' + st[1] + '">' + st[0].toUpperCase() + '</div>';
+    h += '<div class="rl"><span>Bet ID</span><b>' + esc(b.front_bet_id || b.id) + '</b></div>';
+    h += '<div class="rl"><span>Placed</span><b>' + d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' }) + '</b></div>';
+    h += '<div class="rl"><span>Bet type</span><b>' + betLabel(b) + '</b></div><div class="dash"></div>';
+    b.selections.forEach(function (s) {
+      var ss = s.status === 'won' ? 'done' : s.status === 'lost' ? 'lost' : 'pend';
+      h += '<div class="leg"><div class="lt">' + esc((s.desc && s.desc.tournament && s.desc.tournament.name) || 'Sportsbook') + (s.desc && s.desc.scheduled ? ' · ' + new Date(s.desc.scheduled * 1000).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '') + '</div><div class="le">' + esc(evName(s)) + '</div><div class="lm"><span>' + esc(s.market_name) + '</span><span>' + esc(/tt:|^\d+$/.test(s.outcome_name || '') ? 'Selection' : s.outcome_name) + '</span></div><div class="lo"><span class="pill ' + ss + '">' + (s.status === 'open' ? 'Open' : s.status === 'won' ? 'Won' : 'Lost') + '</span><b>' + esc(s.k) + '</b></div></div>';
+    });
+    h += '<div class="dash"></div><div class="rl"><span>Total odds</span><b>' + esc(b.k) + '</b></div><div class="rl"><span>Stake</span><b>$' + Number(b.sum).toFixed(2) + ' ' + esc(b.currency || 'USD') + '</b></div>';
+    h += '<div class="rl tot"><span>' + (b.status === 'open' ? 'Potential payout' : 'Payout') + '</span><b>$' + payout.toFixed(2) + '</b></div>';
+    h += '<div class="dash"></div>' + barcode(String(b.id)) + '<div class="rn">' + esc(String(b.id)) + '</div><div class="rn">Rainbet Sportsbook · Thank you for betting</div></div>';
+    h += '<button class="btn ghost" data-close="1" style="margin-top:14px">Close</button>';
+    openSheet(h);
+  }
   function activity() {
-    var h = '<div class="top"><h1>Activity</h1></div>';
+    if (actView === 'rc') return receipts();
+    var h = '<div class="top"><h1>Activity</h1></div>' + seg();
     if (!S.txs.length) return h + '<div class="center sub" style="margin-top:80px">No transactions yet</div>';
     h += '<div class="list">' + S.txs.map(function (t, i) {
       var c = confs(t), done = c >= CONFS;
@@ -111,6 +164,7 @@
   function openSheet(html) { $('sheet').innerHTML = '<div class="grab"></div>' + html; $('sheet').classList.add('on'); $('sheet-bg').classList.add('on'); $('sheet').scrollTop = 0; }
   function closeSheet() { if (busy) return; $('sheet').classList.remove('on'); $('sheet-bg').classList.remove('on'); }
   $('sheet-bg').addEventListener('click', closeSheet);
+  $('sheet').addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeSheet(); });
 
   function qr(text) {
     var n = 29, r = rng(text), cells = '';
@@ -307,7 +361,9 @@
   $('tabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { tab = b.dataset.tab; render(); $('screen').scrollTop = 0; } });
   $('screen').addEventListener('click', function (e) {
     var t;
-    if ((t = e.target.closest('[data-range]'))) { range = t.dataset.range; render(); }
+    if ((t = e.target.closest('[data-view]'))) { actView = t.dataset.view; render(); }
+    else if ((t = e.target.closest('[data-rc]'))) receiptDetail(+t.dataset.rc);
+    else if ((t = e.target.closest('[data-range]'))) { range = t.dataset.range; render(); }
     else if ((t = e.target.closest('[data-act]'))) {
       var a = t.dataset.act;
       if (a === 'send') send('BTC'); else if (a === 'receive') receive('BTC'); else if (a === 'swap') swap('BTC', 'LTTC'); else toast('Buying is unavailable in your region');
@@ -335,7 +391,7 @@
   setInterval(pollIncoming, 3000);
   refreshPrices();
   setInterval(refreshPrices, 60000);
-  setInterval(function () { if (tab === 'activity' && !$('sheet').classList.contains('on')) render(); }, 2500);
+  setInterval(function () { if (tab === 'activity' && !$('sheet').classList.contains('on')) { if (actView === 'rc') loadReceipts(); else render(); } }, 2500);
   var scr = $('screen'), ptr = $('ptr'), py = null, pd = 0, refreshing = false;
   scr.addEventListener('touchstart', function (e) { py = scr.scrollTop <= 0 && !refreshing ? e.touches[0].clientY : null; pd = 0; }, { passive: true });
   scr.addEventListener('touchmove', function (e) {

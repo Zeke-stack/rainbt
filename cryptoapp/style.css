@@ -66,7 +66,29 @@ h1{font-size:26px;font-weight:700;letter-spacing:-.4px}
 .ok svg{width:38px;height:38px;stroke:var(--up);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .center{text-align:center}
 .pill{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700}
-.pill.pend{background:rgba(250,204,21,.14);color:#facc15}.pill.done{background:rgba(34,197,94,.14);color:var(--up)}
+.pill.pend{background:rgba(250,204,21,.14);color:#facc15}.pill.done{background:rgba(34,197,94,.14);color:var(--up)}.pill.lost{background:rgba(239,68,68,.14);color:var(--dn)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;padding:8px 0;border-radius:9px;font-size:13px;font-weight:600;color:var(--m)}
+.seg button.on{background:var(--card2);color:var(--t)}
+.rcico{background:linear-gradient(135deg,#1d4ed8,#0ea5e9)}
+.rcpt{background:#fff;color:#111;border-radius:14px;padding:20px 18px 16px;font-family:ui-monospace,Menlo,monospace;-webkit-mask:radial-gradient(circle 7px at 7px 100%,#0000 98%,#000) -7px 0/14px 100% repeat-x;mask:radial-gradient(circle 7px at 7px 100%,#0000 98%,#000) -7px 0/14px 100% repeat-x;padding-bottom:22px}
+.rcpt .rh{text-align:center;margin-bottom:10px}
+.rcpt .logo{font-family:-apple-system,system-ui,sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;color:#1d4ed8}
+.rcpt .rs{font-size:11px;color:#555;margin-top:2px;text-transform:uppercase;letter-spacing:1px}
+.rcpt .rstat{text-align:center;font-weight:800;letter-spacing:2px;font-size:13px;padding:6px 0;border:2px solid #111;border-radius:6px;margin:10px 0 12px}
+.rcpt .rstat.done{color:#15803d;border-color:#15803d}.rcpt .rstat.lost{color:#b91c1c;border-color:#b91c1c}.rcpt .rstat.pend{color:#a16207;border-color:#a16207}
+.rcpt .rl{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:3px 0}
+.rcpt .rl span{color:#666}.rcpt .rl b{text-align:right;word-break:break-all}
+.rcpt .rl.tot{font-size:15px;padding-top:6px}.rcpt .rl.tot b{font-size:17px}
+.rcpt .dash{border-top:1.5px dashed #aaa;margin:10px 0}
+.rcpt .leg{padding:6px 0 8px;border-bottom:1px dotted #ccc}
+.rcpt .lt{font-size:10px;color:#777;text-transform:uppercase}
+.rcpt .le{font-size:13px;font-weight:700;margin:2px 0}
+.rcpt .lm{display:flex;justify-content:space-between;font-size:12px;color:#333;gap:8px}
+.rcpt .lo{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:13px}
+.rcpt .pill.pend{background:#fef3c7;color:#a16207}.rcpt .pill.done{background:#dcfce7;color:#15803d}.rcpt .pill.lost{background:#fee2e2;color:#b91c1c}
+.rcpt .bar{width:100%;height:44px;margin-top:4px}
+.rcpt .rn{text-align:center;font-size:10px;color:#666;margin-top:6px;word-break:break-all}
 #toast{position:fixed;left:50%;top:calc(var(--st) + 10px);transform:translate(-50%,-80px);background:var(--card2);border:1px solid var(--line);padding:11px 18px;border-radius:14px;font-size:14px;font-weight:600;transition:.3s;z-index:9}
 #toast.on{transform:translate(-50%,0)}
 .big{font-size:44px;font-weight:700;text-align:center;letter-spacing:-1px;margin:6px 0}
