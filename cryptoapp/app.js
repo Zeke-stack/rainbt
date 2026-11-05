@@ -126,22 +126,21 @@
     while (x < 236) { var w = 1 + Math.floor(r() * 3); if (r() > 0.45) out += '<rect x="' + x + '" y="0" width="' + w + '" height="44"/>'; x += w + 1; }
     return '<svg viewBox="0 0 240 44" class="bar" fill="#111">' + out + '</svg>';
   }
+  function american(k) { k = Number(k); if (!(k > 1)) return String(k); return k >= 2 ? '+' + Math.round((k - 1) * 100) : String(Math.round(-100 / (k - 1))); }
+  function money(n) { return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function receiptDetail(i) {
     var b = rcpts[i]; if (!b) return;
-    var st = stat(b), d = new Date(b.timestamp * 1000);
-    var payout = b.status === 'won' ? Number(b.result_sum || b.potential_win) : b.status === 'lost' ? 0 : Number(b.potential_win);
-    var h = '<div class="rcpt"><div class="rh"><div class="logo">RAINBET</div><div class="rs">Sportsbook · Bet Receipt</div></div>';
-    h += '<div class="rstat ' + st[1] + '">' + st[0].toUpperCase() + '</div>';
-    h += '<div class="rl"><span>Bet ID</span><b>' + esc(b.front_bet_id || b.id) + '</b></div>';
-    h += '<div class="rl"><span>Placed</span><b>' + d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' }) + '</b></div>';
-    h += '<div class="rl"><span>Bet type</span><b>' + betLabel(b) + '</b></div><div class="dash"></div>';
+    var d = new Date(b.timestamp * 1000), stake = Number(b.sum), win = Number(b.potential_win) - stake;
+    var h = '<div class="rcpt"><div class="rh"><img src="rainbet-logo.svg" alt="Rainbet"><i></i><span>SPORTSBOOK</span></div><div class="dbl"></div>';
+    h += '<div class="rt1">' + (b.type === 'combo' ? 'PARLAY' : 'STRAIGHT BET') + '</div><div class="rt2">' + b.selections.length + ' BET(S) @ ' + money(stake) + '</div><div class="sgl"></div>';
     b.selections.forEach(function (s) {
-      var ss = s.status === 'won' ? 'done' : s.status === 'lost' ? 'lost' : 'pend';
-      h += '<div class="leg"><div class="lt">' + esc((s.desc && s.desc.tournament && s.desc.tournament.name) || 'Sportsbook') + (s.desc && s.desc.scheduled ? ' · ' + new Date(s.desc.scheduled * 1000).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '') + '</div><div class="le">' + esc(evName(s)) + '</div><div class="lm"><span>' + esc(s.market_name) + '</span><span>' + esc(/tt:|^\d+$/.test(s.outcome_name || '') ? 'Selection' : s.outcome_name) + '</span></div><div class="lo"><span class="pill ' + ss + '">' + (s.status === 'open' ? 'Open' : s.status === 'won' ? 'Won' : 'Lost') + '</span><b>' + esc(s.k) + '</b></div></div>';
+      var sc = s.desc && s.desc.scheduled ? new Date(s.desc.scheduled * 1000) : null;
+      var pick = /tt:|^\d+$/.test(s.outcome_name || '') ? (s.market_name || 'Selection') : s.outcome_name;
+      h += '<div class="leg"><div class="lt">' + (sc ? sc.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' @ ' + sc.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '') + '</div><div class="lt">' + esc(((s.desc && s.desc.tournament && s.desc.tournament.name) || 'Sportsbook').toUpperCase()) + '</div><div class="lt">' + esc(evName(s).toUpperCase().replace(' VS ', '-')) + '</div><div class="lp"><span>[' + esc(String(s.event_id).slice(-6)) + '] ' + esc(String(pick).toUpperCase()) + '</span><span>' + american(s.k) + '</span></div></div>';
     });
-    h += '<div class="dash"></div><div class="rl"><span>Total odds</span><b>' + esc(b.k) + '</b></div><div class="rl"><span>Stake</span><b>$' + Number(b.sum).toFixed(2) + ' ' + esc(b.currency || 'USD') + '</b></div>';
-    h += '<div class="rl tot"><span>' + (b.status === 'open' ? 'Potential payout' : 'Payout') + '</span><b>$' + payout.toFixed(2) + '</b></div>';
-    h += '<div class="dash"></div>' + barcode(String(b.id)) + '<div class="rn">' + esc(String(b.id)) + '</div><div class="rn">Rainbet Sportsbook · Thank you for betting</div></div>';
+    h += '<div class="rl"><span>TICKET COST:</span><b>' + money(stake) + '</b></div><div class="rl"><span>TO WIN:</span><b>' + money(win) + '</b></div><div class="rl"><span>TO COLLECT:</span><b>' + money(stake + win) + '</b></div>';
+    h += '<div class="rts">' + d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB') + '</div>';
+    h += '<div class="dash"></div>' + barcode(String(b.id)) + '<div class="rn">' + esc(String(b.front_bet_id || b.id)) + '</div></div>';
     h += '<button class="btn ghost" data-close="1" style="margin-top:14px">Close</button>';
     openSheet(h);
   }
