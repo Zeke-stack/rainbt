@@ -607,6 +607,7 @@ module.exports = function createSportsbook(ctx) {
   const liveCache = new Map();
   let liveDownUntil = 0, liveOk = false;
   async function liveFetch(rel, search) {
+    if (process.env.VERCEL && !process.env.BETBY_LIVE) return null;
     if (Date.now() < liveDownUntil) return null;
     const key = rel + search;
     const isManifest = /\/(live|prematch)\/brand\/\d+\/en\/0$/.test(rel);
@@ -788,7 +789,7 @@ module.exports = function createSportsbook(ctx) {
         const body = await liveFetch(rel, url.search);
         if (body) {
           const isManifest = /\/en\/0$/.test(rel);
-          res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*', 'X-Betby-Source': 'live' });
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': isManifest ? 'no-store' : 'public, max-age=60', });
           res.end(body);
           return true;
         }
@@ -799,7 +800,7 @@ module.exports = function createSportsbook(ctx) {
         }
       }
       if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-        res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': m[1] === 'api' ? 'no-store' : 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
+        res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': m[1] === 'api' && /\/0$/.test(rel) ? 'no-store' : 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
         res.end(fs.readFileSync(file));
       } else if (m[1] !== 'start3' && m[1] !== 'api' && req.method === 'GET') {
         let got = null;
