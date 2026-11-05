@@ -3,6 +3,7 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 30,
+      "regions": ["fra1"],
       "memory": 1024,
       "includeFiles": "{plinko/**,chicken-cross_files/**,mines/**,homepage/**,rainbet/public/**,Images/**,new-build/**,cryptoapp/**,cc-page.html,chicken-cross.html}"
     }

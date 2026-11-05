@@ -607,7 +607,7 @@ module.exports = function createSportsbook(ctx) {
   const liveCache = new Map();
   let liveDownUntil = 0, liveOk = false;
   async function liveFetch(rel, search) {
-    if (process.env.VERCEL && !process.env.BETBY_LIVE) return null;
+    if (process.env.VERCEL && process.env.BETBY_LIVE === '0') return null;
     if (Date.now() < liveDownUntil) return null;
     const key = rel + search;
     const isManifest = /\/(live|prematch)\/brand\/\d+\/en\/0$/.test(rel);
