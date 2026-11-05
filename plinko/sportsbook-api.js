@@ -755,7 +755,7 @@ module.exports = function createSportsbook(ctx) {
       res.end(JSON.stringify(out));
       return true;
     }
-    if (/^\/bt-api\/api\/v2\/my_bets\/list$/.test(pathname)) {
+    if (/^\/bt-api\/api\/v[12]\/my_bets\/list$/.test(pathname)) {
       settleBetby();
       const q = url.searchParams;
       const st = q.get('status') || '';
