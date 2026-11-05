@@ -708,7 +708,7 @@ module.exports = function createSportsbook(ctx) {
       const delay = 60e3 + hash32(bet.id + 'd') * 120e3;
       if (now - bet.timestamp * 1000 < delay) continue;
       // never settle before the events have had time to be played (~2h after kickoff)
-      const endAt = Math.max(0, ...bet.selections.map((s) => Number(s.desc && s.desc.scheduled) || 0)) * 1000 + 2 * 3600e3;
+      const endAt = Math.max(bet.timestamp, ...bet.selections.map((s) => Number(s.desc && s.desc.scheduled) || 0)) * 1000 + 2 * 3600e3;
       if (now < endAt) continue;
       let prob = 1;
       for (const s of bet.selections) prob *= Math.min(0.97, 0.94 / Number(s.k));
