@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Slots - Rainbet</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0d1117;color:#fff;font-family:system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;position:sticky;top:0;background:#0d1117;z-index:2;border-bottom:1px solid #1f2733}
+header a{color:#9aa7b8;text-decoration:none;font-size:14px}h1{font-size:18px;margin:0;flex:1}
+input{background:#161d27;border:1px solid #243041;color:#fff;border-radius:8px;padding:8px 12px;width:150px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px}
+.card{background:#161d27;border:1px solid #243041;border-radius:12px;padding:0;cursor:pointer;color:#fff;overflow:hidden;text-align:left}
+.card:hover{border-color:#f5a623}
+.art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800}
+.nm{padding:10px;font-size:13px;font-weight:600}
+.sub{padding:0 10px 10px;font-size:11px;color:#7d8aa0}
+#player{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:10;padding-top:env(safe-area-inset-top)}
+#player .bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#0d1117;position:relative;z-index:2}
+#player button{position:fixed;top:calc(env(safe-area-inset-top) + 8px);right:12px;z-index:20;background:#f5a623;color:#000;font-weight:700;border:0;border-radius:8px;padding:8px 18px}
+#player iframe{flex:1;border:0;width:100%}
+</style></head><body>
+<header><a href="/casino">&larr; Casino</a><h1>Slots</h1><input id="q" placeholder="Search games"></header>
+<div class="grid" id="g"></div>
+<div id="player"><div class="bar"><span id="pn"></span><button onclick="closeGame()">Close</button></div><iframe id="fr" allow="autoplay; fullscreen"></iframe></div>
+<script>
+const GAMES=[["vs20fruitsw","Sweet Bonanza"],["vs20olympgate","Gates of Olympus"],["vs20sugarrush","Sugar Rush"],["vs10bbbonanza","Big Bass Bonanza"],["vs12bbb","Bigger Bass Bonanza"],["vs20doghouse","The Dog House"],["vs20starlight","Starlight Princess"],["vs20fruitparty","Fruit Party"],["vs20fparty2","Fruit Party 2"],["vs25wolfgold","Wolf Gold"],["vs10bookoftut","Book of Tut"],["vs5aztecgems","Aztec Gems"],["vs20sugarrushx","Sugar Rush 1000"],["vs20sbxmas","Sweet Bonanza Xmas"],["vs243lionsgold","5 Lions Gold"],["vs20gatotgates","Gates of Gatot Kaca"],["vs20hburnhs","Hot to Burn Hold and Spin"],["vs20wildparty","3 Buzzing Wilds"],["vs10fruity2","Extra Juicy"],["vs20gorilla","Jungle Gorilla"],["vs20cleocatra","Cleocatra"],["vs25pandagold","Panda Fortune"],["vs5spjoker","Super Joker"],["vs20aladdinsorc","Aladdin and the Sorcerer"],["vs1024gmayhem","Gorilla Mayhem"],["vs20bchprty","Wild Beach Party"],["vs20terrorv","Cash Elevator"],["vs20bl","Busy Bees"],["vs20dhcluster","Twilight Princess"],["vs20hercpeg","Hercules and Pegasus"],["vs20chickdrop","Chicken Drop"],["vs20rhino","Great Rhino"],["vs10goldfish","Fishin Reels"]];
+const g=document.getElementById('g'),q=document.getElementById('q');
+function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
+function render(){const t=q.value.toLowerCase();g.innerHTML='';GAMES.filter(x=>x[1].toLowerCase().includes(t)).forEach(([s,n])=>{const b=document.createElement('button');b.className='card';const h=hue(s);b.innerHTML='<div class="art" style="background:linear-gradient(135deg,hsl('+h+',70%,35%),hsl('+(h+50)%360+',70%,20%))">'+n.split(' ').slice(0,2).map(w=>w[0]).join('')+'</div><div class="nm"></div><div class="sub">Pragmatic Play</div>';b.querySelector('.nm').textContent=n;b.onclick=()=>open_(s,n);g.appendChild(b)})}
+function open_(s,n){document.getElementById('pn').textContent=n;document.getElementById('fr').src='https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol='+s+'&websiteUrl='+encodeURIComponent('https://demogamesfree.pragmaticplay.net')+'&jurisdiction=99&lobby_url='+encodeURIComponent(location.origin+'/slots')+'&lang=en&cur=USD';document.getElementById('player').style.display='flex'}
+function closeGame(){document.getElementById('fr').src='about:blank';document.getElementById('player').style.display='none'}
+q.oninput=render;render();
+</script></body></html>
