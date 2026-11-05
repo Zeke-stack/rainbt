@@ -93,15 +93,41 @@
     });
     return h + '</div>';
   }
-  var actView = 'tx', rcpts = null, rcptErr = false, rcptAt = 0;
+  var actView = 'tx', rcpts = null, rcptErr = false, rcptAt = 0, rcEntries = [];
+  function rcStore() { try { return JSON.parse(localStorage.getItem('vl_bets') || '{}'); } catch (e) { return {}; } }
+  function buildEntries(bets) {
+    var e = [];
+    bets.forEach(function (b) {
+      e.push({ b: b, kind: 'bet', ts: b.timestamp });
+      if (b.status === 'won') e.push({ b: b, kind: 'payout', ts: b._st || b.timestamp });
+      else if (b.status === 'lost') e.push({ b: b, kind: 'closed', ts: b._st || b.timestamp });
+    });
+    return e.sort(function (x, y) { return y.ts - x.ts || (x.kind === 'bet' ? 1 : -1); });
+  }
+  function setBets(st) {
+    var all = Object.keys(st).map(function (k) { return st[k]; }).sort(function (a, b) { return b.timestamp - a.timestamp; });
+    var n = JSON.stringify(all), o = JSON.stringify(rcpts || []);
+    rcpts = all; rcEntries = buildEntries(all);
+    return n !== o;
+  }
   function loadReceipts() {
     if (Date.now() - rcptAt < 2000) return;
     rcptAt = Date.now();
     fetch(API + '/bt-api/api/v2/my_bets/list?limit=50', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
-      var n = JSON.stringify(j.results || []), o = JSON.stringify(rcpts || []);
-      rcptErr = false; rcpts = j.results || [];
-      if (n !== o && tab === 'activity' && actView === 'rc' && !$('sheet').classList.contains('on')) render();
-    }).catch(function () { rcptErr = true; if (rcpts === null) { rcpts = []; if (tab === 'activity' && actView === 'rc') render(); } });
+      var st = rcStore(), now = Math.floor(Date.now() / 1000);
+      (j.results || []).forEach(function (b) {
+        var o = st[b.id];
+        b._st = o && o._st;
+        if (b.status !== 'open' && !b._st) b._st = now;
+        st[b.id] = b;
+      });
+      try { localStorage.setItem('vl_bets', JSON.stringify(st)); } catch (e) {}
+      rcptErr = false;
+      if (setBets(st) && tab === 'activity' && actView === 'rc' && !$('sheet').classList.contains('on')) render();
+    }).catch(function () {
+      rcptErr = true;
+      if (rcpts === null) { setBets(rcStore()); if (tab === 'activity' && actView === 'rc') render(); }
+    });
   }
   function seg() {
     return '<div class="seg"><button data-view="tx" class="' + (actView === 'tx' ? 'on' : '') + '">Transactions</button><button data-view="rc" class="' + (actView === 'rc' ? 'on' : '') + '">Receipts</button></div>';
@@ -114,11 +140,12 @@
     var h = '<div class="top"><h1>Activity</h1></div>' + seg();
     if (rcpts === null) { loadReceipts(); return h + '<div class="center sub" style="margin-top:80px">Loading receipts…</div>'; }
     loadReceipts();
-    if (!rcpts.length) return h + '<div class="center sub" style="margin-top:80px">No sportsbook receipts yet<br>Bets you place on Rainbet Sports appear here</div>';
-    return h + '<div class="list">' + rcpts.map(function (b, i) {
-      var st = stat(b), first = b.selections[0];
-      var ret = b.status === 'won' ? '+$' + Number(b.result_sum || b.potential_win).toFixed(2) : b.status === 'lost' ? '-$' + Number(b.sum).toFixed(2) : '$' + Number(b.sum).toFixed(2);
-      return '<button class="row" data-rc="' + i + '"><div class="coin rcico">R</div><div class="grow"><div class="nm">' + esc(b.type === 'combo' ? betLabel(b) : evName(first)) + '</div><div class="sub">' + fmtDate(b.timestamp * 1000) + ' · <span class="pill ' + st[1] + '">' + st[0] + '</span></div></div><div class="rt"><div class="a ' + (b.status === 'won' ? 'up' : b.status === 'lost' ? 'dn' : '') + '">' + ret + '</div><div class="sub">@ ' + b.k + '</div></div></button>';
+    if (!rcEntries.length) return h + '<div class="center sub" style="margin-top:80px">No sportsbook receipts yet<br>Bets you place on Rainbet Sports appear here</div>';
+    return h + '<div class="list">' +     rcEntries.map(function (en, i) {
+          var b = en.b, first = b.selections[0];
+          var tag = en.kind === 'payout' ? ['Payout', 'done'] : en.kind === 'closed' ? ['Closed · Lost', 'lost'] : ['Bet placed', 'pend'];
+          var ret = en.kind === 'payout' ? '+$' + Number(b.result_sum || b.potential_win).toFixed(2) : en.kind === 'closed' ? '-$' + Number(b.sum).toFixed(2) : '$' + Number(b.sum).toFixed(2);
+          return '<button class="row" data-rc="' + i + '"><div class="coin rcico">R</div><div class="grow"><div class="nm">' + esc(b.type === 'combo' ? betLabel(b) : evName(first)) + '</div><div class="sub">' + fmtDate(en.ts * 1000) + ' · <span class="pill ' + tag[1] + '">' + tag[0] + '</span></div></div><div class="rt"><div class="a ' + (en.kind === 'payout' ? 'up' : en.kind === 'closed' ? 'dn' : '') + '">' + ret + '</div><div class="sub">@ ' + b.k + '</div></div></button>';
     }).join('') + '</div>';
   }
   function barcode(seed) {
@@ -129,16 +156,19 @@
   function american(k) { k = Number(k); if (!(k > 1)) return String(k); return k >= 2 ? '+' + Math.round((k - 1) * 100) : String(Math.round(-100 / (k - 1))); }
   function money(n) { return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function receiptDetail(i) {
-    var b = rcpts[i]; if (!b) return;
-    var d = new Date(b.timestamp * 1000), stake = Number(b.sum), win = Number(b.potential_win) - stake;
+    var en = rcEntries[i]; if (!en) return; var b = en.b;
+    var d = new Date((en.kind === 'bet' ? b.timestamp : en.ts) * 1000), stake = Number(b.sum), win = Number(b.potential_win) - stake;
     var h = '<div class="rcpt"><div class="rh"><img src="rainbet-logo.svg" alt="Rainbet"><i></i><span>SPORTSBOOK</span></div><div class="dbl"></div>';
-    h += '<div class="rt1">' + (b.type === 'combo' ? 'PARLAY' : 'STRAIGHT BET') + '</div><div class="rt2">' + b.selections.length + ' BET(S) @ ' + money(stake) + '</div><div class="sgl"></div>';
+    h += '<div class="rt1">' + (b.type === 'combo' ? 'PARLAY' : 'STRAIGHT BET') + (en.kind === 'payout' ? ' - PAYOUT' : en.kind === 'closed' ? ' - CLOSED' : '') + '</div><div class="rt2">' + b.selections.length + ' BET(S) @ ' + money(stake) + '</div><div class="sgl"></div>';
     b.selections.forEach(function (s) {
       var sc = s.desc && s.desc.scheduled ? new Date(s.desc.scheduled * 1000) : null;
       var pick = /tt:|^\d+$/.test(s.outcome_name || '') ? (s.market_name || 'Selection') : s.outcome_name;
       h += '<div class="leg"><div class="lt">' + (sc ? sc.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' @ ' + sc.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '') + '</div><div class="lt">' + esc(((s.desc && s.desc.tournament && s.desc.tournament.name) || 'Sportsbook').toUpperCase()) + '</div><div class="lt">' + esc(evName(s).toUpperCase().replace(' VS ', '-')) + '</div><div class="lp"><span>[' + esc(String(s.event_id).slice(-6)) + '] ' + esc(String(pick).toUpperCase()) + '</span><span>' + american(s.k) + '</span></div></div>';
     });
-    h += '<div class="rl"><span>TICKET COST:</span><b>' + money(stake) + '</b></div><div class="rl"><span>TO WIN:</span><b>' + money(win) + '</b></div><div class="rl"><span>TO COLLECT:</span><b>' + money(stake + win) + '</b></div>';
+    var cost = '<div class="rl"><span>TICKET COST:</span><b>' + money(stake) + '</b></div>';
+    if (en.kind === 'payout') h += cost + '<div class="rl"><span>PAYOUT:</span><b>' + money(b.result_sum || stake + win) + '</b></div><div class="rl"><span>STATUS:</span><b>PAID</b></div>';
+    else if (en.kind === 'closed') h += cost + '<div class="rl"><span>PAYOUT:</span><b>$0.00</b></div><div class="rl"><span>STATUS:</span><b>CLOSED - LOST</b></div>';
+    else h += cost + '<div class="rl"><span>TO WIN:</span><b>' + money(win) + '</b></div><div class="rl"><span>TO COLLECT:</span><b>' + money(stake + win) + '</b></div>';
     h += '<div class="rts">' + d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB') + '</div>';
     h += '<div class="dash"></div>' + barcode(String(b.id)) + '<div class="rn">' + esc(String(b.front_bet_id || b.id)) + '</div></div>';
     h += '<button class="btn ghost" data-close="1" style="margin-top:14px">Close</button>';
