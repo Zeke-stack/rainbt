@@ -609,6 +609,13 @@ module.exports = function createSportsbook(ctx) {
     return evIndex;
   }
   const LIVE_HOST = 'https://api-a-c7818b61-600.sptpub.com';
+  const evRes = new Map();
+  function noteResults(j) {
+    for (const id of Object.keys(j.events || {})) {
+      const ev = j.events[id];
+      if (ev.state && ev.score) evRes.set(id, { st: ev.state.status, h: Number(ev.score.home_score), a: Number(ev.score.away_score), t: Date.now() });
+    }
+  }
   const liveCache = new Map();
   let liveDownUntil = 0, liveOk = false;
   async function liveFetch(rel, search) {
@@ -639,6 +646,7 @@ module.exports = function createSportsbook(ctx) {
         try {
           const j = JSON.parse(body.toString('utf8'));
           const idx = betbyEvents();
+          noteResults(j);
           for (const id of Object.keys(j.events || {})) {
             const ev = j.events[id], d = ev.desc || {};
             idx.set(id, { competitors: (d.competitors || []).map((c) => ({ name: c.name })), tournament: { name: (j.tournaments && j.tournaments[d.tournament] || {}).name || '' }, sport: { id: d.sport }, scheduled: d.scheduled, markets: ev.markets });
@@ -657,7 +665,7 @@ module.exports = function createSportsbook(ctx) {
   const hash32 = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
   function selName(sel, desc) {
     const c = desc.competitors || [];
-    if (String(sel.market_id) === '1') return sel.outcome_id === '1' ? (c[0] && c[0].name) : sel.outcome_id === '2' ? (c[1] && c[1].name) : 'draw';
+    if (String(sel.market_id) === '1') return sel.outcome_id === '1' ? (c[0] && c[0].name) : sel.outcome_id === '3' ? (c[1] && c[1].name) : 'draw';
     return sel.specifiers ? String(sel.outcome_id) + ' (' + sel.specifiers.replace(/^.*=/, '') + ')' : String(sel.outcome_id);
   }
   function placeBetby(body) {
@@ -700,24 +708,80 @@ module.exports = function createSportsbook(ctx) {
     saveBB();
     return isSlips ? { success: true, slips, error: [] } : { accepted, error: [] };
   }
-  function settleBetby() {
+  // Real results: a leg settles only when Betby's feed reports the event ended (state.status 3) with its final score.
+  function sgn(d) { return d > 0 ? 1 : d < 0 ? -1 : 0; }
+  function quarter(line, f) { return Math.abs(line * 4) % 2 === 1 ? (f(line - 0.25) + f(line + 0.25)) / 2 : f(line); }
+  // returns the stake multiplier for the leg (0 lost, 1 refund, k won) or null when the market can't be graded
+  function gradeLeg(s, h, a) {
+    const m = String(s.market_id), o = String(s.outcome_id), k = Number(s.k);
+    const sp = s.specifiers || '';
+    const line = (name) => { const mm = new RegExp('^' + name + '=(-?\\d+(?:\\.\\d+)?)$').exec(sp); return mm ? Number(mm[1]) : null; };
+    const pay = (q) => (q >= 1 ? k : q >= 0.5 ? (k + 1) / 2 : q > -0.5 ? 1 : q > -1 ? 0.5 : 0);
+    const win = (c) => (c ? k : 0);
+    if (m === '1' && !sp) return o === '1' ? win(h > a) : o === '2' ? win(h === a) : o === '3' ? win(h < a) : null;
+    if (m === '10' && !sp) return o === '9' ? win(h >= a) : o === '10' ? win(h !== a) : o === '11' ? win(h <= a) : null;
+    if (['186', '219', '251'].includes(m) && !sp) {
+      const home = o === '4' || o === '1', away = o === '5' || o === '2';
+      if (!home && !away) return null;
+      return h === a ? 1 : win(home ? h > a : a > h);
+    }
+    if (['18', '225', '26'].includes(m)) {
+      const L = line('total');
+      if (L === null || (o !== '12' && o !== '13')) return null;
+      return pay(quarter(L, (x) => sgn((o === '12' ? 1 : -1) * (h + a - x))));
+    }
+    if (['16', '223'].includes(m)) {
+      const L = line('hcp');
+      if (L === null || (o !== '1714' && o !== '1715')) return null;
+      return pay(quarter(L, (x) => sgn(o === '1714' ? h + x - a : a - x - h)));
+    }
+    return null;
+  }
+  let lastResultsAt = 0;
+  async function refreshResults() {
+    if (Date.now() - lastResultsAt < 4000) return;
+    lastResultsAt = Date.now();
+    const rel = '/api/v4/live/brand/2374656571012681728/en/';
+    try {
+      const mb = await liveFetch(rel + '0', '');
+      if (!mb) return;
+      const man = JSON.parse(mb.toString('utf8'));
+      for (const v of [...(man.top_events_versions || []), ...(man.rest_events_versions || [])]) await liveFetch(rel + v, '');
+    } catch (e) { /* keep waiting */ }
+  }
+  async function settleBetby() {
     const now = Date.now();
     let changed = false;
+    if (bbets.some((b) => b.status === 'open')) await refreshResults();
     for (const bet of bbets) {
       if (bet.status !== 'open') continue;
-      const delay = 60e3 + hash32(bet.id + 'd') * 120e3;
-      if (now - bet.timestamp * 1000 < delay) continue;
-      // never settle before the events have had time to be played (~2h after kickoff)
-      const endAt = Math.max(bet.timestamp, ...bet.selections.map((s) => Number(s.desc && s.desc.scheduled) || 0)) * 1000 + 2 * 3600e3;
-      if (now < endAt) continue;
-      let prob = 1;
-      for (const s of bet.selections) prob *= Math.min(0.97, 0.94 / Number(s.k));
-      const won = hash32(bet.id + 'w') < prob;
+      let pending = false, mult = 1, allVoid = true;
+      for (const s of bet.selections) {
+        if (s.mult !== undefined) { mult *= s.mult; if (!s.voided) allVoid = false; continue; }
+        const sched = Number(s.desc && s.desc.scheduled) || bet.timestamp;
+        const r = evRes.get(s.event_id);
+        let fin = null;
+        if (r && r.st === 3) fin = r;
+        else {
+          if (r && r.st === 1) s.last = { h: r.h, a: r.a };
+          const gone = !r || now - r.t > 120e3;
+          if (gone && now > (sched + 6 * 3600) * 1000) fin = s.last ? { h: s.last.h, a: s.last.a } : { void: true };
+          else if (now > (sched + 72 * 3600) * 1000) fin = { void: true };
+        }
+        if (!fin) { pending = true; continue; }
+        const g = fin.void || !isFinite(fin.h) || !isFinite(fin.a) ? null : gradeLeg(s, fin.h, fin.a);
+        s.voided = g === null;
+        s.mult = g === null ? 1 : g;
+        s.status = g === null ? 'lost' : g > 1 ? 'won' : g === 1 ? 'won' : 'lost';
+        if (g !== null) allVoid = false;
+        mult *= s.mult;
+      }
+      if (pending) continue;
       const stake = Number(bet.sum);
-      const payout = won ? r2(stake * Number(bet.k)) : 0;
+      const payout = r2(stake * mult);
+      const won = payout >= stake;
       bet.status = won ? 'won' : 'lost';
-      bet.selections.forEach((s) => { s.status = won ? 'won' : 'lost'; });
-      if (won) { bet.result_sum = payout.toFixed(2); setBal(r2(getBal() + payout)); }
+      if (payout > 0) { bet.result_sum = payout.toFixed(2); setBal(r2(getBal() + payout)); }
       addStats(stake, payout, 3);
       const h = history();
       const row = h && h.find((x) => x.id === 'sb' + bet.id);
@@ -727,7 +791,7 @@ module.exports = function createSportsbook(ctx) {
     }
     if (changed) saveBB();
   }
-  const tmb = setInterval(settleBetby, 5000);
+  const tmb = setInterval(() => { settleBetby().catch(() => {}); }, 5000);
   if (tmb.unref) tmb.unref();
 
   if (!lastRefreshAt && Date.now() - (snapshot.fetchedAt || 0) > REFRESH_MS) refreshSnapshot();
@@ -759,7 +823,7 @@ module.exports = function createSportsbook(ctx) {
       return true;
     }
     if (/^\/bt-api\/api\/v[12]\/my_bets\/list$/.test(pathname)) {
-      settleBetby();
+      await settleBetby().catch(() => {});
       const q = url.searchParams;
       const st = q.get('status') || '';
       const skip = Number(q.get('skip')) || 0, limit = Number(q.get('limit')) || 50;
