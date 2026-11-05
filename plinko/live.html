@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Live Casino - Rainbet</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0d1117;color:#fff;font-family:system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #1f2733}
+header a{color:#9aa7b8;text-decoration:none;font-size:14px}h1{font-size:18px;margin:0}
+p.n{margin:12px 16px 0;color:#7d8aa0;font-size:12px}
+h2{font-size:14px;margin:18px 16px 0;color:#9aa7b8;text-transform:uppercase;letter-spacing:.05em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:12px 16px}
+a.card{background:#161d27;border:1px solid #243041;border-radius:12px;color:#fff;text-decoration:none;overflow:hidden;display:block}
+a.card:hover{border-color:#f5a623}
+.art{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;position:relative}
+.live{position:absolute;top:8px;left:8px;background:#e5383b;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
+.nm{padding:10px;font-size:13px;font-weight:600}.sub{padding:0 10px 10px;font-size:11px;color:#7d8aa0}
+</style></head><body>
+<header><a href="/casino">&larr; Casino</a><h1>Live Casino</h1></header>
+<p class="n">Games open Evolution's official free-play demo site in a new tab, using its own play-money credits.</p>
+<div id="c"></div>
+<script>
+const B='https://games.evolution.com/live-casino/';
+const S=[["Roulette",[["live-roulette/monopoly-roulette/","Monopoly Roulette"]]],
+["Blackjack",[["live-blackjack/ride-free-blackjack/","Ride Free Blackjack"],["live-blackjack/always-6-blackjack/","Always 6 Blackjack"]]],
+["Baccarat",[["live-baccarat/insurance-baccarat/","Insurance Baccarat"],["live-baccarat/always-9-baccarat/","Always 9 Baccarat"],["live-baccarat/dragon-tiger-phoenix/","Dragon Tiger Phoenix"],["live-baccarat/super-speed-dragon-tiger/","Super Speed Dragon Tiger"]]],
+["Game Shows",[["game-shows/disco-balls/","Disco Balls"],["game-shows/dragon-dragon/","Dragon Dragon"],["game-shows/red-baron/","Red Baron"],["game-shows/ice-fishing/","Ice Fishing"],["game-shows/super-color-game/","Super Color Game"]]]];
+function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
+const c=document.getElementById('c');
+S.forEach(([t,l])=>{const h=document.createElement('h2');h.textContent=t;c.appendChild(h);const g=document.createElement('div');g.className='grid';l.forEach(([p,n])=>{const a=document.createElement('a');a.className='card';a.href=B+p;a.target='_blank';a.rel='noopener';const x=hue(p);a.innerHTML='<div class="art" style="background:linear-gradient(135deg,hsl('+x+',65%,32%),hsl('+(x+50)%360+',65%,16%))"><span class="live">LIVE</span>'+n.split(' ').slice(0,2).map(w=>w[0]).join('')+'</div><div class="nm"></div><div class="sub">Evolution</div>';a.querySelector('.nm').textContent=n;g.appendChild(a)});c.appendChild(g)});
+</script></body></html>

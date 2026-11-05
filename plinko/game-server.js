@@ -3018,6 +3018,12 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     return;
   }
 
+  if ((pathname === '/live-casino' || pathname === '/live-casino/') && (req.method === 'GET' || req.method === 'HEAD')) {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
+    res.end(fs.readFileSync(path.join(__dirname, 'live.html')));
+    return;
+  }
+
   // ── Crypto wallet app (static, ./cryptoapp) ──
   if (pathname === '/crypto') { pathname = '/crypto/'; }
   if (pathname.startsWith('/crypto/') && (req.method === 'GET' || req.method === 'HEAD')) {
