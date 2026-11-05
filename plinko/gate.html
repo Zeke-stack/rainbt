@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1328">
+<title>Lattice Protected | Rainbet</title>
+<style>
+@font-face{font-family:Montserrat;font-style:normal;font-weight:100 900;font-display:swap;src:url(/__gate/font.woff2) format("woff2")}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:#0f1328;color:#fff;font-family:Montserrat,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{min-height:100dvh;display:flex;flex-direction:column}
+header{height:67px;padding:env(safe-area-inset-top) 16px 0;box-sizing:content-box;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05);background:#0f1328}
+header img{height:36px}
+header .lock{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:6px;background:#293253;font-size:13px;font-weight:600}
+header .lock i{width:8px;height:8px;border-radius:50%;background:#3bbf57;display:block}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom));background:radial-gradient(80% 50% at 50% 0%,rgba(82,97,151,.22),transparent)}
+.card{width:100%;max-width:420px;background:#151a35;border:1px solid rgba(82,97,151,.5);border-radius:8px;overflow:hidden}
+.card.shake{animation:sh .4s}
+@keyframes sh{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.top{padding:14px 20px;background:rgba(82,97,151,.4);border-bottom:1px solid rgba(82,97,151,.5);font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px}
+.top svg{width:18px;height:18px}
+.body{padding:26px 20px 22px}
+h1{font-size:28px;font-weight:800;line-height:1.2}
+h1 b{color:#2ea3ff}
+.sub{margin:8px 0 22px;color:rgba(255,255,255,.55);font-size:14px;font-weight:500;line-height:1.5}
+label{display:block;margin-bottom:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6)}
+.field{position:relative}
+input{width:100%;height:48px;border-radius:6px;border:1px solid #293253;background:#0f1328;color:#fff;font:600 15px Montserrat,sans-serif;padding:0 44px 0 14px;outline:none;transition:border-color .15s}
+input:focus{border-color:#526197}
+input.bad{border-color:#e5484d}
+.eye{position:absolute;right:0;top:0;width:44px;height:48px;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;margin:0}
+.eye svg{width:18px;height:18px;opacity:.55}
+.btn{width:100%;height:48px;margin-top:16px;border:0;border-radius:6px;background:#3bbf57;color:#fff;font:700 15px Montserrat,sans-serif;cursor:pointer;transition:filter .15s,transform .1s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.65;cursor:default}
+.err{margin-top:12px;font-size:13px;font-weight:500;color:#ff6b70;min-height:18px;visibility:hidden}
+.err.on{visibility:visible}
+.foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.05);text-align:center;font-size:12px;font-weight:500;color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+<header>
+  <img src="/__gate/logo.svg" alt="Rainbet">
+  <div class="lock"><i></i>Private</div>
+</header>
+<main>
+<form class="card" id="f" autocomplete="off">
+  <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></svg>Restricted Access</div>
+  <div class="body">
+    <h1>Lattice <b>Protected</b></h1>
+    <p class="sub">This site is private. Enter your access key to continue.</p>
+    <label for="pw">Access Key</label>
+    <div class="field">
+      <input id="pw" type="password" placeholder="Enter access key" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus>
+      <button class="eye" type="button" id="eye" aria-label="Show"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+    <div class="err" id="err">Incorrect access key. Try again.</div>
+    <button class="btn" id="go" type="submit">Unlock</button>
+  </div>
+  <div class="foot">Protected by Lattice</div>
+</form>
+</main>
+<script>
+var f=document.getElementById('f'),pw=document.getElementById('pw'),go=document.getElementById('go'),er=document.getElementById('err');
+document.getElementById('eye').onclick=function(){pw.type=pw.type==='password'?'text':'password'};
+f.addEventListener('submit',function(e){
+  e.preventDefault();er.classList.remove('on');pw.classList.remove('bad');go.disabled=true;go.textContent='Verifying…';
+  fetch('/__gate/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw.value}),credentials:'same-origin'})
+    .then(function(r){return r.json()})
+    .then(function(j){if(j.ok){go.textContent='Access granted';location.reload();return}throw 0})
+    .catch(function(){
+      go.disabled=false;go.textContent='Unlock';er.classList.add('on');pw.classList.add('bad');pw.select();
+      f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');
+    });
+});
+</script>
+</body>
+</html>

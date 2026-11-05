@@ -19,7 +19,7 @@ const CLIENT_FILE = path.join(__dirname, 'sportsbook-client.js');
 const CYCLE_MS = 45 * 60e3;
 const REFRESH_MS = 30 * 60e3;
 const MIN_STAKE = 0.1;
-const MAX_STAKE = 25000;
+const MAX_STAKE = 5000000;
 const MAX_LEGS = 12;
 
 // ---------------------------------------------------------------- sports

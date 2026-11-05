@@ -23,6 +23,7 @@ let _currentOrigin = 'http://localhost:' + PORT;
 
 // Request log file (skipped on Vercel â€” read-only filesystem)
 const IS_VERCEL = !!process.env.VERCEL;
+const GATE_PASSWORD = 'LTTCONTOP';
 const LOG_FILE = IS_VERCEL ? null : path.join(PLINKO_DIR, 'server.log');
 if (LOG_FILE) try { fs.writeFileSync(LOG_FILE, `Server started at ${new Date().toISOString()}\n`); } catch(e) {}
 function log(msg) {
@@ -2908,6 +2909,46 @@ async function handleRequest(req, res) {
 
   // Normalize: strip /casino/originals prefix so /casino/originals/v1/... Ã¢â€ â€™ /v1/...
   pathname = pathname.replace(/^\/casino\/originals/, '');
+
+  // --- Password gate (cookie-based; independent of the game/session cookies) ---
+  if (!process.env.GATE_OFF) {
+    const _gk = crypto.createHmac('sha256', process.env.SESSION_SECRET || 'rainbet-local-session-v1').update('gate:' + GATE_PASSWORD).digest('hex');
+    const _gc = ((req.headers['cookie'] || '').match(/(?:^|;\s*)rb_gate=([0-9a-f]{64})/) || [])[1] || '';
+    const _gok = _gc.length === 64 && crypto.timingSafeEqual(Buffer.from(_gc), Buffer.from(_gk));
+    if (pathname === '/__gate/login' && req.method === 'POST') {
+      let raw = '';
+      for await (const c of req) { raw += c; if (raw.length > 2000) break; }
+      let pw = '';
+      try { pw = String(JSON.parse(raw).password || ''); } catch (e) { /* bad body */ }
+      const a = crypto.createHash('sha256').update(pw).digest(), b = crypto.createHash('sha256').update(GATE_PASSWORD).digest();
+      const good = crypto.timingSafeEqual(a, b);
+      if (!good) await new Promise((r) => setTimeout(r, 700));
+      const secure = /^https/.test(_currentOrigin) ? '; Secure' : '';
+      res.writeHead(good ? 200 : 401, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...(good ? { 'Set-Cookie': 'rb_gate=' + _gk + '; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax' + secure } : {}) });
+      res.end(JSON.stringify({ ok: good }));
+      return;
+    }
+    if (!_gok) {
+      if (pathname === '/__gate/font.woff2') {
+        res.writeHead(200, { 'Content-Type': 'font/woff2', 'Cache-Control': 'public, max-age=31536000' });
+        res.end(fs.readFileSync(path.join(PLINKO_DIR, '..', 'new-build', 'root', '_next', 'static', 'media', 'e8f2fbee2754df70-s.p.1dqa_6e_ad4sj.woff2')));
+        return;
+      }
+      if (pathname === '/__gate/logo.svg') {
+        res.writeHead(200, { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=86400' });
+        res.end(fs.readFileSync(path.join(PLINKO_DIR, '..', 'cryptoapp', 'rainbet-logo.svg')));
+        return;
+      }
+      if (req.method === 'GET' && /text\/html/.test(req.headers['accept'] || '')) {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end(fs.readFileSync(path.join(PLINKO_DIR, 'gate.html')));
+        return;
+      }
+      res.writeHead(401, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      res.end('{"error":"locked"}');
+      return;
+    }
+  }
 
   // --- Cookie-based persistence (survives Vercel cold starts) ---
   const _rbCookieHdr = req.headers['cookie'] || '';
