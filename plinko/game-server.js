@@ -24,6 +24,19 @@ let _currentOrigin = 'http://localhost:' + PORT;
 // Request log file (skipped on Vercel â€” read-only filesystem)
 const IS_VERCEL = !!process.env.VERCEL;
 const GATE_PASSWORD = 'LTTCONTOP';
+const webpush = require('web-push');
+const VAPID_PUB = process.env.VAPID_PUBLIC || 'BBQ3alGJQu7r8FXnMQMi8vrngBXNPFGGa6h4bUdCDZtmNFPvVV2L2lxn6gaaVsgZJ4b251K0hdR8lE_bgb3NtBw';
+const VAPID_PRIV = process.env.VAPID_PRIVATE || 'g1H2jZGZkqHopX1RO1Gr_TYQzk2GJj4m7V0FxofR8KU';
+webpush.setVapidDetails('mailto:admin@example.com', VAPID_PUB, VAPID_PRIV);
+// The push subscription rides in the rb_push cookie, so it works across serverless instances
+let _pushSub = null;
+async function notify(title, body) {
+  if (!_pushSub) return;
+  try {
+    await webpush.sendNotification(_pushSub, JSON.stringify({ title, body }), { TTL: 3600, urgency: 'high', timeout: 4000 });
+  } catch (e) { log('PUSH ERROR: ' + (e.statusCode || '') + ' ' + e.message); }
+}
+const fmtUsd = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const LOG_FILE = IS_VERCEL ? null : path.join(PLINKO_DIR, 'server.log');
 if (LOG_FILE) try { fs.writeFileSync(LOG_FILE, `Server started at ${new Date().toISOString()}\n`); } catch(e) {}
 function log(msg) {
@@ -2177,7 +2190,7 @@ function buildHomepageHTML() {
   html = html.replace('</head>', function() { return buildNavScript('homepage') + '</head>'; });
 
   // -- Unregister service workers --
-  var swKill = '<script>if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(w){w.unregister()})});<\/script>';
+  var swKill = '<script>if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(w){if(w.scope.indexOf("/crypto/")<0)w.unregister()})});<\/script>';
   html = html.replace('</head>', swKill + '</head>');
 
   return html;
@@ -2709,7 +2722,7 @@ function buildPlinkoHTML() {
   });
 
   // -- Unregister service workers to prevent chunk caching --
-  var swKill = '<script>if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(w){w.unregister()})});<\/script>';
+  var swKill = '<script>if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(w){if(w.scope.indexOf("/crypto/")<0)w.unregister()})});<\/script>';
   html = html.replace('</head>', swKill + '</head>');
 
   // Add preload hints for JS chunks
@@ -2952,6 +2965,10 @@ async function handleRequest(req, res) {
 
   // --- Cookie-based persistence (survives Vercel cold starts) ---
   const _rbCookieHdr = req.headers['cookie'] || '';
+  try {
+    const _pc = (_rbCookieHdr.match(/(?:^|;\s*)rb_push=([A-Za-z0-9_-]+)/) || [])[1];
+    _pushSub = _pc ? JSON.parse(Buffer.from(_pc, 'base64url').toString('utf8')) : null;
+  } catch (e) { _pushSub = null; }
   const _rbBalMatch = _rbCookieHdr.match(/rb_bal=([0-9.]+)/);
   _balSync();
   _origCtx.sessions.begin(req);
@@ -2978,6 +2995,7 @@ async function handleRequest(req, res) {
         _cdep.push(t.id);
         invalidatePageCaches();
         log('BTC DEPOSIT CREDITED: ' + t.btc + ' BTC = $' + t.usd);
+        await notify('Deposit successful', fmtUsd(t.usd) + ' deposited (' + t.btc + ' BTC)');
       }
     }
     _cdep = _cdep.slice(-20);
@@ -3001,6 +3019,7 @@ async function handleRequest(req, res) {
     if (/(?:^|;\s*)mines_state=/.test(_rbCookieHdr)) _cookies.push('mines_state=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure');
     try { _origCtx.sessions.flush(req).forEach(function(c) { _cookies.push(c); }); } catch(e) { log('SESSION COOKIE WRITE ERROR: ' + e.message); }
     if (res._expireCookies) res._expireCookies.forEach(function(c) { _cookies.push(c + '=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure'); });
+    if (res._extraCookies) res._extraCookies.forEach(function(c) { _cookies.push(c); });
     _h['Set-Cookie'] = _cookies;
     return _origWriteHead(statusCode, _h);
   };
@@ -3062,6 +3081,32 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if ((pathname === '/live-casino' || pathname === '/live-casino/') && (req.method === 'GET' || req.method === 'HEAD')) {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     res.end(fs.readFileSync(path.join(__dirname, 'live.html')));
+    return;
+  }
+
+  // ── Web push (iOS: works from the Home Screen app) ──
+  if (pathname === '/api/push/key' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ key: VAPID_PUB }));
+    return;
+  }
+  if (pathname === '/api/push/subscribe' && req.method === 'POST') {
+    const body = await parseBody(req);
+    const sub = body && body.subscription;
+    if (!sub || typeof sub.endpoint !== 'string' || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
+      res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'invalid_subscription' })); return;
+    }
+    const clean = { endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } };
+    _pushSub = clean;
+    res._extraCookies = ['rb_push=' + Buffer.from(JSON.stringify(clean)).toString('base64url') + '; Path=/; Max-Age=31536000; SameSite=None; Secure'];
+    await notify('Notifications enabled', 'You will be notified about deposits and withdrawals.');
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+  if (pathname === '/api/push/off' && req.method === 'POST') {
+    res._extraCookies = ['rb_push=; Path=/; Max-Age=0; SameSite=None; Secure'];
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"ok":true}');
     return;
   }
 
@@ -4198,6 +4243,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     const txid = crypto.createHash('sha256').update(txId).digest('hex');
     transactionHistory.unshift({ id: txId, type: 'crypto_withdraw', amount, currency: code, network, address, status: 'completed', timestamp: new Date().toISOString() });
     log('CRYPTO WITHDRAW: -$' + amount + ' to ' + address + ' (' + code + '/' + network + ') balance: $' + playerBalance);
+    await notify('Withdrawal successful', fmtUsd(amount) + ' withdrawn to ' + code + ' (' + address.slice(0, 6) + '...' + address.slice(-4) + ')');
     if (code === 'BTC') {
       _wdIncoming.push({ id: txid.slice(0, 12), txid, address, btc: parseFloat((amount / (px.BTC || 67500)).toFixed(8)), ts: Date.now() });
       if (_wdIncoming.length > 200) _wdIncoming.shift();
@@ -4729,6 +4775,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     totalWithdrawn = parseFloat((totalWithdrawn + amount).toFixed(2));
     transactionHistory.unshift({ id: crypto.randomUUID(), type: 'withdraw', amount, currency: 'USD', status: 'completed', address: '0x0000...void', timestamp: new Date().toISOString() });
     log(`WITHDRAW: -$${amount} (balance: $${playerBalance})`);
+    await notify('Withdrawal successful', fmtUsd(amount) + ' withdrawn');
     invalidatePageCaches();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, amount: playerBalance, balance: playerBalance }));

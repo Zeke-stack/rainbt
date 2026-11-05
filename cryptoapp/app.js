@@ -184,9 +184,35 @@
     }).join('') + '</div>';
     return h;
   }
+  var pushOn = false;
+  function pushState() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    navigator.serviceWorker.register('sw.js').then(function (reg) { return reg.pushManager.getSubscription(); })
+      .then(function (s) { var on = !!s && Notification.permission === 'granted'; if (on !== pushOn) { pushOn = on; if (tab === 'settings' && !$('sheet').classList.contains('on')) render(); } })
+      .catch(function () {});
+  }
+  function b64u(s) { var p = '='.repeat((4 - s.length % 4) % 4), b = (s + p).replace(/-/g, '+').replace(/_/g, '/'), raw = atob(b), a = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) a[i] = raw.charCodeAt(i); return a; }
+  function togglePush() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) { toast('Add DeadDrop to your Home Screen first'); return; }
+    navigator.serviceWorker.register('sw.js').then(function () { return navigator.serviceWorker.ready; }).then(function (reg) {
+      return reg.pushManager.getSubscription().then(function (s) {
+        if (s) {
+          return s.unsubscribe().then(function () { return fetch(API + '/api/push/off', { method: 'POST' }); }).then(function () { pushOn = false; render(); toast('Notifications off'); });
+        }
+        return Notification.requestPermission().then(function (p) {
+          if (p !== 'granted') { toast('Notifications were not allowed'); return; }
+          return fetch(API + '/api/push/key').then(function (r) { return r.json(); }).then(function (k) {
+            return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(k.key) });
+          }).then(function (sub) {
+            return fetch(API + '/api/push/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subscription: sub.toJSON() }) });
+          }).then(function () { pushOn = true; render(); toast('Notifications on'); });
+        });
+      });
+    }).catch(function () { toast('Could not enable notifications'); });
+  }
   function settings() {
-    function r(l, v) { return '<div class="row"><div class="grow">' + l + '</div><div class="sub">' + (v || '') + '</div></div>'; }
-    return '<div class="top"><h1>Profile</h1></div><div class="list" style="margin-bottom:16px"><div class="row"><div class="avatar" style="width:46px;height:46px">' + S.user.split(' ').map(function (w) { return w[0]; }).join('') + '</div><div class="grow"><div class="nm">' + S.user + '</div><div class="sub">Verified · Level 2</div></div></div></div><div class="list">' + r('Security', 'Face ID') + r('Recovery phrase', 'Backed up') + r('Currency', 'USD') + r('Network', 'Mainnet') + r('Notifications', 'On') + r('Help & support') + '</div><div class="center sub" style="margin-top:22px">DeadDrop 2.4.1</div>';
+    function r(l, v, a) { return '<div class="row"' + (a ? ' data-push="1" style="cursor:pointer"' : '') + '><div class="grow">' + l + '</div><div class="sub">' + (v || '') + '</div></div>'; }
+    return '<div class="top"><h1>Profile</h1></div><div class="list" style="margin-bottom:16px"><div class="row"><div class="avatar" style="width:46px;height:46px">' + S.user.split(' ').map(function (w) { return w[0]; }).join('') + '</div><div class="grow"><div class="nm">' + S.user + '</div><div class="sub">Verified · Level 2</div></div></div></div><div class="list">' + r('Security', 'Face ID') + r('Recovery phrase', 'Backed up') + r('Currency', 'USD') + r('Network', 'Mainnet') + r('Notifications', pushOn ? 'On' : 'Off · Tap to enable', 1) + r('Help & support') + '</div><div class="center sub" style="margin-top:22px">DeadDrop 2.4.1</div>';
   }
 
   // ---------- sheets ----------
@@ -390,7 +416,8 @@
   $('tabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { tab = b.dataset.tab; render(); $('screen').scrollTop = 0; } });
   $('screen').addEventListener('click', function (e) {
     var t;
-    if ((t = e.target.closest('[data-view]'))) { actView = t.dataset.view; render(); }
+    if ((t = e.target.closest('[data-push]'))) togglePush();
+    else if ((t = e.target.closest('[data-view]'))) { actView = t.dataset.view; render(); }
     else if ((t = e.target.closest('[data-rc]'))) receiptDetail(+t.dataset.rc);
     else if ((t = e.target.closest('[data-range]'))) { range = t.dataset.range; render(); }
     else if ((t = e.target.closest('[data-act]'))) {
@@ -418,6 +445,7 @@
   }
   pollIncoming();
   setInterval(pollIncoming, 3000);
+  pushState();
   refreshPrices();
   setInterval(refreshPrices, 60000);
   setInterval(function () { if (tab === 'activity' && !$('sheet').classList.contains('on')) { if (actView === 'rc') loadReceipts(); else render(); } }, 2500);
