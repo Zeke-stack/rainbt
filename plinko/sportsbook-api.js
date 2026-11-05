@@ -605,7 +605,7 @@ module.exports = function createSportsbook(ctx) {
   }
   const LIVE_HOST = 'https://api-a-c7818b61-600.sptpub.com';
   const liveCache = new Map();
-  let liveDownUntil = 0;
+  let liveDownUntil = 0, liveOk = false;
   async function liveFetch(rel, search) {
     if (Date.now() < liveDownUntil) return null;
     const key = rel + search;
@@ -618,6 +618,7 @@ module.exports = function createSportsbook(ctx) {
       if (!r.ok) throw new Error('http ' + r.status);
       const body = Buffer.from(await r.arrayBuffer());
       liveCache.set(key, { t: Date.now(), body });
+      liveOk = true;
       if (liveCache.size > 300) for (const k of [...liveCache.keys()].slice(0, 100)) liveCache.delete(k);
       if (/\/(live|prematch)\/brand\/\d+\/en\/\d{6,}$/.test(rel)) {
         try {
@@ -631,10 +632,12 @@ module.exports = function createSportsbook(ctx) {
       }
       return body;
     } catch (e) {
-      if (!hit && !/^Error: http 404/.test(String(e))) liveDownUntil = Date.now() + 15000;
+      if (!liveOk && !hit && !/http 404/.test(String(e))) liveDownUntil = Date.now() + 15000;
+      console.log('[betby live] ' + rel + ' ' + e);
       return hit ? hit.body : null;
     }
   }
+  liveFetch('/api/v4/live/brand/2374656571012681728/en/0', '').catch(() => {});
   const MARKET_NAMES = { 1: '1x2', 10: 'Double chance', 16: 'Handicap', 18: 'Total', 26: 'Total', 186: 'Winner', 219: 'Winner', 223: 'Handicap', 225: 'Total', 251: 'Winner' };
   const hash32 = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
   function selName(sel, desc) {
@@ -777,6 +780,11 @@ module.exports = function createSportsbook(ctx) {
           const isManifest = /\/en\/0$/.test(rel);
           res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': isManifest ? 'no-store' : 'public, max-age=60', 'Access-Control-Allow-Origin': '*', 'X-Betby-Source': 'live' });
           res.end(body);
+          return true;
+        }
+        if (liveOk && /\/(live|prematch|side)\//.test(rel)) {
+          res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' });
+          res.end('{}');
           return true;
         }
       }
