@@ -726,6 +726,12 @@ module.exports = function createSportsbook(ctx) {
   if (rt.unref) rt.unref();
 
   return async function handle(req, res, pathname, url) {
+    if (pathname === '/bt-diag') {
+      const cnt = (d) => { let n = 0; try { for (const e of fs.readdirSync(d, { withFileTypes: true })) n += e.isDirectory() ? cnt(path.join(d, e.name)) : 1; } catch (e) { return 0; } return n; };
+      const root = path.join(__dirname, 'bt-real');
+      reply(res, { start3: cnt(path.join(root, 'start3')), api: cnt(path.join(root, 'mirror', 'api-a-c7818b61-600.sptpub.com')), files: cnt(path.join(root, 'mirror', 'files-immutable-4cbc033nbd3.sptpub.com')), top: (() => { try { return fs.readdirSync(root); } catch (e) { return String(e); } })() });
+      return true;
+    }
     if (pathname === '/bt-renderer.min.js') {
       res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
       const real = path.join(__dirname, 'bt-real', 'bt-renderer.min.js');
