@@ -581,6 +581,11 @@ module.exports = function createSportsbook(ctx) {
   let bbets = [];
   try { bbets = JSON.parse(fs.readFileSync(BB_FILE, 'utf8')); } catch (e) { /* none */ }
   const saveBB = () => { try { fs.writeFileSync(BB_FILE, JSON.stringify(bbets.slice(0, 200))); } catch (e) { /* read-only */ } };
+  const bbStore = ctx.sessions.register('sbbets', {
+    get: () => (bbets.length ? bbets : null),
+    set: (v) => { bbets = Array.isArray(v) ? v : []; },
+    pack: (v) => (v ? v.slice(0, 12) : null),
+  });
   if (ctx.onReset) ctx.onReset(() => { bbets = []; saveBB(); });
   const BB_DIR = path.join(__dirname, 'bt-real', 'mirror', 'api-a-c7818b61-600.sptpub.com', 'api', 'v4');
   let evIndex = null;
