@@ -69,6 +69,13 @@ function fpClient() {
       document.addEventListener(type, intercept, { capture: true, passive: false });
     });
   document.addEventListener('keydown', function (e) {
+    if ((e.key === '>' || e.key === '.') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      var t = e.target, tag = t && t.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+      arm();
+    }
+  }, true);
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && e.target && e.target.closest && e.target.closest(SEL)) {
       e.preventDefault(); e.stopImmediatePropagation(); arm();
     }
