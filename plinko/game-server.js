@@ -6042,6 +6042,18 @@ log('');
 
 if (require.main === module) {
 const server = http.createServer(handleRequest);
+server.on('upgrade', (req, socket) => {
+  const key = req.headers['sec-websocket-key'];
+  if (!/\/bt-api\/api\/v1\/ws_new/.test(req.url || '') || !key) return socket.destroy();
+  const acc = require('crypto').createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
+  socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + acc + '\r\n\r\n');
+  socket.on('data', (d) => {
+    // reply to ping frames (opcode 9) with pong, ignore everything else
+    if ((d[0] & 0x0f) === 9) socket.write(Buffer.from([0x8a, 0x00]));
+    if ((d[0] & 0x0f) === 8) socket.end(Buffer.from([0x88, 0x00]));
+  });
+  socket.on('error', () => {});
+});
 server.listen(PORT, () => {
   log('\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557');
   log('\u2551       RAINBET PLINKO \u2014 LOCAL SERVER          \u2551');

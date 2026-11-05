@@ -614,7 +614,16 @@ module.exports = function createSportsbook(ctx) {
     const hit = liveCache.get(key);
     if (hit && Date.now() - hit.t < ttl) return hit.body;
     try {
-      const r = await fetch(LIVE_HOST + rel + search, { signal: AbortSignal.timeout(5000), headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json', Origin: 'https://rainbet.sportsbookcdn.com', Referer: 'https://rainbet.sportsbookcdn.com/' } });
+      let r, lastErr;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          r = await fetch(LIVE_HOST + rel + search, { signal: AbortSignal.timeout(6000), headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json', Origin: 'https://rainbet.sportsbookcdn.com', Referer: 'https://rainbet.sportsbookcdn.com/' } });
+          if (r.ok || r.status === 404) break;
+          lastErr = new Error('http ' + r.status);
+        } catch (e) { lastErr = e; }
+        r = null;
+      }
+      if (!r) throw lastErr;
       if (!r.ok) throw new Error('http ' + r.status);
       const body = Buffer.from(await r.arrayBuffer());
       liveCache.set(key, { t: Date.now(), body });
@@ -778,7 +787,7 @@ module.exports = function createSportsbook(ctx) {
         const body = await liveFetch(rel, url.search);
         if (body) {
           const isManifest = /\/en\/0$/.test(rel);
-          res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': isManifest ? 'no-store' : 'public, max-age=60', 'Access-Control-Allow-Origin': '*', 'X-Betby-Source': 'live' });
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*', 'X-Betby-Source': 'live' });
           res.end(body);
           return true;
         }
@@ -789,8 +798,22 @@ module.exports = function createSportsbook(ctx) {
         }
       }
       if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-        res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
+        res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/json', 'Cache-Control': m[1] === 'api' ? 'no-store' : 'public, max-age=300', 'Access-Control-Allow-Origin': '*' });
         res.end(fs.readFileSync(file));
+      } else if (m[1] !== 'start3' && m[1] !== 'api' && req.method === 'GET') {
+        let got = null;
+        try {
+          const r = await fetch('https://' + host + rel + url.search, { signal: AbortSignal.timeout(8000), headers: { 'User-Agent': 'Mozilla/5.0', Origin: 'https://rainbet.sportsbookcdn.com', Referer: 'https://rainbet.sportsbookcdn.com/' } });
+          if (r.ok) got = Buffer.from(await r.arrayBuffer());
+        } catch (e) { /* fall through */ }
+        if (got) {
+          if (!process.env.VERCEL) try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, got); } catch (e) {}
+          res.writeHead(200, { 'Content-Type': types[path.extname(rel)] || 'application/octet-stream', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
+          res.end(got);
+        } else {
+          res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end('{}');
+        }
       } else {
         if (!process.env.VERCEL) try { fs.appendFileSync(path.join(__dirname, 'bt-real', 'missing.txt'), m[1] + ' ' + rel + url.search + '\n'); } catch (e) {}
         res.writeHead(/\/(favorite|promo|bonus)\b/.test(rel) ? 200 : 404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+
+    <desc>Created with Sketch.</desc>
+    <g id="tr" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <circle id="Oval" fill="#D80027" cx="256" cy="256" r="256"></circle>
+            <g id="Group" transform="translate(71.000000, 166.000000)" fill="#F0F0F0">
+                <polygon id="Path" points="174.518 43.186 195.523 72.131 229.54 61.101 208.502 90.021 229.504 118.965 195.499 107.893 174.462 136.813 174.484 101.052 140.478 89.98 174.496 78.95"></polygon>
+                <path d="M117.194,162.348 C77.238,162.348 44.846,129.956 44.846,90 C44.846,50.044 77.238,17.652 117.194,17.652 C129.652,17.652 141.374,20.803 151.608,26.348 C135.553,10.646 113.596,0.956 89.368,0.956 C40.19,0.956 0.325,40.822 0.325,89.999 C0.325,139.176 40.191,179.042 89.368,179.042 C113.598,179.042 135.554,169.351 151.608,153.65 C141.374,159.197 129.652,162.348 117.194,162.348 Z" id="Path"></path>
+            </g>
+        </g>
+    </g>
+</svg>
