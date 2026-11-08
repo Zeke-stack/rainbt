@@ -708,6 +708,31 @@ module.exports = function createSportsbook(ctx) {
     saveBB();
     return isSlips ? { success: true, slips, error: [] } : { accepted, error: [] };
   }
+  // One-time granted winning receipt: Sao Paulo GP, Norris @ 14-1 (k=15), stake 250,000 -> return 3,750,000.
+  async function grantNorris() {
+    const GID = 'norris-saopaulo-gp-250k';
+    if (bbets.some((b) => b.front_bet_id === GID)) return;
+    if (!(await require('./once-store').claim(GID))) return;
+    const stake = 250000, k = 15, ret = r2(stake * k);
+    const now = Date.now();
+    const bet = {
+      id: GID, front_bet_id: GID, type: 'single', status: 'won', timestamp: Math.floor(now / 1000), k: k.toFixed(2),
+      sum: stake.toFixed(2), potential_win: ret.toFixed(2), result_sum: ret.toFixed(2), currency: 'USD',
+      selections: [{
+        event_id: 'sp-gp-2025', market_id: '1', market_name: 'Race Winner', outcome_id: '1', specifiers: '',
+        outcome_name: 'Lando Norris', k: k.toFixed(2), status: 'won',
+        desc: { competitors: [{ name: 'Sao Paulo Grand Prix Race' }, { name: 'Winner' }], tournament: { name: 'Formula 1' }, sport: { name: 'Formula 1' }, scheduled: Math.floor(now / 1000) },
+      }],
+      bet_request_id: GID,
+    };
+    bbets.unshift(bet);
+    if (bbets.length > 200) bbets.length = 200;
+    saveBB();
+    setBal(r2(getBal() - stake + ret));
+    const h = history();
+    if (h) h.unshift({ id: 'sb' + GID, game: 'sportsbook', amount: stake, payout: ret, multiplier: k, currency: 'USD', time: now, result: 'win' });
+    log('SPORTSBOOK: granted ' + GID);
+  }
   // Real results: a leg settles only when Betby's feed reports the event ended (state.status 3) with its final score.
   function sgn(d) { return d > 0 ? 1 : d < 0 ? -1 : 0; }
   function quarter(line, f) { return Math.abs(line * 4) % 2 === 1 ? (f(line - 0.25) + f(line + 0.25)) / 2 : f(line); }
@@ -823,6 +848,7 @@ module.exports = function createSportsbook(ctx) {
       return true;
     }
     if (/^\/bt-api\/api\/v[12]\/my_bets\/list$/.test(pathname)) {
+      await grantNorris().catch(() => {});
       await settleBetby().catch(() => {});
       const q = url.searchParams;
       const st = q.get('status') || '';
