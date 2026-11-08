@@ -3212,6 +3212,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
     '/new/casino': 'lobby', '/new/plinko': 'plinko', '/new/chicken-cross': 'chicken', '/new/mines': 'mines', '/new/blackjack': 'blackjack'
   };
   const EXTRA_ORIGINALS = ['dice', 'limbo', 'keno', 'hilo', 'tower', 'coinflip', 'wheel', 'roulette', 'moles', 'war', 'baccarat', 'rock-paper-scissors'];
+  const { updateBetLimits, updatePageBetLimits } = require('./game-bet-limits');
   EXTRA_ORIGINALS.forEach(s => { NEW_PAGES['/casino/originals/' + s] = s; NEW_PAGES['/new/' + s] = s; });
   ['affiliates', 'bets', 'rewards', 'settings', 'transactions', 'verification', 'vip'].forEach(s => { NEW_PAGES['/' + s] = s; });
   const _rawPath = decodeURIComponent(url.pathname);
@@ -3225,6 +3226,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
       try {
         const dh = fs.readFileSync(path.join(__dirname, '..', 'new-build', 'pages', NEW_PAGES[_dk] + '.html'), 'utf8');
         const nd = JSON.parse(dh.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/)[1]);
+        updateBetLimits(NEW_PAGES[_dk], nd.props.pageProps);
         res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
         res.end(JSON.stringify({ pageProps: nd.props.pageProps, __N_SSP: true })); return;
       } catch (e) { /* fall through */ }
@@ -3233,6 +3235,7 @@ a{display:inline-block;background:linear-gradient(135deg,#5B6EF5,#7B4FD4);color:
   if (NEW_PAGES[_npKey] && req.method === 'GET' && url.searchParams.get('old') !== '1') {
     try {
       let nh = fs.readFileSync(path.join(__dirname, '..', 'new-build', 'pages', NEW_PAGES[_npKey] + '.html'), 'utf8');
+      nh = updatePageBetLimits(NEW_PAGES[_npKey], nh);
       const selfOrigin = (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host;
       nh = nh.replace(/https:\/\/(api|services|originals)\.rainbet\.com/g, selfOrigin);
       nh = nh.replace(/<script[^>]*src="https?:\/\/(www\.googletagmanager\.com|connect\.facebook\.net|widget\.intercom\.io|challenges\.cloudflare\.com)[^"]*"[^>]*><\/script>/gi, '');
